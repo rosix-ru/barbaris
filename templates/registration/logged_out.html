@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/logout.css" />{% endblock %}
+
+{% block bodyclass %}logout{% endblock %}
+{% block content %}
+    <div class="navbar">
+        <div class="navbar-inner">
+            <p class="brand">{% trans "Barbaris" %}</p>
+        </div>
+    </div>
+    <div class="alert alert-success">
+        <button class="close" data-dismiss="alert">×</button>
+        <p><strong>Вы вышли из системы!</strong></p>
+        <p>Но можете зайти снова...</p>
+    </div>
+    <div align=center>
+        <p><a href="{% url login %}">{% trans 'Log in again' %}</a></p>
+    </div>
+{% endblock %}
+
+

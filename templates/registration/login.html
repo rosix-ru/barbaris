@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/login.css" />{% endblock %}
+
+{% block bodyclass %}login{% endblock %}
+{% block content %}
+    <div class="navbar">
+        <div class="navbar-inner">
+            <p class="brand">{% trans "Barbaris" %}</p>
+        </div>
+    </div>
+    {% if form.errors %}
+        <div class="alert alert-error">
+            <button class="close" data-dismiss="alert">×</button>
+            <p><strong>Ошибка!</strong></p>
+            <p>Неверное имя или пароль...</p>
+        </div>
+    {% endif %}
+    
+    <form action="" method="post">{% csrf_token %}
+        <div class="form-row">
+            <label for="username">{% trans 'Username:' %}</label>
+            <input type="text" name="username" value="" id="username">
+        </div>
+        <div class="form-row">
+            <label for="password">{% trans 'Password:' %}</label>
+            <input type="password" name="password" value="" id="password">
+        </div>
+        <div class="submit-row">
+            <input type="submit" value="{% trans 'Log in' %}"/>
+        </div>
+        <input type="hidden" name="next" value="{{ next|escape }}" />
+    </form>
+    <script type="text/javascript">
+        $('#username').focus()
+    </script>
+{% endblock %}
+
+
