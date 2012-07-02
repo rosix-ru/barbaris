@@ -126,12 +126,31 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'barbaris.online'
 )
+
+# Settings for applications:
+CREATED_ORDER   = 1
+AVANCED_ORDER   = 2
+PAYED_ORDER     = 3
+CANCELLED_ORDER = 4
+ORDER_STATE_CHOICES = (
+        (CREATED_ORDER, _('Created')),
+        (AVANCED_ORDER, _('Avanced')),
+        (PAYED_ORDER, _('Payed')),
+        (CANCELLED_ORDER, _('Cancelled')),
+    )
+SELECT_ONLY_CREATED_ORDERS   = [1]
+SELECT_ONLY_AVANCED_ORDERS   = [2]
+SELECT_ONLY_PAYED_ORDERS     = [3]
+SELECT_ONLY_CANCELLED_ORDERS = [4]
+SELECT_WORKED_ORDERS         = [1,2,3]
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

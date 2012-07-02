@@ -10,8 +10,8 @@ def homeredirect(request):
     return redirect('/')
 
 urlpatterns = patterns('',
+    url(r'^$', 'barbaris.views.home', name='home'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('barbaris.online.urls')),
 )
 
 urlpatterns += patterns('django.contrib.auth.views',
