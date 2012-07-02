@@ -3,7 +3,7 @@ from django.db import models, connection, transaction
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.conf import settings
-from barabris.online.managers import ActivePriceManager,\
+from barbaris.online.managers import ActivePriceManager,\
     CreatedOrderManager, AvansedOrderManager, \
     PayedOrderManager, CancelledOrderManager, WorkedOrderManager
 
@@ -55,10 +55,10 @@ class Client(models.Model):
     middle_name = models.CharField(
             max_length=50,
             blank=True,
-            verbose_name=_('last name'))
+            verbose_name=_('middle name'))
     birth = models.DateField(
             blank=True,
-            verbose_name=_('date of birth'))
+            verbose_name=_('birthday'))
     phones = models.CharField(
             max_length=50,
             blank=True,
@@ -126,7 +126,7 @@ class Price(models.Model):
             default=0.0,
             verbose_name = _('price'))
     start_date = models.DateField(
-            default=datetime.date.today() +1,
+            default=datetime.date.today() + datetime.timedelta(1),
             verbose_name = _('start date'))
     
     objects = models.Manager()

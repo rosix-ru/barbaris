@@ -9,8 +9,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 admin.site.register(Organization,OrganizationAdmin)
 
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'middle_name', 'birth', 'is_client', 'id')
-    list_filter = ('is_supplier', 'is_client')
-    search_fields = ('title', 'inn')
-    filter_horizontal = ['users', ]
+    list_display = ('last_name', 'first_name', 'middle_name', 'birth', 'id')
+    #~ list_filter = ('is_supplier', 'is_client')
+    search_fields = ('last_name', 'first_name', 'middle_name', 'organization__title', 'organization__inn')
 admin.site.register(Client,ClientAdmin)
