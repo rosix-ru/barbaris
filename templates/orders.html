@@ -2,13 +2,41 @@
 {% load i18n %}
 
 {% block page_name %}Заказы{% endblock %}
+{% block search_placeholder %}Найти заказы{% endblock %}
+
+{% block subnav %}
+<div class="subnav">
+    <ul class="nav nav-pills">
+        <li class=""><a href="#">Изменить</a></li>
+        <li class=""><a href="#">Добавить</a></li>
+        <li class=""><a href="#">Удалить</a></li>
+    </ul>
+</div>
+{% endblock %}
 
 {% block content %}
-    <div align=center>
-        <p>
-            {% trans "Internal error of the server." %}
-        </p>
-    </div>
+<table id="table-orders" class="table table-condensed">
+    <thead>
+        <tr>
+            <th class="input-mini state"><span>Статус</span></th>
+            <th class="client"><span>Клиент</span></th>
+            <th class="comment"><span>Комментарий</span></th>
+            <th class="input-mini full-summa"><span class="pull-right">Сумма</span></th>
+            <th class="input-mini start_date"><span>Дата</span></th>
+            <th class="input-mini user"><span>Принял</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="order_0">
+            <td class="input-mini state"><span>Создан</span></td>
+            <td class="client"><span>Крамаренко Григорий Викторович</span></td>
+            <td class="comment"><span>Пожелал сауну с морской водой и златоволосыми русалками.</span></td>
+            <td class="input-mini full-summa"><span class="pull-right">99999,00</span></td>
+            <td class="input-mini start_date"><span>01.07.12</span></td>
+            <td class="input-mini user"><span>Прозоровский</span></td>
+        </tr>
+    </tbody>
+</table>
 {% endblock %}
 
 
