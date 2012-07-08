@@ -120,6 +120,17 @@ TEMPLATE_DIRS = (
     abspath("templates"),
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    # append:
+    'django.core.context_processors.request'
+)
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -131,7 +142,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'barbaris.online'
+    'barbaris.online',
+    'cachebot',
+    'memcache_status',
 )
 
 # Settings for applications:
@@ -178,5 +191,14 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+    }
+}
+
+CACHES = {
+    'default': {
+        #~ 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'BACKEND': 'cachebot.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': 'barbaris',
     }
 }

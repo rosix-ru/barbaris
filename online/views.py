@@ -20,13 +20,111 @@ import operator
 import datetime
 
 @login_required
-def home(request):
-    print "EXEC views.home()" # DEBUG
+def monitor(request):
+    print "EXEC views.monitor()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
-    return render_to_response('base.html', ctx,
+    return render_to_response('monitor.html', ctx,
                             context_instance=RequestContext(request,))
+
+@login_required
+def orders(request):
+    print "EXEC views.orders()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('orders.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def pricelist(request):
+    print "EXEC views.pricelist()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('pricelist.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def invoices(request):
+    print "EXEC views.invoices()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('invoices.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def acts(request):
+    print "EXEC views.acts()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('acts.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def clients(request):
+    print "EXEC views.clients()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('clients.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def analyze(request):
+    print "EXEC views.analyze()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('analyze.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def reports(request):
+    print "EXEC views.reports()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('reports.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def questions(request):
+    print "EXEC views.questions()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('questions.html', ctx,
+                            context_instance=RequestContext(request,))
+
+

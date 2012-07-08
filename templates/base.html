@@ -1,151 +1,61 @@
-{% load i18n %}<html lang="ru">
+{% load i18n %}<!DOCTYPE html>
+<html lang="ru">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{ STATIC_URL }}img/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}{% trans "Barbaris" %}{% endblock %}</title>
+        <title>{% block title %}АИС Барбарис{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-responsive.css" />
-        
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/docs.css" />
         {% block extrastyle %}{% endblock %}
-        
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-tab.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-typeahead.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/barbaris.js"></script>
-        
     </head>
-    <body class="{% block bodyclass %}home{% endblock %}">
+    <body data-offset="50" data-target=".subnav" data-spy="scroll" class="{% block bodyclass %}home{% endblock %}">
+        <!-- START: navbar -->
+        {% include "navigator.html" %}
+        <!-- END: navbar -->
+        
         <div class="container">
-        {% block content %}
-
-            {% block navbar %}
-            <!-- START: block navbar -->
-            <div class="row">
-                <div class="navbar">
-                    <div class="navbar-inner">
-                        <div class="container">
-                            <a class="brand" href="/">
-                                <img height="24" src="{{ STATIC_URL }}img/logo.png" />
-                                Барбарис
-                            </a>
-                            <ul class="nav">
-                                <li id="menu1" class="dropdown{% ifequal request.path "/" %} active{% endifequal %}">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-                                        Действия
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li id="action-1">
-                                            <a href="#">
-                                                <i class="icon-folder-open"> </i>
-                                                ...
-                                            </a>
-                                        </li>
-                                        <li id="action-2">
-                                            <a href="#">
-                                                <i class="icon-refresh"> </i>
-                                                ...
-                                            </a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li id="action-3">
-                                            <a href="#">
-                                                <i class="icon-envelope"> </i>
-                                                ...
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li id="menu2" class="dropdown{% ifequal request.path "/menu2" %} active{% endifequal %}">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2">
-                                        Вид
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li id="view-show-punkt1">
-                                            <a href="#">
-                                                <i class="icon-info"> </i>
-                                                Пункт 1
-                                            </a>
-                                        </li>
-                                       
-                                    </ul>
-                                </li>
-                            </ul>
-                            <ul class="nav pull-right">
-                                <li class="brand">...</li>
-                                <li><a>{% if user.last_name %}{{ user.get_full_name }}{% else %}{{ user }}{% endif %}</a></li>
-                                <li id="menu3" class="dropdown{% ifequal request.path "/menu3" %} active{% endifequal %}">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu3">
-                                        Сервис
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li id="service-1">
-                                            <a href="#">
-                                                
-                                                ...
-                                            </a>
-                                        </li>
-                                        <li id="service-2">
-                                            <a href="#">
-                                                
-                                                ...
-                                            </a>
-                                        </li>
-                                        <li id="service-3">
-                                            <a href="#">
-                                                
-                                                ...
-                                            </a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li id="service-settings">
-                                            <a href="#">
-                                                
-                                                Настройки
-                                            </a>
-                                        </li>
-                                    {% if user.is_staff %}
-                                        <li>
-                                            <a href="/admin/">
-                                                
-                                                Администрирование
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                        <li class="divider"></li>
-                                        <li>
-                                            <a href="#">
-                                                
-                                                ...
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/accounts/logout/">
-                                                
-                                                Выход
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- END: block navbar -->
+            <!-- START: header -->
+            {% block header %}
+            <header>
+                <h1>{% block page_name %}BASE TEMPLATE{% endblock %}</h1>
+                <!-- START: subnav -->
+                {% block subnav %}{% endblock %}
+                <!-- END: subnav -->
+            </header>
             {% endblock %}
-            
-            {% block tabs %}
-            <!-- START: block tabs -->
-            <!-- END: block tabs -->
+            <!-- END: header -->
+            <hr class="soften">
+            <!-- START: content -->
+            {% block content %}{% endblock %}
+            <!-- END: content -->
+            <!-- START: footer -->
+            {% block footer %}
+            <footer class="footer">
+                <p class="pull-right"><a href="#navbar">Наверх</a></p>
+            </footer>
             {% endblock %}
-            
-        {% endblock %}
-        </div>
+            <!-- END: footer -->
+        </div><!-- /container -->
+    
+    <!-- START: javascript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-scrollspy.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tab.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-button.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-typeahead.js"></script>
+    <script src="{{ STATIC_URL }}js/application.js"></script>
+    {% block extrajs %}{% endblock %}
+    <!-- END: javascript -->
     </body>
 </html>
