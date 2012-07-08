@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="modal hide fade" id="modalUser" style="display: none;">
+    <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button">×</button>
+        <h3>Пользователь</h3>
+    </div>
+    <form id="form-change-user" class="form" action="/" method="post">{% csrf_token %}
+        <fieldset>
+            <div class="modal-body">
+                <div class="control-group">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn">Закрыть</button>
+                <button id="form-change-user-submit" class="btn btn-primary" type="submit">Сохранить</button>
+            </div>
+        </fieldset>
+    </form>
+</div>

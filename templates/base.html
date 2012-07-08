@@ -12,7 +12,7 @@
     </head>
     <body data-offset="50" data-target=".subnav" data-spy="scroll" class="{% block bodyclass %}home{% endblock %}">
         <!-- START: navbar -->
-        {% include "navigator.html" %}
+        {% block navbar %}{% include "navigator.html" %}{% endblock %}
         <!-- END: navbar -->
         
         <div class="container">
@@ -23,10 +23,10 @@
                 <!-- START: subnav -->
                 {% block subnav %}{% endblock %}
                 <!-- END: subnav -->
+            <hr class="soften">
             </header>
             {% endblock %}
             <!-- END: header -->
-            <hr class="soften">
             <!-- START: content -->
             {% block content %}{% endblock %}
             <!-- END: content -->
@@ -38,6 +38,13 @@
             {% endblock %}
             <!-- END: footer -->
         </div><!-- /container -->
+        
+        {% block modals %}
+        <!-- START: modalLogout -->
+        {% include "modalUser.html" %}
+        <!-- END: modalLogout -->
+        {% endblock %}
+    
     
     <!-- START: javascript -->
     <!-- Placed at the end of the document so the pages load faster -->

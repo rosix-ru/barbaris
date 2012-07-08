@@ -3,10 +3,13 @@
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/login.css" />{% endblock %}
 
 {% block bodyclass %}login{% endblock %}
+{% block navbar %}{% endblock %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
 {% block content %}
     <div class="navbar">
         <div class="navbar-inner">
-            <p class="brand">{% trans "Barbaris" %}</p>
+            <p class="brand">АИС Барбарис</p>
         </div>
     </div>
     {% if form.errors %}
