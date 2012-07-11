@@ -1,14 +1,22 @@
-<!-- start: paginator.html -->
+{% if pagination_list %}
+<!-- Example:
 <div class="pagination pagination-centered">
     <ul>
-        <li><a href="#">&laquo;</a></li>
-        <li class="active">
-            <a href="#">1</a>
-        </li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">&raquo;</a></li>
+        <li class="disabled"><a href="?page=0&query=">&laquo;</a></li>
+        <li class="active"><a href="?page=1&query=">1</a></li>
+        <li><a href="?page=2&query=">2</a></li>
+        <li><a href="?page=3&query=">3</a></li>
+        <li><a href="?page=4&query=">4</a></li>
+        <li><a href="?page=5&query=">&raquo;</a></li>
     </ul>
 </div>
-<!-- end: paginator.html -->
+-->
+
+<div class="pagination pagination-centered">
+    <ul>
+    {% for li in pagination_list %}
+        {{ li|safe }}
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}

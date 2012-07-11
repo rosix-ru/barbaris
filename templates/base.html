@@ -1,4 +1,4 @@
-{% load i18n %}<!DOCTYPE html>
+{% load i18n base_extras %}<!DOCTYPE html>
 <html lang="ru">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -26,34 +26,54 @@
                     </div>
                     <div class="span5">
                         <div class="pull-right">
-                            <!-- START: search -->
-                            {% block search %}
-                            <form id="form-search" class="form-search">
+                            
+                        </div>
+                    </div>
+                </div>
+                <!-- START: subnav -->
+                {% block subnav %}
+                <div class="subnav">
+                    
+                    <!-- START: search -->
+                    {% block search %}
+                    <ul class="nav nav-pills">
+                        <li class="">
+                            <form id="form-search" class="form-search" action="" method="get">
                                 <fieldset>
                                     <div class="control-group">
                                         <div class="controls">
                                             <div class="input-append">
-                                                <input id="search" name="query" type="text" class="input-large" placeholder="{% block search_placeholder %}Найти{% endblock %}" />
+                                                <input id="search" value="{{ query }}" name="query" type="text" class="input-large" placeholder="{% block search_placeholder %}Найти{% endblock %}" />
                                                 <button id="search-submit" type="submit" class="btn">&rang;</button>
                                             </div>
                                         </div>
                                     </div>
                                 </fieldset>
                             </form>
-                            {% endblock %}
-                            <!-- END: search -->
-                        </div>
-                    </div>
+                        </li>
+                        <!-- START: subnav_content -->
+                        {% block subnav_content %}
+                        {% endblock %}
+                        <!-- END: subnav_content -->
+                    </ul>
+                    {% endblock %}
+                    <!-- END: search -->
+                    
                 </div>
-                <!-- START: subnav -->
-                {% block subnav %}{% endblock %}
+                {% endblock %}
                 <!-- END: subnav -->
+                <div style="clear:both;"></div>
+            <hr class="soften">
             </header>
             {% endblock %}
             <!-- END: header -->
+            
             <!-- START: content -->
             {% block content %}{% endblock %}
             <!-- END: content -->
+            <!-- START: paginator -->
+            {% block paginator %}{% include "paginator.html" %}{% endblock %}
+            <!-- END: paginator -->
             <!-- START: footer -->
             {% block footer %}
             <footer class="footer">
@@ -64,9 +84,12 @@
         </div><!-- /container -->
         
         {% block modals %}
-        <!-- START: modalLogout -->
+        <!-- START: modalUser -->
         {% include "modalUser.html" %}
-        <!-- END: modalLogout -->
+        <!-- END: modalUser -->
+        <!-- START: modalOrder -->
+        {% include "modalOrder.html" %}
+        <!-- END: modalOrder -->
         {% endblock %}
     
     

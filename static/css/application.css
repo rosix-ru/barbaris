@@ -4,5 +4,14 @@ hr.soften {
     margin: 1px 0;
 }
 
+.subnav fieldset {
+    padding: 4px;
+}
+/* Fixed subnav on scroll, but only for 980px and up (sorry IE!) */
+@media (min-width: 980px) {
+    .subnav-fixed fieldset {
+        padding: 6px;
+    }
+}
 
 

@@ -1,4 +1,4 @@
-{% load i18n base_extras %}
+{% load base_extras %}
 <div id="navbar" class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -14,7 +14,7 @@
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li class="{% navactive request 'monitor' %}">
-                        <a href="{% url monitor %}">Монитор услуг</a>
+                        <a href="{% url monitor %}">Монитор</a>
                     </li>
                     <li class="{% navactive request 'orders' %}">
                         <a href="{% url orders %}">Заказы</a>
@@ -22,28 +22,47 @@
                     <li class="{% navactive request 'pricelist' %}">
                         <a href="{% url pricelist %}">Прайс-лист</a>
                     </li>
-                    <li class="{% navactive request 'invoices' %}">
-                        <a href="{% url invoices %}">Счета</a>
-                    </li>
-                    <li class="{% navactive request 'acts' %}">
-                        <a href="{% url acts %}">Акты</a>
-                    </li>
+                    
                     <li class="{% navactive request 'clients' %}">
                         <a href="{% url clients %}">Клиенты</a>
                     </li>
                     <li class="divider-vertical"></li>
-                    <li class="{% navactive request 'analyze' %}">
-                        <a href="{% url analyze %}">Анализ</a>
-                    </li>
-                    <li class="{% navactive request 'reports' %}">
-                        <a href="{% url reports %}">Отчётность</a>
+                    <li id="menu-reports" class="dropdown {% navactive request 'analyze acts invoices' %}">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu-reports">
+                            Отчётность
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="{% navactive request 'invoices' %}">
+                                <a href="{% url invoices %}">Счета</a>
+                            </li>
+                            <li class="{% navactive request 'acts' %}">
+                                <a href="{% url acts %}">Акты</a>
+                            </li>
+                            <li class="{% navactive request 'analyze' %}">
+                                <a href="{% url analyze %}">Анализ</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="divider-vertical"></li>
-                    <li class="{% navactive request 'questions' %}">
-                        <a href="{% url questions %}">Вопросы</a>
-                    </li>
-                    <li class="">
-                        <a href="/accounts/logout/">Выход</a>
+                    <li id="menu-service" class="dropdown {% navactive request 'questions' %}">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu-service">
+                            Сервис
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="{% navactive request 'questions' %}">
+                                <a href="{% url questions %}">Вопросы</a>
+                            </li>
+                        {% if user.is_staff %}
+                            <li class="">
+                                <a href="/admin/">Админка</a>
+                            </li>
+                        {% endif %}
+                            <li class="">
+                                <a href="/accounts/logout/">Выход</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>

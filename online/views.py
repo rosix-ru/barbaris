@@ -16,8 +16,9 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.template.defaultfilters import date as _date
 import operator
-
 import datetime
+
+from barbaris.online.models import *
 
 @login_required
 def monitor(request):
@@ -39,6 +40,18 @@ def orders(request):
     session = request.session
     user = request.user
     session['user_id'] = user.id
+    
+    if request.GET:
+        query = request.GET.get('query', '')
+        year = request.GET.get('year', '')
+        month = request.GET.get('month', '')
+        day = request.GET.get('day', '')
+        
+        ctx['query'] = query
+    
+    orders = Order.objects.all()
+    
+    ctx['orders'] = orders
     
     return render_to_response('orders.html', ctx,
                             context_instance=RequestContext(request,))

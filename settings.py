@@ -148,22 +148,87 @@ INSTALLED_APPS = (
 )
 
 # Settings for applications:
-CREATED_ORDER   = 1
-AVANCED_ORDER   = 2
-PAYED_ORDER     = 3
-CANCELLED_ORDER = 4
+CREATE_ORDER   = 1
+RESERV_ORDER   = 2
+ACCEPT_ORDER   = 3
+AVANCE_ORDER   = 4
+PAYMENT_ORDER  = 5
+CANCEL_ORDER   = 6
 ORDER_STATE_CHOICES = (
-        (CREATED_ORDER, _('Created')),
-        (AVANCED_ORDER, _('Avanced')),
-        (PAYED_ORDER, _('Payed')),
-        (CANCELLED_ORDER, _('Cancelled')),
+        (CREATE_ORDER, 'Создан'),
+        (RESERV_ORDER, 'Бронь'),
+        (ACCEPT_ORDER, 'Принят'),
+        (AVANCE_ORDER, 'Аванс'),
+        (PAYMENT_ORDER,'Оплата'),
+        (CANCEL_ORDER, 'Отмена'),
     )
-SELECT_ONLY_CREATED_ORDERS   = [1]
-SELECT_ONLY_AVANCED_ORDERS   = [2]
-SELECT_ONLY_PAYED_ORDERS     = [3]
-SELECT_ONLY_CANCELLED_ORDERS = [4]
-SELECT_WORKED_ORDERS         = [1,2,3]
 
+DAY_PRICE   = 1
+HOUR_PRICE  = 2
+MONTH_PRICE = 3
+PRICE_DIVIDER_CHOICES = (
+        (DAY_PRICE, 'Сутки'),
+        (HOUR_PRICE, 'Час'),
+        (MONTH_PRICE, 'Месяц'),
+    )
+SELECT_WORKED_ORDERS = [1,2,3,4]
+
+ORGANIZATION_DETAIL_CHOICES = (
+    ('inn', 'ИНН'),
+    ('kpp', 'КПП'),
+    ('ogrn', 'ОГРН'),
+    ('Документ', (
+        ('document-type', 'Тип'),
+        ('document-series', 'Серия'),
+        ('document-number', 'Номер'),
+        ('document-date', 'Дата'),
+        ('document-organ', 'Орган'),
+        ('document-code', 'Код органа'),
+        )
+    ),
+    ('Банк', (
+        ('bank-bik', 'БИК'),
+        ('bank-settlement-account', 'Расчётный счёт'),
+        ('bank-correspond-account', 'Корр. счёт'),
+        ('bank-title', 'Наименование'),
+        )
+    ),
+)
+
+CLIENT_DETAIL_CHOICES = (
+    ('sex', 'Пол'),
+    ('Рождение', (
+        ('birth-day', 'Дата'),
+        ('birth-country', 'Страна'),
+        ('birth-region', 'Регион'),
+        ('birth-area', 'Район'),
+        ('birth-sity', 'Город'),
+        ('birth-settlement', 'Населённый пункт'),
+        )
+    ),
+    ('sitizenship', 'Гражданство'),
+    ('Документ', (
+        ('document-type', 'Тип'),
+        ('document-series', 'Серия'),
+        ('document-number', 'Номер'),
+        ('document-date', 'Дата выдачи'),
+        ('document-organ', 'Орган выдачи'),
+        ('document-code', 'Код органа'),
+        )
+    ),
+    ('Место жительства', (
+        ('residence-country', 'Страна'),
+        ('residence-region', 'Регион'),
+        ('residence-area', 'Район'),
+        ('residence-sity', 'Город'),
+        ('residence-settlement', 'Населённый пункт'),
+        ('residence-street', 'Улица'),
+        ('residence-house', 'Дом'),
+        ('residence-case', 'Корпус'),
+        ('residence-apartment', 'Квартира'),
+        )
+    ),
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

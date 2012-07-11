@@ -12,37 +12,72 @@ class ActivePriceManager(models.Manager):
             start_date__lte=datetime.date.today()
         )
 
-class CreatedOrderManager(models.Manager):
+class CreateOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(CreatedOrderManager, self).get_query_set().filter(
-            state=settings.CREATED_ORDER
+        return super(CreateOrderManager, self).get_query_set().filter(
+            state=settings.CREATE_ORDER
         )
 
-class AvansedOrderManager(models.Manager):
+class ReservOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(CreatedOrderManager, self).get_query_set().filter(
-            state=settings.AVANCED_ORDER
+        return super(ReservOrderManager, self).get_query_set().filter(
+            state=settings.RESERV_ORDER
         )
 
-class PayedOrderManager(models.Manager):
+class AcceptOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(CreatedOrderManager, self).get_query_set().filter(
-            state=settings.PAYED_ORDER
+        return super(AcceptOrderManager, self).get_query_set().filter(
+            state=settings.ACCEPT_ORDER
         )
 
-class CancelledOrderManager(models.Manager):
+class AvanseOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(CreatedOrderManager, self).get_query_set().filter(
-            state=settings.CANCELLED_ORDER
+        return super(AvanceOrderManager, self).get_query_set().filter(
+            state=settings.AVANCE_ORDER
         )
 
-class WorkedOrderManager(models.Manager):
+class PaymentOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(CreatedOrderManager, self).get_query_set().filter(
+        return super(PaymentOrderManager, self).get_query_set().filter(
+            state=settings.PAYMENT_ORDER
+        )
+
+class CancelOrderManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(CancelOrderManager, self).get_query_set().filter(
+            state=settings.CANCEL_ORDER
+        )
+
+class WorkOrderManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(WorkOrderManager, self).get_query_set().filter(
             state__in=settings.SELECT_WORKED_ORDERS
+        )
+
+class SellerOrganizationManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(SellerOrganizationManager, self).get_query_set().filter(
+            is_seller=True
+        )
+
+class BuyerOrganizationManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(BuyerOrganizationManager, self).get_query_set().filter(
+            is_seller=False
+        )
+
+class PrivateClientManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(PrivateClientManager, self).get_query_set().filter(
+            organization=None
         )
