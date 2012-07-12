@@ -1,25 +1,43 @@
 {% load base_extras %}
-<li class="dropdown">
+<li class="dropdown {% subnavactive request 'year' %}">
     <a href="#" data-toggle="dropdown" class="dropdown-toggle">Год <b class="caret"></b></a>
     <ul class="dropdown-menu">
-        <li class="active"><a href="{% addGET request 'year' %}">Любой</a></li>
+        <li class="{% subnavactive request 'year' 0 %}">
+            <a href="{% addGET request 'year' 0 %}">Любой</a>
+        </li>
         <li class="divider"></li>
-        {% for year in years %}<li class=""><a href="{% addGET request 'year' year %}">{{ year }}</a></li>{% endfor %}
+    {% for year in years %}
+        <li class="{% subnavactive request 'year' year %}">
+            <a href="{% addGET request 'year' year %}">{{ year }}</a>
+        </li>
+    {% endfor %}
     </ul>
 </li>
-<li class="dropdown">
+<li class="dropdown {% subnavactive request 'month' %}">
     <a href="#" data-toggle="dropdown" class="dropdown-toggle">Месяц <b class="caret"></b></a>
     <ul class="dropdown-menu">
-        <li class="active"><a href="{% addGET request 'month' %}">Любой</a></li>
+        <li class="{% subnavactive request 'month' 0 %}">
+            <a href="{% addGET request 'month' 0 %}">Любой</a>
+        </li>
         <li class="divider"></li>
-        {% for month in months %}<li class=""><a href="{% addGET request 'month' month %}">{{ month }}</a></li>{% endfor %}
+    {% for month in months %}
+        <li class="{% subnavactive request 'month' month %}">
+            <a href="{% addGET request 'month' month %}">{{ month }}</a>
+        </li>
+    {% endfor %}
     </ul>
 </li>
-<li class="dropdown">
+<li class="dropdown {% subnavactive request 'day' %}">
     <a href="#" data-toggle="dropdown" class="dropdown-toggle">День <b class="caret"></b></a>
     <ul class="dropdown-menu">
-        <li class="active"><a href="{% addGET request 'day' %}">Любой</a></li>
+        <li class="{% subnavactive request 'day' 0 %}">
+            <a href="{% addGET request 'day' 0 %}">Любой</a>
+        </li>
         <li class="divider"></li>
-        {% for day in days %}<li class=""><a href="{% addGET request 'day' day %}">{{ day }}</a></li>{% endfor %}
+    {% for day in days %}
+        <li class="{% subnavactive request 'day' day %}">
+            <a href="{% addGET request 'day' day %}">{{ day }}</a>
+        </li>
+    {% endfor %}
     </ul>
 </li>

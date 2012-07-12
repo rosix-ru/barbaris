@@ -52,7 +52,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -143,92 +143,63 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'barbaris.online',
+    'barbaris.auth_fix',
     'cachebot',
     'memcache_status',
 )
 
 # Settings for applications:
-CREATE_ORDER   = 1
-RESERV_ORDER   = 2
-ACCEPT_ORDER   = 3
-AVANCE_ORDER   = 4
-PAYMENT_ORDER  = 5
-CANCEL_ORDER   = 6
-ORDER_STATE_CHOICES = (
-        (CREATE_ORDER, 'Создан'),
-        (RESERV_ORDER, 'Бронь'),
-        (ACCEPT_ORDER, 'Принят'),
-        (AVANCE_ORDER, 'Аванс'),
-        (PAYMENT_ORDER,'Оплата'),
-        (CANCEL_ORDER, 'Отмена'),
+
+START_YEAR = 2011
+
+STATE_ORDER_CREATE   = 1
+STATE_ORDER_RESERV   = 2
+STATE_ORDER_ACCEPT   = 3
+STATE_ORDER_CLOSE    = 4
+STATE_ORDER_CANCEL   = 5
+STATE_ORDER_CHOICES = (
+        (STATE_ORDER_CREATE, 'Создан'),
+        (STATE_ORDER_RESERV, 'Бронь'),
+        (STATE_ORDER_ACCEPT, 'Принят'),
+        (STATE_ORDER_CLOSE,  'Закрыт'),
+        (STATE_ORDER_CANCEL, 'Отменён'),
+    )
+SELECT_WORK_ORDERS = [1,2,3]
+
+STATE_INVOICE_CREATE   = 1
+STATE_INVOICE_PAYMENT  = 2
+STATE_INVOICE_CANCEL   = 3
+STATE_INVOICE_CHOICES = (
+        (STATE_INVOICE_CREATE, 'Создан'),
+        (STATE_INVOICE_PAYMENT, 'Оплачен'),
+        (STATE_INVOICE_CANCEL, 'Отменён'),
+    )
+SELECT_INVOICES = [1,2,3]
+
+PAYMENT_INVOICE_CASH      = 1
+PAYMENT_INVOICE_CASHLESS  = 2
+PAYMENT_INVOICE_CARD      = 3
+PAYMENT_INVOICE_CHOICES = (
+        (PAYMENT_INVOICE_CASH,     'Наличный'),
+        (PAYMENT_INVOICE_CASHLESS, 'Безналичный'),
+        (PAYMENT_INVOICE_CARD,     'Карта банка'),
     )
 
-DAY_PRICE   = 1
-HOUR_PRICE  = 2
-MONTH_PRICE = 3
-PRICE_DIVIDER_CHOICES = (
-        (DAY_PRICE, 'Сутки'),
-        (HOUR_PRICE, 'Час'),
-        (MONTH_PRICE, 'Месяц'),
+ATTRIBUTE_WEDDING    = 1
+ATTRIBUTE_SPORTSMANS = 2
+ATTRIBUTE_CHOICES = (
+        (ATTRIBUTE_WEDDING, 'Свадьба'),
+        (ATTRIBUTE_SPORTSMANS, 'Спортсмены'),
     )
-SELECT_WORKED_ORDERS = [1,2,3,4]
 
-ORGANIZATION_DETAIL_CHOICES = (
-    ('inn', 'ИНН'),
-    ('kpp', 'КПП'),
-    ('ogrn', 'ОГРН'),
-    ('Документ', (
-        ('document-type', 'Тип'),
-        ('document-series', 'Серия'),
-        ('document-number', 'Номер'),
-        ('document-date', 'Дата'),
-        ('document-organ', 'Орган'),
-        ('document-code', 'Код органа'),
-        )
-    ),
-    ('Банк', (
-        ('bank-bik', 'БИК'),
-        ('bank-settlement-account', 'Расчётный счёт'),
-        ('bank-correspond-account', 'Корр. счёт'),
-        ('bank-title', 'Наименование'),
-        )
-    ),
-)
-
-CLIENT_DETAIL_CHOICES = (
-    ('sex', 'Пол'),
-    ('Рождение', (
-        ('birth-day', 'Дата'),
-        ('birth-country', 'Страна'),
-        ('birth-region', 'Регион'),
-        ('birth-area', 'Район'),
-        ('birth-sity', 'Город'),
-        ('birth-settlement', 'Населённый пункт'),
-        )
-    ),
-    ('sitizenship', 'Гражданство'),
-    ('Документ', (
-        ('document-type', 'Тип'),
-        ('document-series', 'Серия'),
-        ('document-number', 'Номер'),
-        ('document-date', 'Дата выдачи'),
-        ('document-organ', 'Орган выдачи'),
-        ('document-code', 'Код органа'),
-        )
-    ),
-    ('Место жительства', (
-        ('residence-country', 'Страна'),
-        ('residence-region', 'Регион'),
-        ('residence-area', 'Район'),
-        ('residence-sity', 'Город'),
-        ('residence-settlement', 'Населённый пункт'),
-        ('residence-street', 'Улица'),
-        ('residence-house', 'Дом'),
-        ('residence-case', 'Корпус'),
-        ('residence-apartment', 'Квартира'),
-        )
-    ),
-)
+DIVIDER_DAY   = 1
+DIVIDER_HOUR  = 2
+DIVIDER_MONTH = 3
+DIVIDER_PRICE_CHOICES = (
+        (DIVIDER_DAY, 'Сутки'),
+        (DIVIDER_HOUR, 'Час'),
+        (DIVIDER_MONTH, 'Месяц'),
+    )
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

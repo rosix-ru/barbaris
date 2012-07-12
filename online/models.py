@@ -3,14 +3,9 @@ from django.db import models, connection, transaction
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.conf import settings
-from barbaris.online.managers import ActivePriceManager,\
-    CreateOrderManager, ReservOrderManager, AcceptOrderManager,\
-    AvanseOrderManager, PaymentOrderManager, CancelOrderManager,\
-    WorkOrderManager,\
-    SellerOrganizationManager, BuyerOrganizationManager,\
-    PrivateClientManager
+from barbaris.online import managers
 
-import datetime
+import datetime, calendar
 
 class Organization(models.Model):
     """ Представляет собственную организацию-продавца услуг(seller),
@@ -18,102 +13,115 @@ class Organization(models.Model):
     """
     is_seller = models.BooleanField(
             default=False,
-            verbose_name = "продавец")
+            verbose_name = u"продавец")
     title = models.CharField(
             max_length=100,
-            verbose_name = "название")
+            verbose_name = u"название")
     
     objects = models.Manager()
-    sellers = SellerOrganizationManager()
-    buyers  = BuyerOrganizationManager()
+    sellers = managers.SellerOrganizationManager()
+    buyers  = managers.BuyerOrganizationManager()
     
     def __unicode__(self):
         return self.title
         
     class Meta:
         ordering = ['title']
-        verbose_name = "организацию"
-        verbose_name_plural = "организации"
+        verbose_name = u"организацию"
+        verbose_name_plural = u"организации"
 
 class OrganizationDetail(models.Model):
     """ Расширенная информация об организации """
-    organization = models.OneToOneField(
+    is_active = models.BooleanField(
+            default=True,
+            verbose_name = u"активная")
+    organization = models.ForeignKey(
             Organization,
-            verbose_name = "организация")
+            verbose_name = u"организация")
     fulltitle = models.CharField(
             max_length=255,
             blank=True,
-            verbose_name = "полное название")
+            verbose_name = u"полное название")
     inn = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "ИНН")
+            verbose_name = u"ИНН")
     kpp = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "КПП")
+            verbose_name = u"КПП")
     ogrn = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "ОГРН")
+            verbose_name = u"ОГРН")
     address = models.CharField(
             max_length=255,
             blank=True,
-            verbose_name = "адрес")
+            verbose_name = u"адрес")
     phones = models.CharField(
             max_length=100,
             blank=True,
-            verbose_name = "телефоны")
+            verbose_name = u"телефоны")
     # Поля документа организации
     document_type = models.CharField(
             max_length=50,
             blank=True,
-            verbose_name = "тип")
+            verbose_name = u"тип")
     document_series = models.CharField(
             max_length=10,
             blank=True,
-            verbose_name = "серия")
+            verbose_name = u"серия")
     document_number = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "номер")
+            verbose_name = u"номер")
     document_date = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "дата выдачи")
+            verbose_name = u"дата выдачи")
     document_organ = models.CharField(
             max_length=255,
             blank=True,
-            verbose_name = "орган выдачи")
+            verbose_name = u"орган выдачи")
     document_code = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "код органа")
+            verbose_name = u"код органа")
     # Банковские реквизиты
     bank_bik = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "БИК")
+            verbose_name = u"БИК")
     bank_title = models.CharField(
             max_length=255,
             blank=True,
-            verbose_name = "название")
+            verbose_name = u"название банка")
     bank_set_account = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = "Р/СЧ")
+            verbose_name = u"Р/СЧ")
     bank_cor_account = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = "КОР/СЧ")
+            verbose_name = u"КОР/СЧ")
+    
+    objects = models.Manager()
+    actives = managers.ActiveOrganizationDetailManager()
     
     def __unicode__(self):
         return unicode(self.organization)
         
     class Meta:
         ordering = ['organization',]
-        verbose_name = "карточку организации"
-        verbose_name_plural = "карточки организаций"
+        verbose_name = u"карточку организации"
+        verbose_name_plural = u"карточки организаций"
+    
+    def save(self, **kwargs):
+        super(OrganizationDetail, self).save(**kwargs)
+        
+        qs = OrganizationDetail.actives.filter(organization=self.organization)
+        qs = qs.exclude(id=self.id)
+        qs.update(is_active=False)
 
 class Client(models.Model):
     """ Клиент - физическое лицо, либо представитель фирмы, 
@@ -124,25 +132,25 @@ class Client(models.Model):
     organization = models.ForeignKey(
             Organization,
             null=True, blank=True,
-            verbose_name = "организация")
+            verbose_name = u"организация")
     last_name = models.CharField(
             max_length=50,
-            verbose_name = "фамилия")
+            verbose_name = u"фамилия")
     first_name = models.CharField(
             max_length=50,
             blank=True,
-            verbose_name = "имя")
+            verbose_name = u"имя")
     middle_name = models.CharField(
             max_length=50,
             blank=True,
-            verbose_name = "отчество")
+            verbose_name = u"отчество")
     phones = models.CharField(
             max_length=50,
             blank=True,
-            verbose_name = "телефоны")
+            verbose_name = u"телефоны")
     
     objects = models.Manager()
-    privates = PrivateClientManager()
+    privates = managers.PrivateClientManager()
     
     def __unicode__(self):
         fio = u' '.join(
@@ -152,8 +160,8 @@ class Client(models.Model):
         
     class Meta:
         ordering = ['last_name', 'first_name', 'middle_name']
-        verbose_name = "клиента"
-        verbose_name_plural = "клиенты"
+        verbose_name = u"клиента"
+        verbose_name_plural = u"клиенты"
 
 class ClientDetail(models.Model):
     """ Расширенная информация о клиенте """
@@ -165,156 +173,169 @@ class ClientDetail(models.Model):
         ('паспорт','паспорт'),
         ('водительское','водительское удостоверение')
     )
-    client = models.OneToOneField(
+    is_active = models.BooleanField(
+            default=True,
+            verbose_name = u"активная")
+    client = models.ForeignKey(
             Client,
-            verbose_name = "клиент")
+            verbose_name = u"клиент")
     sex = models.CharField(
             max_length=3,
             choices=SEX_CHOICES,
             blank=True,
-            verbose_name = "пол")
+            verbose_name = u"пол")
     sitizenship = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = 'гражданство')
+            verbose_name = u"гражданство")
     # Поля места рождения
     birth_day = models.DateField(
             null=True, blank=True,
-            verbose_name = 'дата')
+            verbose_name = u"дата")
     birth_country = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = 'страна')
+            verbose_name = u"страна")
     birth_region = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'регион')
+            verbose_name = u"регион")
     birth_area = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'район')
+            verbose_name = u"район")
     birth_sity = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'город')
+            verbose_name = u"город")
     birth_settlement = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'населённый пункт')
+            verbose_name = u"населённый пункт")
     # Поля документа клиента
     document_type = models.CharField(
             max_length=16,
             choices=DOCUMENT_CHOICES,
             blank=True,
-            verbose_name = "тип")
+            verbose_name = u"тип")
     document_series = models.CharField(
             max_length=10,
             blank=True,
-            verbose_name = "серия")
+            verbose_name = u"серия")
     document_number = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "номер")
+            verbose_name = u"номер")
     document_date = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "дата выдачи")
+            verbose_name = u"дата выдачи")
     document_organ = models.CharField(
             max_length=255,
             blank=True,
-            verbose_name = "орган выдачи")
+            verbose_name = u"орган выдачи")
     document_code = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = "код органа")
+            verbose_name = u"код органа")
     # Поля места жительства
     residence_country = models.CharField(
             max_length=16,
             blank=True,
-            verbose_name = 'страна')
+            verbose_name = u"страна")
     residence_region = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'регион')
+            verbose_name = u"регион")
     residence_area = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'район')
+            verbose_name = u"район")
     residence_sity = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'город')
+            verbose_name = u"город")
     residence_settlement = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'населённый пункт')
+            verbose_name = u"населённый пункт")
     residence_street = models.CharField(
             max_length=32,
             blank=True,
-            verbose_name = 'улица')
+            verbose_name = u"улица")
     residence_house = models.CharField(
             max_length=8,
             blank=True,
-            verbose_name = 'дом')
+            verbose_name = u"дом")
     residence_case = models.CharField(
             max_length=8,
             blank=True,
-            verbose_name = 'корпус')
+            verbose_name = u"корпус")
     residence_apartment = models.CharField(
             max_length=8,
             blank=True,
-            verbose_name = 'квартира')
+            verbose_name = u"квартира")
+    
+    objects = models.Manager()
+    actives = managers.ActiveClientDetailManager()
     
     def __unicode__(self):
         return unicode(self.client)
         
     class Meta:
         ordering = ['client',]
-        verbose_name = "карточку клиента"
-        verbose_name_plural = "карточки клиентов"
+        verbose_name = u"карточку клиента"
+        verbose_name_plural = u"карточки клиентов"
+    
+    def save(self, **kwargs):
+        super(ClientDetail, self).save(**kwargs)
+        
+        qs = ClientDetail.actives.filter(client=self.client)
+        qs = qs.exclude(id=self.id)
+        qs.update(is_active=False)
 
 class Category(models.Model):
     """ Категория услуги """
     title = models.CharField(
             max_length=255,
-            verbose_name = "название")
+            verbose_name = u"название")
     
     def __unicode__(self):
         return self.title
     
     class Meta:
         ordering = ['title']
-        verbose_name = "категорию"
-        verbose_name_plural = "категории"
+        verbose_name = u"категорию"
+        verbose_name_plural = u"категории"
 
 class Service(models.Model):
     """ Услуга """
     category = models.ForeignKey(
             Category,
-            verbose_name = "категория")
+            verbose_name = u"категория")
     title = models.CharField(
             max_length=255,
-            verbose_name = "название")
+            verbose_name = u"название")
     is_rooms = models.BooleanField(
             default=False,
-            verbose_name = "подразделяется на номера")
+            verbose_name = u"подразделяется на номера")
     is_reserved = models.BooleanField(
             default=False,
-            verbose_name = "разрешить бронирование")
+            verbose_name = u"разрешить бронирование")
     
     def __unicode__(self):
         return '%s: %s' % (unicode(self.category), self.title)
         
     class Meta:
         ordering = ['title']
-        verbose_name = "услугу"
-        verbose_name_plural = "услуги"
+        verbose_name = u"услугу"
+        verbose_name_plural = u"услуги"
     
     @property
-    def price(self):
+    def prices(self):
         prices = Price.actives.filter(service=self)
         return '; '.join([ 
-            p.get_divider_display() +'='+ str(round(p.price, 2))
+            (p.get_divider_display() or u'Единица') +'='+ str(round(p.price, 2))
             for p in prices
             ])
 
@@ -323,18 +344,18 @@ class Room(models.Model):
     service = models.ForeignKey(
             Service,
             limit_choices_to={'is_rooms': True},
-            verbose_name = "тип номера")
+            verbose_name = u"тип номера")
     num = models.IntegerField(
             unique=True,
-            verbose_name = "номер")
+            verbose_name = u"номер")
     
     def __unicode__(self):
         return str(self.num)
         
     class Meta:
         ordering = ['service', 'num']
-        verbose_name = "номер"
-        verbose_name_plural = "номера"
+        verbose_name = u"номер"
+        verbose_name_plural = u"номера"
     
     @property
     def price(self):
@@ -348,29 +369,29 @@ class Price(models.Model):
     
     service = models.ForeignKey(
             Service,
-            verbose_name = "услуга")
+            verbose_name = u"услуга")
     price = models.DecimalField(
             max_digits=10, decimal_places=2,
             default=0.0,
-            verbose_name = "цена")
+            verbose_name = u"цена")
     start_date = models.DateField(
             default=datetime.date.today() + datetime.timedelta(1),
-            verbose_name = "начало действия")
+            verbose_name = u"начало действия")
     divider = models.IntegerField(
-            choices=settings.PRICE_DIVIDER_CHOICES,
-            default=settings.DAY_PRICE,
-            verbose_name = "делитель")
+            choices=settings.DIVIDER_PRICE_CHOICES,
+            null=True, blank=True,
+            verbose_name = u"делитель")
     
     objects = models.Manager()
-    actives = ActivePriceManager()
+    actives = managers.ActivePriceManager()
     
     def __unicode__(self):
         return unicode(self.service)
     
     class Meta:
         ordering = ['service__category__title','service','start_date',]
-        verbose_name = "цену"
-        verbose_name_plural = "цены"
+        verbose_name = u"цену"
+        verbose_name_plural = u"цены"
         get_latest_by = 'start_date'
     
     def save(self, **kwargs):
@@ -392,13 +413,13 @@ class Reservation(models.Model):
     """ Вид бронирования и его процентная надбавка"""
     title = models.CharField(
             max_length=255,
-            verbose_name = "название")
+            verbose_name = u"название")
     expired_days = models.IntegerField(
             default=0,
-            verbose_name = "истечение в днях")
+            verbose_name = u"истечение в днях")
     percent = models.DecimalField(
             max_digits=3, decimal_places=2,
-            verbose_name = "процент надбавки",
+            verbose_name = u"процент надбавки",
             help_text='"10%" это "0.10"')
     
     def __unicode__(self):
@@ -406,9 +427,23 @@ class Reservation(models.Model):
         
     class Meta:
         ordering = ['title']
-        verbose_name = "вид бронирования"
-        verbose_name_plural = "виды бронирования"
+        verbose_name = u"вид бронирования"
+        verbose_name_plural = u"виды бронирования"
+
+class Attribute(models.Model):
+    value = models.IntegerField(
+            choices=settings.ATTRIBUTE_CHOICES,
+            unique=True,
+            verbose_name = u"значение")
     
+    def __unicode__(self):
+        return self.value
+        
+    class Meta:
+        ordering = ['value']
+        verbose_name = u"атрибут"
+        verbose_name_plural = u"атрибуты"
+
 class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -417,48 +452,41 @@ class Order(models.Model):
             User,
             verbose_name="пользователь")
     state = models.IntegerField(
-            choices=settings.ORDER_STATE_CHOICES,
+            choices=settings.STATE_ORDER_CHOICES,
             default=1,
             verbose_name="состояние")
     client = models.ForeignKey(
             Client,
             verbose_name="клиент")
-    start_date = models.DateField(
+    other_clients = models.ManyToManyField(
+            Client,
             null=True, blank=True,
-            verbose_name = "дата начала")
-    start_time = models.TimeField(
+            related_name = 'order_other_set',
+            verbose_name = u"другие клиенты")
+    attributes = models.ManyToManyField(
+            Attribute,
             null=True, blank=True,
-            verbose_name = "время начала")
-    end_date = models.DateField(
-            null=True, blank=True,
-            verbose_name = "дата окончания")
-    end_time = models.TimeField(
-            null=True, blank=True,
-            verbose_name = "время окончания")
-    comment = models.CharField(
-            max_length=255,
+            verbose_name = u"атрибуты")
+    comment = models.TextField(
             blank=True,
             verbose_name="комментарий")
-    card = models.BooleanField(
-            default=False,
-            verbose_name = "оплата по карте")
     
     
     objects  = models.Manager()
-    creates  = CreateOrderManager()
-    accepts  = AcceptOrderManager()
-    avances  = AvanseOrderManager()
-    payments = PaymentOrderManager()
-    cancels  = CancelOrderManager()
-    workeds  = WorkOrderManager()
+    creates  = managers.CreateOrderManager()
+    reservs  = managers.ReservOrderManager()
+    accepts  = managers.AcceptOrderManager()
+    closes   = managers.CloseOrderManager()
+    cancels  = managers.CancelOrderManager()
+    workeds  = managers.WorkOrderManager()
     
     def __unicode__(self):
         return unicode(self.client)
     
     class Meta:
         ordering = ['-updated', 'client']
-        verbose_name = "заказ"
-        verbose_name_plural = "заказы"
+        verbose_name = u"заказ"
+        verbose_name_plural = u"заказы"
         get_latest_by = 'updated'
     
     @property
@@ -474,74 +502,171 @@ class Specification(models.Model):
             verbose_name="заказ")
     price = models.ForeignKey(
             Price,
-            verbose_name="цена")
-    quantity = models.IntegerField(
-            default=0,
+            verbose_name="услуга")
+    count = models.IntegerField(
+            null=True, blank=True,
             verbose_name="количество")
-    start_date = models.DateField(
+    start = models.DateTimeField(
             null=True, blank=True,
-            verbose_name = "дата начала")
-    start_time = models.TimeField(
+            verbose_name = u"дата и время начала")
+    end = models.DateTimeField(
             null=True, blank=True,
-            verbose_name = "время начала")
-    end_date = models.DateField(
-            null=True, blank=True,
-            verbose_name = "дата окончания")
-    end_time = models.TimeField(
-            null=True, blank=True,
-            verbose_name = "время окончания")
+            verbose_name = u"дата и время окончания")
     reservation = models.ForeignKey(
             Reservation,
             null=True, blank=True,
             verbose_name="вид бронирования")
-            
+    
     def __unicode__(self):
         return unicode(self.price)
     
     class Meta:
         ordering = ['order', '-updated',]
-        verbose_name = "спецификацию"
-        verbose_name_plural = "спецификации"
+        verbose_name = u"спецификацию"
+        verbose_name_plural = u"спецификации"
     
     @property
     def summa(self):
         if self.reservation and self.price.service.is_reserved:
-            markup = self.price.price*self.order.reservation.percent
+            markup = self.price.price*self.reservation.percent
         else:
             markup = 0
-        return round(self.price.price*self.quantity+markup, 2)
+        return round((self.price.price*self.count)+markup, 2)
+    
+    def save(self, **kwargs):
+        """ Если есть делитель:
+            Получаем старый объект, сравниваем изменившееся
+            приоритетное поле count.
+            
+            Если количество отсутствует либо не изменилось,
+            то по интервалу времени и делителю устанавливаем количество.
+            Если же интервал тоже отсутствует, то количество 
+            выставляем равным единице, и снова пытаемся установить
+            интервал согласно делителя, количества и текущего времени.
+            
+            Наоборот, если есть количество,
+            то рассчитываем интервал согласно делителя.
+        """
+        def get_divider_sec():
+            d = self.price.divider
+            if d == settings.DIVIDER_DAY:
+                return 24*60*60 # часы*минуты*секунды
+            elif d == settings.DIVIDER_HOUR:
+                return 60*60 # минуты*секунды
+            elif d == settings.DIVIDER_MONTH:
+                days = calendar.monthrange(self.start.year, self.start.month)
+                return days*24*60*60 # дни*часы*минуты*секунды
+            else:
+                return 0
+        
+        def set_interval():
+            print 'def set_interval()' # DEBUG
+            ds = get_divider_sec()
+            if not self.count or not ds:
+                return False
+            self.start = self.start or datetime.datetime.now()
+            delta = datetime.timedelta(seconds=ds*self.count)
+            print ds, self.count, delta # DEBUG
+            self.end = self.start + delta
+            return True
+        
+        def set_count():
+            print 'def set_count()' # DEBUG
+            ds = get_divider_sec()
+            if not self.end or not ds:
+                return False
+            self.start = self.start or self.start.now()
+            delta = self.end - self.start
+            count = int(round(delta.total_seconds() / ds))
+            if not count:
+                return False
+            self.count = count
+            return True
+        
+        if self.price.divider:
+            if self.id:
+                old = Specification.objects.get(id=self.id)
+                change_count = bool(self.count != old.count)
+            else:
+                change_count = bool(self.count)
+            if not change_count:
+                if not set_count():
+                    self.count = 1
+                    if not set_interval():
+                        print u'ошибка изменения спецификации'
+                        return False
+            else:
+                if not set_interval():
+                    if not set_count():
+                        print u'ошибка изменения спецификации'
+                        return False
+            
+        super(Specification, self).save(**kwargs)
     
 class Invoice(models.Model):
-    """ Счёт """
-    created = models.DateTimeField(
-        auto_now_add=True,
-        editable=True,
-        verbose_name=_('created'))
-    client = models.ForeignKey(
-            Client,
-            verbose_name=_('client'))
+    """ Счёт нужен для частичной оплаты заказа"""
+    created = models.DateField(
+            auto_now_add=True,
+            editable=True,
+            verbose_name = u"дата")
+    user = models.ForeignKey(
+            User,
+            verbose_name="пользователь")
+    is_avance = models.BooleanField(
+            default=False,
+            verbose_name = u"аванс")
+    state = models.IntegerField(
+            choices=settings.STATE_INVOICE_CHOICES,
+            default=1,
+            verbose_name = u"состояние")
+    payment = models.IntegerField(
+            choices=settings.PAYMENT_INVOICE_CHOICES,
+            default=1,
+            verbose_name = u"вид расчёта")
     order = models.ForeignKey(
             Order,
-            null=True, blank=True,
-            verbose_name=_('order'))
+            verbose_name = u"заказ")
     summa = models.DecimalField(
             max_digits=10, decimal_places=2,
             default=0.0,
-            verbose_name = _('summa'))
-    comment = models.CharField(
-            max_length=255,
+            verbose_name = u"сумма")
+    comment = models.TextField(
             blank=True,
-            verbose_name=_('comment'))
+            verbose_name = u"комментарий")
     
     def __unicode__(self):
         return unicode(self.client)
     
     class Meta:
-        ordering = ['client', 'order']
-        verbose_name = _('invoice')
-        verbose_name_plural = _('invoices')
+        ordering = ['user', '-created',]
+        verbose_name = u"счёт"
+        verbose_name_plural = u"счета"
     
     def save(self, **kwargs):
-        if not self.summa and self.order:
+        if not self.summa:
             self.summa = self.order.summa
         super(Invoice, self).save(**kwargs)
+
+class Act(models.Model):
+    """ Акт выполненных работ """
+    created = models.DateField(
+            auto_now_add=True,
+            editable=True,
+            verbose_name = u"дата")
+    user = models.ForeignKey(
+            User,
+            verbose_name="пользователь")
+    order = models.ForeignKey(
+            Order,
+            verbose_name = u"заказ")
+    comment = models.TextField(
+            blank=True,
+            verbose_name = u"комментарий")
+    
+    def __unicode__(self):
+        return unicode(self.order)
+    
+    class Meta:
+        ordering = ['user', '-created']
+        verbose_name = u"акт"
+        verbose_name_plural = u"акты"
