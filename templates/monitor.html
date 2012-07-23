@@ -41,13 +41,199 @@
 {% load i18n %}
 
 {% block page_name %}Монитор{% endblock %}
+{% block search %}{% endblock %}
+
+{% block subnav_content %}
+<li class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Гостиница <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li class="">
+            <a href="#rooms_free">Свободные комнаты </a>
+        </li>
+        <li class="">
+            <a href="#rooms_nonfree">Занятые комнаты </a>
+        </li>
+    </ul>
+</li>
+<li class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Бронирование <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li class="">
+            <a href="#reserv_today">На сегодня </a>
+        </li>
+        <li class="">
+            <a href="#reserv_tomorrow">На завтра </a>
+        </li>
+        <li class="divider"></li>
+        <li class="">
+            <a href="#reserv_month">{{ current_month }} </a>
+        </li>
+        <li class="">
+            <a href="#reserv_month_next">{{ next_month }} </a>
+        </li>
+    </ul>
+</li>
+<li class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Сауна <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li class="">
+            <a href="#sauna_today">Сегодня </a>
+        </li>
+        <li class="">
+            <a href="#sauna_tomorrow">Завтра </a>
+        </li>
+        <li class="divider"></li>
+        <li class="">
+            <a href="#sauna_month">{{ current_month }} </a>
+        </li>
+        <li class="">
+            <a href="#sauna_month_next">{{ next_month }} </a>
+        </li>
+    </ul>
+</li>
+{% endblock %}
 
 {% block content %}
-    <div align=center>
-        <p>
-            {% trans "Internal error of the server." %}
-        </p>
+<section id="rooms_free">
+    <div class="page-header">
+        <h3>Свободные комнаты <small></small></h3>
     </div>
+{% for service in hotel_services %}
+    <div class="row">
+        <div align="right" class="span2">
+            <h6>{{ service.title }}:</h6>
+        </div>
+        <div class="span10">
+        {% for room in rooms_free %}
+            {% if room.service == service %}
+                <a href="#"><span class="label label-success">{{ room.num }}</span></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <hr class="soften" />
+{% endfor %}
+</section>
+<section id="rooms_nonfree">
+    <div class="page-header">
+        <h3>Занятые комнаты <small></small></h3>
+    </div>
+{% for service in hotel_services %}
+    <div class="row">
+        <div align="right" class="span2">
+            <h6>{{ service.title }}:</h6>
+        </div>
+        <div class="span10">
+        {% for sp in sps_rooms_nonfree %}
+            {% if sp.room.service == service %}
+                <a href="#"><span class="label label-success">{{ sp.room.num }}</span></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <hr class="soften" />
+{% endfor %}
+</section>
+<section id="reserv_today">
+    <div class="page-header">
+        <h3>Бронирование <small>на сегодня</small></h3>
+    </div>
+{% for service in hotel_services %}
+    <div class="row">
+        <div align="right" class="span2">
+            <h6>{{ service.title }}:</h6>
+        </div>
+        <div class="span10">
+        {% for sp in sps_rooms_reserv_today %}
+            {% if sp.room.service == service %}
+                <a href="#"><span class="label label-success">{{ sp.room.num }}</span></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <hr class="soften" />
+{% endfor %}
+</section>
+<section id="reserv_tomorrow">
+    <div class="page-header">
+        <h3>Бронирование <small>на завтра</small></h3>
+    </div>
+{% for service in hotel_services %}
+    <div class="row">
+        <div align="right" class="span2">
+            <h6>{{ service.title }}:</h6>
+        </div>
+        <div class="span10">
+        {% for sp in sps_rooms_reserv_tomorrow %}
+            {% if sp.room.service == service %}
+                <a href="#"><span class="label label-success">{{ sp.room.num }}</span></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <hr class="soften" />
+{% endfor %}
+</section>
+<section id="reserv_month">
+    <div class="page-header">
+        <h3>Бронирование <small>на {{ current_month }}</small></h3>
+    </div>
+{% for service in hotel_services %}
+    <div class="row">
+        <div align="right" class="span2">
+            <h6>{{ service.title }}:</h6>
+        </div>
+        <div class="span10">
+        {% for sp in sps_rooms_reserv_month %}
+            {% if sp.room.service == service %}
+                <a href="#"><span class="label label-success">{{ sp.room.num }}</span></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <hr class="soften" />
+{% endfor %}
+</section>
+<section id="reserv_month_next">
+    <div class="page-header">
+        <h3>Бронирование <small>на {{ next_month }}</small></h3>
+    </div>
+{% for service in hotel_services %}
+    <div class="row">
+        <div align="right" class="span2">
+            <h6>{{ service.title }}:</h6>
+        </div>
+        <div class="span10">
+        {% for sp in sps_rooms_reserv_month_next %}
+            {% if sp.room.service == service %}
+                <a href="#"><span class="label label-success">{{ sp.room.num }}</span></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <hr class="soften" />
+{% endfor %}
+</section>
+<section id="sauna_today">
+    <div class="page-header">
+        <h3>Сауна <small>на сегодня</small></h3>
+    </div>
+</section>
+<section id="sauna_tomorrow">
+    <div class="page-header">
+        <h3>Сауна <small>на завтра</small></h3>
+    </div>
+</section>
+<section id="sauna_month">
+    <div class="page-header">
+        <h3>Сауна <small>на {{ current_month }}</small></h3>
+    </div>
+</section>
+<section id="sauna_month_next">
+    <div class="page-header">
+        <h3>Сауна <small>на {{ next_month }}</small></h3>
+    </div>
+</section>
 {% endblock %}
 
 

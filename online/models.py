@@ -65,7 +65,14 @@ class Organization(models.Model):
         ordering = ['title']
         verbose_name = u"организацию"
         verbose_name_plural = u"организации"
-
+    
+    @property
+    def detail(self):
+        try:
+            return self.organizationdetail_set.get(is_active=True)
+        except:
+            return None
+    
 class OrganizationDetail(models.Model):
     """ Расширенная информация об организации """
     is_active = models.BooleanField(
@@ -198,12 +205,19 @@ class Client(models.Model):
         ordering = ['last_name', 'first_name', 'middle_name']
         verbose_name = u"клиента"
         verbose_name_plural = u"клиенты"
+    
+    @property
+    def detail(self):
+        try:
+            return self.clientdetail_set.get(is_active=True)
+        except:
+            return None
 
 class ClientDetail(models.Model):
     """ Расширенная информация о клиенте """
     SEX_CHOICES = (
-        ('муж','мужской'),
-        ('жен','женский')
+        (u'муж',u'мужской'),
+        (u'жен',u'женский')
     )
     DOCUMENT_CHOICES = (
         ('паспорт','паспорт'),
@@ -329,18 +343,30 @@ class ClientDetail(models.Model):
         qs = ClientDetail.actives.filter(client=self.client)
         qs = qs.exclude(id=self.id)
         qs.update(is_active=False)
-
+    
+    @property
+    def residence_address(self):
+        return ' '.join([
+            self.residence_country,
+            self.residence_region,
+            self.residence_area,
+            self.residence_sity,
+            self.residence_settlement,
+            ])
+    
 class Category(models.Model):
     """ Категория услуги """
     title = models.CharField(
-            max_length=255,
+            choices = settings.CATEGORY_CHOICES,
+            max_length=16,
+            unique=True,
             verbose_name = u"название")
     
     def __unicode__(self):
-        return self.title
+        return self.get_title_display()
     
     class Meta:
-        ordering = ['title']
+        ordering = ['id']
         verbose_name = u"категорию"
         verbose_name_plural = u"категории"
 
@@ -539,6 +565,10 @@ class Specification(models.Model):
     price = models.ForeignKey(
             Price,
             verbose_name="услуга")
+    room = models.ForeignKey(
+            Room,
+            null=True, blank=True,
+            verbose_name="комната")
     count = models.IntegerField(
             null=True, blank=True,
             verbose_name="количество")

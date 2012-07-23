@@ -38,16 +38,116 @@
 
 -->{% endcomment %}
 
-{% load i18n %}
+{% load i18n base_extras %}
 
 {% block page_name %}Клиенты{% endblock %}
 
+{% block subnav_content %}
+<li>
+    <a href="#clients">Физические лица</a>
+</li>
+<li>
+    <a href="#organizations">Организации</a>
+</li>
+{% endblock %}
+
 {% block content %}
-    <div align=center>
-        <p>
-            {% trans "Internal error of the server." %}
-        </p>
-    </div>
+{% if clients.object_list %}
+    <section id="clients">
+        <div class="page-header">
+            <h3>Физические лица <small><a href="{% url client_detail 0 %}" >(добавить)</a></small></h3>
+        </div>
+        <div class="row-fluid">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Организация</th>
+                        <th class="input-large">Телефоны</th>
+                        <th class="input-large">Управление</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for client in clients.object_list %}
+                    <tr>
+                        <td>{{ client }}</td>
+                        <td>{{ client.organization|default:"" }}</td>
+                        <td class="input-large">{{ client.phones }}</td>
+                        <td class="input-large">
+                            <div class="btn-group">
+                                <a href="{% url client_detail client.id %}" rel="tooltip" title="Редактировать карточку клиента" class="btn btn-info">Карточка</a>
+                                <a href="{% url new_order 'client' client.id %}" rel="tooltip" title="Создать новый заказ для клиента" class="btn btn-success">Заказ</a>
+                                <a href="{% url client_orders 'client' client.id %}" rel="tooltip" title="Просмотр списка заказов клиента" class="btn btn-inverse">Список</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <hr />
+        </div>
+    </section>
+    <ul class="pager">
+    {% if clients.has_previous %}
+        <li class="previous">
+            <a href="{% addGET request 'page_cli' clients.previous_page_number %}">&larr; Предыдущие</a>
+        </li>
+    {% endif %}
+    {% if clients.has_next %}
+        <li class="next">
+            <a href="{% addGET request 'page_cli' clients.next_page_number %}">Следующие &rarr;</a>
+        </li>
+    {% endif %}
+    </ul>
+{% endif %}
+
+{% if organizations.object_list %}
+    <section id="organizations">
+        <div class="page-header">
+            <h3>Организации <small><a href="{% url org_detail 0 %}" >(добавить)</a></small></h3>
+        </div>
+        <div class="row-fluid">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Краткое название</th>
+                        <th>Полное название</th>
+                        <th class="input-small">ИНН</th>
+                        <th class="input-large">Управление</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for org in organizations.object_list %}
+                    <tr>
+                        <td>{{ org }}</td>
+                        <td>{{ org.detail.fulltitle }}</td>
+                        <td class="input-small">{{ org.detail.inn }}</td>
+                        <td class="input-large">
+                            <div class="btn-group">
+                                <a href="{% url org_detail org.id %}" rel="tooltip" title="Редактировать карточку клиента" class="btn btn-info">Карточка</a>
+                                <a href="{% url new_order 'org' org.id %}" rel="tooltip" title="Создать новый заказ для клиента" class="btn btn-success">Заказ</a>
+                                <a href="{% url client_orders 'org' org.id %}" rel="tooltip" title="Просмотр списка заказов клиента" class="btn btn-inverse">Список</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <hr />
+        </div>    </section>
+    <ul class="pager">
+    {% if organizations.has_previous %}
+        <li class="previous">
+            <a href="{% addGET request 'page_org' organizations.previous_page_number %}">&larr; Предыдущие</a>
+        </li>
+    {% endif %}
+    {% if organizations.has_next %}
+        <li class="next">
+            <a href="{% addGET request 'page_org' organizations.next_page_number %}">Следующие &rarr;</a>
+        </li>
+    {% endif %}
+    </ul>
+{% endif %}
 {% endblock %}
 
 

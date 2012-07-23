@@ -65,12 +65,51 @@ def monitor(request):
     user = request.user
     session['user_id'] = user.id
     
+    now = datetime.datetime.now()
+    ctx['current_month'] = _date(now, 'F')
+    ctx['next_month'] = _date(datetime.datetime(now.year, now.month +1, 1), 'F')
+    
+    categories = Category.objects.all()
+    hotel = categories.get(title="Hotel")
+    ctx['hotel_services'] = hotel.service_set.all()
+    sauna = categories.get(title="Sauna")
+    
+    rooms = Room.objects.all()
+    
+    sps = Specification.objects.all()
+    
+    # Занятые комнаты: освободились на текущий момент,
+    # занимаются позднее чем завтра.
+    sps_rooms = sps.filter(room__isnull=False,
+            end__gt=now,
+            start__lt=now.date() + datetime.timedelta(1)
+            )
+    room_ids = [ x.room.id for x in sps_rooms ]
+    ctx['sps_rooms_nonfree'] = rooms.filter(id__in=sps_rooms)
+    ctx['rooms_free'] = rooms.exclude(id__in=room_ids)
+    
+    # Бронирование комнат
+    sps_room_reserv = sps.filter(room__isnull=False,
+            reservation__isnull=False,
+            end__gt=now,
+            start__gte=now.date()
+            )
+    # На сегодня
+    ctx['sps_rooms_reserv_today'] = sps_room_reserv.filter(
+            start__lt=now.date() + datetime.timedelta(1)
+            )
+    # На завтра
+    ctx['sps_rooms_reserv_tomorrow'] = sps_room_reserv.filter(
+            start__range=(now.date(), now.date() + datetime.timedelta(2))
+            )
+    
+    
     
     return render_to_response('monitor.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def orders(request):
+def orders(request, key=None, id=None):
     print "EXEC views.orders()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
@@ -116,6 +155,18 @@ def orders(request):
                             context_instance=RequestContext(request,))
 
 @login_required
+def new_order(request, key, id):
+    print "EXEC views.orders()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('new_order.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
 def pricelist(request):
     print "EXEC views.pricelist()" # DEBUG
     #~ print request # DEBUG
@@ -123,6 +174,7 @@ def pricelist(request):
     session = request.session
     user = request.user
     session['user_id'] = user.id
+    ctx['categories'] = Category.objects.all()
     
     return render_to_response('pricelist.html', ctx,
                             context_instance=RequestContext(request,))
@@ -160,7 +212,83 @@ def clients(request):
     user = request.user
     session['user_id'] = user.id
     
+    # Организации
+    organizations = Organization.buyers.all()
+    # Люди
+    clients = Client.objects.all()
+    
+    page_cli = 1
+    page_org = 1
+    show_orgs = 1
+    show_clients = 1
+    query = ''
+    
+    if request.GET:
+        try:
+            page_cli = int(request.GET.get('page_cli'))
+        except:
+            page_cli = 1
+        try:
+            page_org = int(request.GET.get('page_org'))
+        except:
+            page_org = 1
+        show_orgs = request.GET.get('show_orgs', 1)
+        show_clients = request.GET.get('show_clients', 1)
+        #~ if show_orgs and show_clients and page > 1:
+            #~ return HttpResponseBadRequest()
+        query = request.GET.get('query', '')
+    
+        if query:
+            #~ if show_orgs and not show_clients:
+                #~ fields = ('title',)
+                #~ organizations = search(organizations, fields, query)
+            #~ elif show_clients:
+                #~ fields = ('last_name', 'first_name', 'middle_name')
+                #~ clients = search(clients, fields, query)
+            #~ else:
+                fields = ('title',)
+                organizations = search(organizations, fields, query)
+                fields = ('last_name', 'first_name', 'middle_name')
+                clients = search(clients, fields, query)
+    
+    
+    if show_clients:
+        ctx['clients'] = get_paginator(clients, page_cli)
+    else:
+        ctx['clients'] = ctx['pagination_list_clients'] = []
+    
+    if show_orgs:
+        ctx['organizations'] = get_paginator(organizations, page_org, 10)
+    else:
+        ctx['organizations'] = ctx['pagination_list_orgs'] = []
+    
+    ctx['query'] = query
     return render_to_response('clients.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def client_detail(request, id):
+    print "EXEC views.clients()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('client_detail.html', ctx,
+                            context_instance=RequestContext(request,))
+
+
+@login_required
+def org_detail(request, id):
+    print "EXEC views.clients()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('org_detail.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
@@ -221,3 +349,12 @@ def search(queryset, search_fields, query):
         queryset = queryset.filter(reduce(operator.or_, or_queries))
     
     return queryset
+
+def get_paginator(qs, page=1, on_page=25):
+    paginator = Paginator(qs, on_page)
+    try:
+        page_qs = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        page_qs = paginator.page(paginator.num_pages)
+    
+    return page_qs

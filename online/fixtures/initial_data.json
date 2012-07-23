@@ -17,6 +17,7 @@
             "phones": "",
             "document_number": "",
             "document_organ": "",
+            "is_active": true,
             "bank_bik": "040813737",
             "ogrn": "",
             "bank_set_account": "40802810308020061574",
@@ -31,31 +32,51 @@
         }
     },
     {
-        "pk": 4,
-        "model": "online.category",
-        "fields": {
-            "title": "\u0410\u0432\u0442\u043e\u0441\u0442\u043e\u044f\u043d\u043a\u0430"
-        }
-    },
-    {
         "pk": 1,
         "model": "online.category",
         "fields": {
-            "title": "\u0413\u043e\u0441\u0442\u0438\u043d\u0438\u0446\u0430"
+            "title": "Hotel"
         }
     },
     {
         "pk": 3,
         "model": "online.category",
         "fields": {
-            "title": "\u041a\u0443\u0445\u043d\u044f"
+            "title": "Kitchen"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "online.category",
+        "fields": {
+            "title": "Parking"
         }
     },
     {
         "pk": 2,
         "model": "online.category",
         "fields": {
-            "title": "\u0421\u0430\u0443\u043d\u0430"
+            "title": "Sauna"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "online.service",
+        "fields": {
+            "category": 1,
+            "is_rooms": true,
+            "is_reserved": true,
+            "title": "\u041b\u044e\u043a\u0441"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "online.service",
+        "fields": {
+            "category": 1,
+            "is_rooms": true,
+            "is_reserved": true,
+            "title": "\u041f\u043e\u043b\u0443\u043b\u044e\u043a\u0441"
         }
     },
     {

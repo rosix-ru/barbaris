@@ -194,11 +194,11 @@ STATE_ORDER_ACCEPT   = 3
 STATE_ORDER_CLOSE    = 4
 STATE_ORDER_CANCEL   = 5
 STATE_ORDER_CHOICES = (
-        (STATE_ORDER_CREATE, 'Создан'),
-        (STATE_ORDER_RESERV, 'Бронь'),
-        (STATE_ORDER_ACCEPT, 'Принят'),
-        (STATE_ORDER_CLOSE,  'Закрыт'),
-        (STATE_ORDER_CANCEL, 'Отменён'),
+        (STATE_ORDER_CREATE, u'Создан'),
+        (STATE_ORDER_RESERV, u'Бронь'),
+        (STATE_ORDER_ACCEPT, u'Принят'),
+        (STATE_ORDER_CLOSE,  u'Закрыт'),
+        (STATE_ORDER_CANCEL, u'Отменён'),
     )
 SELECT_WORK_ORDERS = [1,2,3]
 
@@ -206,9 +206,9 @@ STATE_INVOICE_CREATE   = 1
 STATE_INVOICE_PAYMENT  = 2
 STATE_INVOICE_CANCEL   = 3
 STATE_INVOICE_CHOICES = (
-        (STATE_INVOICE_CREATE, 'Создан'),
-        (STATE_INVOICE_PAYMENT, 'Оплачен'),
-        (STATE_INVOICE_CANCEL, 'Отменён'),
+        (STATE_INVOICE_CREATE, u'Создан'),
+        (STATE_INVOICE_PAYMENT, u'Оплачен'),
+        (STATE_INVOICE_CANCEL, u'Отменён'),
     )
 SELECT_INVOICES = [1,2,3]
 
@@ -216,25 +216,32 @@ PAYMENT_INVOICE_CASH      = 1
 PAYMENT_INVOICE_CASHLESS  = 2
 PAYMENT_INVOICE_CARD      = 3
 PAYMENT_INVOICE_CHOICES = (
-        (PAYMENT_INVOICE_CASH,     'Наличный'),
-        (PAYMENT_INVOICE_CASHLESS, 'Безналичный'),
-        (PAYMENT_INVOICE_CARD,     'Карта банка'),
+        (PAYMENT_INVOICE_CASH,     u'Наличный'),
+        (PAYMENT_INVOICE_CASHLESS, u'Безналичный'),
+        (PAYMENT_INVOICE_CARD,     u'Карта банка'),
     )
 
 ATTRIBUTE_WEDDING    = 1
 ATTRIBUTE_SPORTSMANS = 2
 ATTRIBUTE_CHOICES = (
-        (ATTRIBUTE_WEDDING, 'Свадьба'),
-        (ATTRIBUTE_SPORTSMANS, 'Спортсмены'),
+        (ATTRIBUTE_WEDDING, u'Свадьба'),
+        (ATTRIBUTE_SPORTSMANS, u'Спортсмены'),
     )
 
 DIVIDER_DAY   = 1
 DIVIDER_HOUR  = 2
 DIVIDER_MONTH = 3
 DIVIDER_PRICE_CHOICES = (
-        (DIVIDER_DAY, 'Сутки'),
-        (DIVIDER_HOUR, 'Час'),
-        (DIVIDER_MONTH, 'Месяц'),
+        (DIVIDER_DAY, u'Сутки'),
+        (DIVIDER_HOUR, u'Час'),
+        (DIVIDER_MONTH, u'Месяц'),
+    )
+
+CATEGORY_CHOICES = (
+        (u'Hotel',u'Гостиница'),
+        (u'Sauna',u'Сауна'),
+        (u'Kitchen',u'Кухня'),
+        (u'Parking',u'Автостоянка'),
     )
 
 # A sample logging configuration. The only tangible logging

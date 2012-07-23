@@ -125,9 +125,9 @@ class ReservationAdmin(admin.ModelAdmin):
     list_display = ('title','id',)
 admin.site.register(Reservation, ReservationAdmin)
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('title','id',)
-admin.site.register(Category,CategoryAdmin)
+#~ class CategoryAdmin(admin.ModelAdmin):
+    #~ list_display = ('title','id',)
+#~ admin.site.register(Category,CategoryAdmin)
 
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'prices', 'id',)

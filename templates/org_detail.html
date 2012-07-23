@@ -38,38 +38,13 @@
 
 -->{% endcomment %}
 
-{% load i18n %}
+{% load i18n base_extras %}
 
-{% block page_name %}Прайс-лист{% endblock %}
-{% block search %}{% endblock %}
-
-{% block subnav_content %}
-{% for category in categories %}
-    <li>
-        <a href="#category_{{ category.id }}">{{ category }}</a>
-    </li>
-{% endfor %}
-{% endblock %}
+{% block page_name %}Карточка организации{% endblock %}
 
 {% block content %}
-{% for category in categories %}
-    <section id="category_{{ category.id }}">
-        <div class="page-header">
-            <h3>{{ category }}<small></small></h3>
-        </div>
-    {% for service in category.service_set.all %}
-        <div class="row">
-            <div align="right" class="span2">
-                <h6>{{ service.title }}:</h6>
-            </div>
-            <div class="span10">
-                <a href="#"><span class="label label-success">{{ service.prices }}</span></a>
-            </div>
-        </div>
-        <hr class="soften" />
-    {% endfor %}
-    </section>
-{% endfor %}
+{{ client }}
+
 {% endblock %}
 
 

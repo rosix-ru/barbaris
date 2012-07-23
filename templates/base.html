@@ -57,7 +57,7 @@
         <div class="container">
             <!-- START: header -->
             {% block header %}
-            <header>
+            <header id="header">
                 <div class="row">
                     <div class="span7">
                         <h1>{% block page_name %}BASE TEMPLATE{% endblock %}</h1>
@@ -71,10 +71,9 @@
                 <!-- START: subnav -->
                 {% block subnav %}
                 <div class="subnav">
-                    
-                    <!-- START: search -->
-                    {% block search %}
                     <ul class="nav nav-pills">
+                        <!-- START: search -->
+                        {% block search %}
                         <li class="">
                             <form id="form-search" class="form-search" action="" method="get">
                                 <fieldset>
@@ -89,14 +88,12 @@
                                 </fieldset>
                             </form>
                         </li>
-                        <!-- START: subnav_content -->
-                        {% block subnav_content %}
                         {% endblock %}
+                        <!-- END: search -->
+                        <!-- START: subnav_content -->
+                        {% block subnav_content %}{% endblock %}
                         <!-- END: subnav_content -->
                     </ul>
-                    {% endblock %}
-                    <!-- END: search -->
-                    
                 </div>
                 {% endblock %}
                 <!-- END: subnav -->
@@ -105,6 +102,8 @@
             </header>
             {% endblock %}
             <!-- END: header -->
+            
+            
             
             <!-- START: content -->
             {% block content %}{% endblock %}
@@ -115,7 +114,9 @@
             <!-- START: footer -->
             {% block footer %}
             <footer class="footer">
-                <p class="pull-right"><a href="#navbar">Наверх</a></p>
+<!--
+                <p class="pull-right"><a href="#">Наверх</a></p>
+-->
             </footer>
             {% endblock %}
             <!-- END: footer -->
