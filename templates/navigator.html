@@ -55,28 +55,28 @@
                     <li class="{% navactive request 'monitor' %}">
                         <a href="{% url monitor %}">Монитор</a>
                     </li>
-                    <li class="{% navactive request 'orders' %}">
-                        <a href="{% url orders %}">Заказы</a>
+                    <li class="{% navactive request 'order_list' %}">
+                        <a href="{% url order_list %}">Заказы</a>
                     </li>
-                    <li class="{% navactive request 'pricelist' %}">
-                        <a href="{% url pricelist %}">Прайс-лист</a>
+                    <li class="{% navactive request 'price_list' %}">
+                        <a href="{% url price_list %}">Прайс-лист</a>
                     </li>
                     
-                    <li class="{% navactive request 'clients' %}">
-                        <a href="{% url clients %}">Клиенты</a>
+                    <li class="{% navactive request 'client_list' %}">
+                        <a href="{% url client_list %}">Клиенты</a>
                     </li>
                     <li class="divider-vertical"></li>
-                    <li id="menu-reports" class="dropdown {% navactive request 'analyze acts invoices' %}">
+                    <li id="menu-reports" class="dropdown {% navactive request 'analyze act_list invoice_list' %}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu-reports">
                             Отчётность
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="{% navactive request 'invoices' %}">
-                                <a href="{% url invoices %}">Счета</a>
+                            <li class="{% navactive request 'invoice_list' %}">
+                                <a href="{% url invoice_list %}">Счета</a>
                             </li>
-                            <li class="{% navactive request 'acts' %}">
-                                <a href="{% url acts %}">Акты</a>
+                            <li class="{% navactive request 'act_list' %}">
+                                <a href="{% url act_list %}">Акты</a>
                             </li>
                             <li class="{% navactive request 'analyze' %}">
                                 <a href="{% url analyze %}">Анализ</a>
@@ -84,14 +84,14 @@
                         </ul>
                     </li>
                     <li class="divider-vertical"></li>
-                    <li id="menu-service" class="dropdown {% navactive request 'questions' %}">
+                    <li id="menu-service" class="dropdown {% navactive request 'question_list' %}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu-service">
                             Сервис
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="{% navactive request 'questions' %}">
-                                <a href="{% url questions %}">Вопросы</a>
+                            <li class="{% navactive request 'question_list' %}">
+                                <a href="{% url question_list %}">Вопросы</a>
                             </li>
                         {% if user.is_staff %}
                             <li class="">

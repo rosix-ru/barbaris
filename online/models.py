@@ -43,7 +43,7 @@ from barbaris.online import managers
 
 import datetime, calendar
 
-class Organization(models.Model):
+class Org(models.Model):
     """ Представляет собственную организацию-продавца услуг(seller),
         либо покупателя.
     """
@@ -55,8 +55,8 @@ class Organization(models.Model):
             verbose_name = u"название")
     
     objects = models.Manager()
-    sellers = managers.SellerOrganizationManager()
-    buyers  = managers.BuyerOrganizationManager()
+    sellers = managers.SellerOrgManager()
+    buyers  = managers.BuyerOrgManager()
     
     def __unicode__(self):
         return self.title
@@ -69,17 +69,17 @@ class Organization(models.Model):
     @property
     def detail(self):
         try:
-            return self.organizationdetail_set.get(is_active=True)
+            return self.orgdetail_set.get(is_active=True)
         except:
             return None
     
-class OrganizationDetail(models.Model):
+class OrgDetail(models.Model):
     """ Расширенная информация об организации """
     is_active = models.BooleanField(
             default=True,
             verbose_name = u"активная")
-    organization = models.ForeignKey(
-            Organization,
+    org = models.ForeignKey(
+            Org,
             verbose_name = u"организация")
     fulltitle = models.CharField(
             max_length=255,
@@ -149,31 +149,31 @@ class OrganizationDetail(models.Model):
             verbose_name = u"КОР/СЧ")
     
     objects = models.Manager()
-    actives = managers.ActiveOrganizationDetailManager()
+    actives = managers.ActiveOrgDetailManager()
     
     def __unicode__(self):
-        return unicode(self.organization)
+        return unicode(self.org)
         
     class Meta:
-        ordering = ['organization',]
+        ordering = ['org',]
         verbose_name = u"карточку организации"
         verbose_name_plural = u"карточки организаций"
     
     def save(self, **kwargs):
-        super(OrganizationDetail, self).save(**kwargs)
+        super(OrgDetail, self).save(**kwargs)
         
-        qs = OrganizationDetail.actives.filter(organization=self.organization)
+        qs = OrgDetail.actives.filter(org=self.org)
         qs = qs.exclude(id=self.id)
         qs.update(is_active=False)
 
-class Client(models.Model):
+class Person(models.Model):
     """ Клиент - физическое лицо, либо представитель фирмы, 
         который может быть представлен существительным во 
         множественном числе, например: "нефтяники", в 
         обязательном поле last_name.
     """
-    organization = models.ForeignKey(
-            Organization,
+    org = models.ForeignKey(
+            Org,
             null=True, blank=True,
             verbose_name = u"организация")
     last_name = models.CharField(
@@ -193,7 +193,7 @@ class Client(models.Model):
             verbose_name = u"телефоны")
     
     objects = models.Manager()
-    privates = managers.PrivateClientManager()
+    privates = managers.PrivatePersonManager()
     
     def __unicode__(self):
         fio = u' '.join(
@@ -209,11 +209,11 @@ class Client(models.Model):
     @property
     def detail(self):
         try:
-            return self.clientdetail_set.get(is_active=True)
+            return self.persondetail_set.get(is_active=True)
         except:
             return None
 
-class ClientDetail(models.Model):
+class PersonDetail(models.Model):
     """ Расширенная информация о клиенте """
     SEX_CHOICES = (
         (u'муж',u'мужской'),
@@ -226,8 +226,8 @@ class ClientDetail(models.Model):
     is_active = models.BooleanField(
             default=True,
             verbose_name = u"активная")
-    client = models.ForeignKey(
-            Client,
+    person = models.ForeignKey(
+            Person,
             verbose_name = u"клиент")
     sex = models.CharField(
             max_length=3,
@@ -327,20 +327,20 @@ class ClientDetail(models.Model):
             verbose_name = u"квартира")
     
     objects = models.Manager()
-    actives = managers.ActiveClientDetailManager()
+    actives = managers.ActivePersonDetailManager()
     
     def __unicode__(self):
-        return unicode(self.client)
+        return unicode(self.person)
         
     class Meta:
-        ordering = ['client',]
+        ordering = ['person',]
         verbose_name = u"карточку клиента"
         verbose_name_plural = u"карточки клиентов"
     
     def save(self, **kwargs):
-        super(ClientDetail, self).save(**kwargs)
+        super(PersonDetail, self).save(**kwargs)
         
-        qs = ClientDetail.actives.filter(client=self.client)
+        qs = PersonDetail.actives.filter(person=self.person)
         qs = qs.exclude(id=self.id)
         qs.update(is_active=False)
     
@@ -517,11 +517,11 @@ class Order(models.Model):
             choices=settings.STATE_ORDER_CHOICES,
             default=1,
             verbose_name="состояние")
-    client = models.ForeignKey(
-            Client,
+    person = models.ForeignKey(
+            Person,
             verbose_name="клиент")
-    other_clients = models.ManyToManyField(
-            Client,
+    other_persons = models.ManyToManyField(
+            Person,
             null=True, blank=True,
             related_name = 'order_other_set',
             verbose_name = u"другие клиенты")
@@ -543,10 +543,10 @@ class Order(models.Model):
     workeds  = managers.WorkOrderManager()
     
     def __unicode__(self):
-        return unicode(self.client)
+        return unicode(self.person)
     
     class Meta:
-        ordering = ['-updated', 'client']
+        ordering = ['-updated', 'person']
         verbose_name = u"заказ"
         verbose_name_plural = u"заказы"
         get_latest_by = 'updated'
@@ -701,7 +701,7 @@ class Invoice(models.Model):
             verbose_name = u"комментарий")
     
     def __unicode__(self):
-        return unicode(self.client)
+        return unicode(self.person)
     
     class Meta:
         ordering = ['user', '-created',]

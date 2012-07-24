@@ -38,17 +38,22 @@
 from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('barbaris.online.views',
-    url(r'^$', 'monitor', name='monitor'),
-    url(r'^orders/$', 'orders', name='orders'),
-    url(r'^orders/(\w+)/(\d+)/$', 'orders', name='client_orders'),
-    url(r'^order/new/(\w+)/(\d+)/$', 'new_order', name='new_order'),
-    url(r'^pricelist/$', 'pricelist', name='pricelist'),
-    url(r'^invoices/$', 'invoices', name='invoices'),
-    url(r'^acts/$', 'acts', name='acts'),
-    url(r'^clients/$', 'clients', name='clients'),
-    url(r'^client/(\d+)/$', 'client_detail', name='client_detail'),
-    url(r'^org/(\d+)/$', 'org_detail', name='org_detail'),
-    url(r'^analyze/$', 'analyze', name='analyze'),
-    url(r'^reports/$', 'reports', name='reports'),
-    url(r'^questions/$', 'questions', name='questions'),
+    url(r'^$',                          'monitor',              name='monitor'),
+    
+    url(r'^orders/$',                   'order_list',           name='order_list'),
+    url(r'^orders/(\w+)/(\d+)/$',       'order_list',           name='order_list_client'),
+    url(r'^order/new/(\w+)/(\d+)/$',    'order_new',            name='order_new'),
+    
+    url(r'^pricelist/$',                'price_list',           name='price_list'),
+    
+    url(r'^clients/$',                  'client_list',          name='client_list'),
+    url(r'^person/(\d+)/$',             'person_detail',        name='person_detail'),
+    url(r'^org/(\d+)/$',                'org_detail',           name='org_detail'),
+    
+    url(r'^reports/$',                  'report_list',          name='report_list'),
+    url(r'^invoices/$',                 'invoice_list',         name='invoice_list'),
+    url(r'^acts/$',                     'act_list',             name='act_list'),
+    url(r'^analyze/$',                  'analyze',              name='analyze'),
+    
+    url(r'^questions/$',                'question_list',        name='question_list'),
 )

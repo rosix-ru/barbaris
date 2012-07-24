@@ -109,8 +109,8 @@ def monitor(request):
                             context_instance=RequestContext(request,))
 
 @login_required
-def orders(request, key=None, id=None):
-    print "EXEC views.orders()" # DEBUG
+def order_list(request, key=None, id=None):
+    print "EXEC views.order_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
@@ -138,9 +138,9 @@ def orders(request, key=None, id=None):
             orders = orders.filter(updated__day=day)
         if query:
             search_fields = (
-                'client__last_name',
-                'client__first_name',
-                'client__middle_name',
+                'person__last_name',
+                'person__first_name',
+                'person__middle_name',
             )
             orders = search(orders, search_fields, query)
         ctx['query'] = query
@@ -151,24 +151,24 @@ def orders(request, key=None, id=None):
     ctx['days']   = [ x.day   for x in orders.dates('updated', 'day') ]
     ctx['stats']   = settings.STATE_ORDER_CHOICES
     
-    return render_to_response('orders.html', ctx,
+    return render_to_response('order_list.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def new_order(request, key, id):
-    print "EXEC views.orders()" # DEBUG
+def order_new(request, key, id):
+    print "EXEC views.order_new()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
-    return render_to_response('new_order.html', ctx,
+    return render_to_response('order_new.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def pricelist(request):
-    print "EXEC views.pricelist()" # DEBUG
+def price_list(request):
+    print "EXEC views.price_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
@@ -176,36 +176,36 @@ def pricelist(request):
     session['user_id'] = user.id
     ctx['categories'] = Category.objects.all()
     
-    return render_to_response('pricelist.html', ctx,
+    return render_to_response('price_list.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def invoices(request):
-    print "EXEC views.invoices()" # DEBUG
+def invoice_list(request):
+    print "EXEC views.invoice_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
-    return render_to_response('invoices.html', ctx,
+    return render_to_response('invoice_list.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def acts(request):
-    print "EXEC views.acts()" # DEBUG
+def act_list(request):
+    print "EXEC views.act_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
-    return render_to_response('acts.html', ctx,
+    return render_to_response('act_list.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def clients(request):
-    print "EXEC views.clients()" # DEBUG
+def client_list(request):
+    print "EXEC views.client_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
@@ -213,75 +213,74 @@ def clients(request):
     session['user_id'] = user.id
     
     # Организации
-    organizations = Organization.buyers.all()
+    orgs = Org.buyers.all()
     # Люди
-    clients = Client.objects.all()
+    persons = Person.objects.all()
     
-    page_cli = 1
-    page_org = 1
+    page_persons = 1
+    page_orgs = 1
     show_orgs = 1
-    show_clients = 1
+    show_persons = 1
     query = ''
     
     if request.GET:
         try:
-            page_cli = int(request.GET.get('page_cli'))
+            page_persons = int(request.GET.get('page_persons'))
         except:
-            page_cli = 1
+            page_persons = 1
         try:
-            page_org = int(request.GET.get('page_org'))
+            page_orgs = int(request.GET.get('page_orgs'))
         except:
-            page_org = 1
+            page_orgs = 1
         show_orgs = request.GET.get('show_orgs', 1)
-        show_clients = request.GET.get('show_clients', 1)
-        #~ if show_orgs and show_clients and page > 1:
+        show_persons = request.GET.get('show_persons', 1)
+        #~ if show_orgs and show_persons and page > 1:
             #~ return HttpResponseBadRequest()
         query = request.GET.get('query', '')
     
         if query:
-            #~ if show_orgs and not show_clients:
+            #~ if show_orgs and not show_persons:
                 #~ fields = ('title',)
-                #~ organizations = search(organizations, fields, query)
-            #~ elif show_clients:
+                #~ orgs = search(orgs, fields, query)
+            #~ elif show_persons:
                 #~ fields = ('last_name', 'first_name', 'middle_name')
-                #~ clients = search(clients, fields, query)
+                #~ persons = search(persons, fields, query)
             #~ else:
                 fields = ('title',)
-                organizations = search(organizations, fields, query)
+                orgs = search(orgs, fields, query)
                 fields = ('last_name', 'first_name', 'middle_name')
-                clients = search(clients, fields, query)
+                persons = search(persons, fields, query)
     
     
-    if show_clients:
-        ctx['clients'] = get_paginator(clients, page_cli)
+    if show_persons:
+        ctx['persons'] = get_paginator(persons, page_persons)
     else:
-        ctx['clients'] = ctx['pagination_list_clients'] = []
+        ctx['persons'] = ctx['pagination_list_persons'] = []
     
     if show_orgs:
-        ctx['organizations'] = get_paginator(organizations, page_org, 10)
+        ctx['orgs'] = get_paginator(orgs, page_orgs, 10)
     else:
-        ctx['organizations'] = ctx['pagination_list_orgs'] = []
+        ctx['orgs'] = ctx['pagination_list_orgs'] = []
     
     ctx['query'] = query
-    return render_to_response('clients.html', ctx,
+    return render_to_response('client_list.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def client_detail(request, id):
-    print "EXEC views.clients()" # DEBUG
+def person_detail(request, id):
+    print "EXEC views.person_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
-    return render_to_response('client_detail.html', ctx,
+    return render_to_response('person_detail.html', ctx,
                             context_instance=RequestContext(request,))
-
 
 @login_required
 def org_detail(request, id):
-    print "EXEC views.clients()" # DEBUG
+    print "EXEC views.org_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
@@ -304,27 +303,27 @@ def analyze(request):
                             context_instance=RequestContext(request,))
 
 @login_required
-def reports(request):
-    print "EXEC views.reports()" # DEBUG
+def report_list(request):
+    print "EXEC views.report_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
-    return render_to_response('reports.html', ctx,
+    return render_to_response('report_list.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def questions(request):
-    print "EXEC views.questions()" # DEBUG
+def question_list(request):
+    print "EXEC views.question_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
-    return render_to_response('questions.html', ctx,
+    return render_to_response('question_list.html', ctx,
                             context_instance=RequestContext(request,))
 
 ########################################################################

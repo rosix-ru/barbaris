@@ -48,17 +48,17 @@ class ActivePriceManager(models.Manager):
             start_date__lte=datetime.date.today()
         )
 
-class ActiveOrganizationDetailManager(models.Manager):
+class ActiveOrgDetailManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(ActiveOrganizationDetailManager, self).get_query_set().filter(
+        return super(ActiveOrgDetailManager, self).get_query_set().filter(
             is_active=True
         )
 
-class ActiveClientDetailManager(models.Manager):
+class ActivePersonDetailManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(ActiveClientDetailManager, self).get_query_set().filter(
+        return super(ActivePersonDetailManager, self).get_query_set().filter(
             is_active=True
         )
 
@@ -125,23 +125,23 @@ class CancelInvoiceManager(models.Manager):
             state=settings.STATE_INVOICE_CANCEL
         )
 
-class SellerOrganizationManager(models.Manager):
+class SellerOrgManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(SellerOrganizationManager, self).get_query_set().filter(
+        return super(SellerOrgManager, self).get_query_set().filter(
             is_seller=True
         )
 
-class BuyerOrganizationManager(models.Manager):
+class BuyerOrgManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(BuyerOrganizationManager, self).get_query_set().filter(
+        return super(BuyerOrgManager, self).get_query_set().filter(
             is_seller=False
         )
 
-class PrivateClientManager(models.Manager):
+class PrivatePersonManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(PrivateClientManager, self).get_query_set().filter(
-            organization=None
+        return super(PrivatePersonManager, self).get_query_set().filter(
+            org=None
         )

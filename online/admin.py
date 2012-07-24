@@ -39,17 +39,17 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from models import *
 
-class OrganizationAdmin(admin.ModelAdmin):
+class OrgAdmin(admin.ModelAdmin):
     list_display = ('title', 'id')
     search_fields = ('title',)
-admin.site.register(Organization,OrganizationAdmin)
+admin.site.register(Org,OrgAdmin)
 
-class OrganizationDetailAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'is_active', 'id')
+class OrgDetailAdmin(admin.ModelAdmin):
+    list_display = ('org', 'is_active', 'id')
     fieldsets = (
         (None, {
             'fields': (
-                ('organization', 'is_active'), 
+                ('org', 'is_active'), 
                 'fulltitle',
                 )
         }),
@@ -75,21 +75,21 @@ class OrganizationDetailAdmin(admin.ModelAdmin):
                 )
         }),
     )
-admin.site.register(OrganizationDetail,OrganizationDetailAdmin)
+admin.site.register(OrgDetail,OrgDetailAdmin)
 
-class ClientAdmin(admin.ModelAdmin):
+class PersonAdmin(admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'middle_name', 'id')
-    #~ list_filter = ('is_supplier', 'is_client')
-    search_fields = ('last_name', 'first_name', 'middle_name', 'organization__title',)
-    raw_id_fields = ['organization']
-admin.site.register(Client,ClientAdmin)
+    #~ list_filter = ('is_supplier', 'is_person')
+    search_fields = ('last_name', 'first_name', 'middle_name', 'org__title',)
+    raw_id_fields = ['org']
+admin.site.register(Person,PersonAdmin)
 
-class ClientDetailAdmin(admin.ModelAdmin):
-    list_display = ('client', 'is_active', 'id')
+class PersonDetailAdmin(admin.ModelAdmin):
+    list_display = ('person', 'is_active', 'id')
     fieldsets = (
         (None, {
             'fields': (
-                ('client', 'is_active'), 
+                ('person', 'is_active'), 
                 'sex',
                 )
         }),
@@ -119,7 +119,7 @@ class ClientDetailAdmin(admin.ModelAdmin):
                 )
         }),
     )
-admin.site.register(ClientDetail,ClientDetailAdmin)
+admin.site.register(PersonDetail,PersonDetailAdmin)
 
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('title','id',)
@@ -146,20 +146,20 @@ class PriceAdmin(admin.ModelAdmin):
 admin.site.register(Price, PriceAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('client', 'updated', 'state','id',)
+    list_display = ('person', 'updated', 'state','id',)
     list_filter = ('state', 'user',)
-    filter_horizontal = ('other_clients', 'attributes')
+    filter_horizontal = ('other_persons', 'attributes')
     fieldsets = (
         (None, {
             'fields': (
-                ('client'), 
+                ('person'), 
                 ('user', 'state'), 
                 )
         }),
         (u'Дополнительно', {
             'classes': ('collapse',),
             'fields': (
-                'other_clients','attributes', 'comment',
+                'other_persons','attributes', 'comment',
                 )
         }),
     )

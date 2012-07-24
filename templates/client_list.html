@@ -44,18 +44,18 @@
 
 {% block subnav_content %}
 <li>
-    <a href="#clients">Физические лица</a>
+    <a href="#persons">Физические лица</a>
 </li>
 <li>
-    <a href="#organizations">Организации</a>
+    <a href="#orgs">Организации</a>
 </li>
 {% endblock %}
 
 {% block content %}
-{% if clients.object_list %}
-    <section id="clients">
+{% if persons.object_list %}
+    <section id="persons">
         <div class="page-header">
-            <h3>Физические лица <small><a href="{% url client_detail 0 %}" >(добавить)</a></small></h3>
+            <h3>Физические лица <small><a href="{% url person_detail 0 %}" >(добавить)</a></small></h3>
         </div>
         <div class="row-fluid">
             <table class="table table-condensed">
@@ -68,16 +68,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for client in clients.object_list %}
+                {% for person in persons.object_list %}
                     <tr>
-                        <td>{{ client }}</td>
-                        <td>{{ client.organization|default:"" }}</td>
-                        <td class="input-large">{{ client.phones }}</td>
+                        <td>{{ person }}</td>
+                        <td>{{ person.org|default:"" }}</td>
+                        <td class="input-large">{{ person.phones }}</td>
                         <td class="input-large">
                             <div class="btn-group">
-                                <a href="{% url client_detail client.id %}" rel="tooltip" title="Редактировать карточку клиента" class="btn btn-info">Карточка</a>
-                                <a href="{% url new_order 'client' client.id %}" rel="tooltip" title="Создать новый заказ для клиента" class="btn btn-success">Заказ</a>
-                                <a href="{% url client_orders 'client' client.id %}" rel="tooltip" title="Просмотр списка заказов клиента" class="btn btn-inverse">Список</a>
+                                <a href="{% url person_detail person.id %}" rel="tooltip" title="Редактировать карточку клиента" class="btn btn-info">Карточка</a>
+                                <a href="{% url order_new 'person' person.id %}" rel="tooltip" title="Создать новый заказ для клиента" class="btn btn-success">Заказ</a>
+                                <a href="{% url order_list_client 'person' person.id %}" rel="tooltip" title="Просмотр списка заказов клиента" class="btn btn-inverse">Список</a>
                             </div>
                         </td>
                     </tr>
@@ -88,21 +88,21 @@
         </div>
     </section>
     <ul class="pager">
-    {% if clients.has_previous %}
+    {% if persons.has_previous %}
         <li class="previous">
-            <a href="{% addGET request 'page_cli' clients.previous_page_number %}">&larr; Предыдущие</a>
+            <a href="{% addGET request 'page_persons' persons.previous_page_number %}">&larr; Предыдущие</a>
         </li>
     {% endif %}
-    {% if clients.has_next %}
+    {% if persons.has_next %}
         <li class="next">
-            <a href="{% addGET request 'page_cli' clients.next_page_number %}">Следующие &rarr;</a>
+            <a href="{% addGET request 'page_persons' persons.next_page_number %}">Следующие &rarr;</a>
         </li>
     {% endif %}
     </ul>
 {% endif %}
 
-{% if organizations.object_list %}
-    <section id="organizations">
+{% if orgs.object_list %}
+    <section id="orgs">
         <div class="page-header">
             <h3>Организации <small><a href="{% url org_detail 0 %}" >(добавить)</a></small></h3>
         </div>
@@ -117,7 +117,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for org in organizations.object_list %}
+                {% for org in orgs.object_list %}
                     <tr>
                         <td>{{ org }}</td>
                         <td>{{ org.detail.fulltitle }}</td>
@@ -125,8 +125,8 @@
                         <td class="input-large">
                             <div class="btn-group">
                                 <a href="{% url org_detail org.id %}" rel="tooltip" title="Редактировать карточку клиента" class="btn btn-info">Карточка</a>
-                                <a href="{% url new_order 'org' org.id %}" rel="tooltip" title="Создать новый заказ для клиента" class="btn btn-success">Заказ</a>
-                                <a href="{% url client_orders 'org' org.id %}" rel="tooltip" title="Просмотр списка заказов клиента" class="btn btn-inverse">Список</a>
+                                <a href="{% url order_new 'org' org.id %}" rel="tooltip" title="Создать новый заказ для клиента" class="btn btn-success">Заказ</a>
+                                <a href="{% url order_list_client 'org' org.id %}" rel="tooltip" title="Просмотр списка заказов клиента" class="btn btn-inverse">Список</a>
                             </div>
                         </td>
                     </tr>
@@ -136,14 +136,14 @@
             <hr />
         </div>    </section>
     <ul class="pager">
-    {% if organizations.has_previous %}
+    {% if orgs.has_previous %}
         <li class="previous">
-            <a href="{% addGET request 'page_org' organizations.previous_page_number %}">&larr; Предыдущие</a>
+            <a href="{% addGET request 'page_orgs' orgs.previous_page_number %}">&larr; Предыдущие</a>
         </li>
     {% endif %}
-    {% if organizations.has_next %}
+    {% if orgs.has_next %}
         <li class="next">
-            <a href="{% addGET request 'page_org' organizations.next_page_number %}">Следующие &rarr;</a>
+            <a href="{% addGET request 'page_orgs' orgs.next_page_number %}">Следующие &rarr;</a>
         </li>
     {% endif %}
     </ul>
