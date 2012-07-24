@@ -39,27 +39,43 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from barbaris.online import models
 
-class OrganizationForm(forms.ModelForm):
+class OrgForm(forms.ModelForm):
     class Meta:
-        model = models.Organization
+        model = models.Org
         exclude = ('is_seller',)
 
-class OrganizationDetailForm(forms.ModelForm):
+class OrgDetailForm(forms.ModelForm):
     class Meta:
-        model = models.OrganizationDetail
+        model = models.OrgDetail
         exclude = ('is_active',)
         widgets = {
             'fulltitle': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
         }
 
-class ClientForm(forms.ModelForm):
+class PersonForm(forms.ModelForm):
     class Meta:
-        model = models.Client
+        model = models.Person
 
-class ClientDetailForm(forms.ModelForm):
+class PersonResidenceForm(forms.ModelForm):
     class Meta:
-        model = models.ClientDetail
-        exclude = ('is_active',)
+        model = models.PersonDetail
+        fields = ('residence_sitizenship', 'residence_country', 
+            'residence_region', 'residence_area', 'residence_sity',
+            'residence_settlement', 'residence_street',
+            'residence_house', 'residence_case', 'residence_apartment')
+
+class PersonBirthForm(forms.ModelForm):
+    class Meta:
+        model = models.PersonDetail
+        fields = ('birth_day', 'birth_country', 'birth_area', 
+            'birth_sity', 'birth_settlement',)
+
+class PersonDocumentForm(forms.ModelForm):
+    class Meta:
+        model = models.PersonDetail
+        fields = ('document_type', 'document_series', 
+            'document_number', 'document_date', 'document_organ', 
+            'document_code')
 
 class OrderForm(forms.ModelForm):
     class Meta:

@@ -40,11 +40,91 @@
 
 {% load i18n base_extras %}
 
-{% block page_name %}Карточка физического лица{% endblock %}
+{% block page_name %}Карточка физического лица <p><small>{{ person }}</small></p>{% endblock %}
+{% block subnav %}{% endblock %}
 
 {% block content %}
-{{ client }}
 
+<div class="row-fluid">
+    <div class="span6">
+        <form class="well form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset>
+                <legend>Основная информация</legend>
+            {% for field in form_person %}
+                <div class="control-group">
+                    <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="span6">
+        <form class="well form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset>
+                <legend>Информация о документе</legend>
+            {% for field in form_document %}
+                <div class="control-group">
+                    <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span6">
+        <form class="well form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset>
+                <legend>Информация о рождении</legend>
+            {% for field in form_birth %}
+                <div class="control-group">
+                    <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="span6">
+        <form class="well form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset>
+                <legend>Информация о проживании</legend>
+            {% for field in form_residence %}
+                <div class="control-group">
+                    <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
 

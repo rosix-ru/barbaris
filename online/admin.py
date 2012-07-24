@@ -78,7 +78,7 @@ class OrgDetailAdmin(admin.ModelAdmin):
 admin.site.register(OrgDetail,OrgDetailAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'middle_name', 'id')
+    list_display = ('last_name', 'first_name', 'middle_name', 'sex', 'id')
     #~ list_filter = ('is_supplier', 'is_person')
     search_fields = ('last_name', 'first_name', 'middle_name', 'org__title',)
     raw_id_fields = ['org']
@@ -90,7 +90,6 @@ class PersonDetailAdmin(admin.ModelAdmin):
         (None, {
             'fields': (
                 ('person', 'is_active'), 
-                'sex',
                 )
         }),
         (u'Место рождения', {
@@ -111,7 +110,7 @@ class PersonDetailAdmin(admin.ModelAdmin):
         (u'Место жительства', {
             'classes': ('collapse',),
             'fields': (
-                'sitizenship',
+                'residence_sitizenship',
                 ('residence_country', 'residence_region','residence_sity',),
                 ('residence_area', 'residence_settlement'),
                 'residence_street',

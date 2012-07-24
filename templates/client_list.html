@@ -44,10 +44,16 @@
 
 {% block subnav_content %}
 <li>
-    <a href="#persons">Физические лица</a>
+    <a href="#persons">Персоналии</a>
+</li>
+<li>
+    <a href="{% url person_detail 0 %}" title="Добавить персону"><i class="icon-plus"></i></a>
 </li>
 <li>
     <a href="#orgs">Организации</a>
+</li>
+<li>
+    <a href="{% url org_detail 0 %}" title="Добавить организацию"><i class="icon-plus"></i></a>
 </li>
 {% endblock %}
 
@@ -55,7 +61,7 @@
 {% if persons.object_list %}
     <section id="persons">
         <div class="page-header">
-            <h3>Физические лица <small><a href="{% url person_detail 0 %}" >(добавить)</a></small></h3>
+            <h3>Персоналии</h3>
         </div>
         <div class="row-fluid">
             <table class="table table-condensed">
@@ -104,7 +110,7 @@
 {% if orgs.object_list %}
     <section id="orgs">
         <div class="page-header">
-            <h3>Организации <small><a href="{% url org_detail 0 %}" >(добавить)</a></small></h3>
+            <h3>Организации</h3>
         </div>
         <div class="row-fluid">
             <table class="table table-condensed">

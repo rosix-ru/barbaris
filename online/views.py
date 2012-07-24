@@ -55,6 +55,7 @@ import operator
 import datetime
 
 from barbaris.online.models import *
+from barbaris.online import forms
 
 @login_required
 def monitor(request):
@@ -283,9 +284,66 @@ def person_detail(request, id):
     print "EXEC views.person_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
+    
+    if id in ('0', 0):
+        person = Person(last_name="Новый клиент")
+        detail = PersonDetail(person=person)
+        person_not_save = True
+    else:
+        person = get_object_or_404(Person.objects, id=id)
+        detail = person.detail
+        person_not_save = False
+    
+    def check_person():
+        if person_not_save:
+            person.save()
+            detail.person = person
+            form_person = forms.PersonForm(instance=person)
+            if form_person.is_valid():
+                form_person.save()
+    
+    if request.method == 'POST':
+        if 'last_name' in request.POST:
+            form_person = forms.PersonForm(request.POST, instance=person)
+            if form_person.is_valid():
+                form_person.save()
+        else:
+            form_person = forms.PersonForm(instance=person)
+        if 'document_type' in request.POST:
+            form_document = forms.PersonDocumentForm(request.POST, instance=detail)
+            check_person()
+            if form_document.is_valid():
+                form_document.save()
+        else:
+            form_document = forms.PersonDocumentForm(instance=detail)
+        if 'birth_day' in request.POST:
+            form_birth = forms.PersonBirthForm(request.POST, instance=detail)
+            check_person()
+            if form_birth.is_valid():
+                form_birth.save()
+        else:
+            form_birth = forms.PersonBirthForm(instance=detail)
+        
+        if 'residence_country' in request.POST:
+            form_residence = forms.PersonResidenceForm(request.POST, instance=detail)
+            check_person()
+            if form_residence.is_valid():
+                form_residence.save()
+        else:
+            form_residence = forms.PersonResidenceForm(instance=detail)
+        if person_not_save:
+            return HttpResponseRedirect(person.get_absolute_url())
+    else:
+        form_person = forms.PersonForm(instance=person)
+        form_document = forms.PersonDocumentForm(instance=detail)
+        form_birth = forms.PersonBirthForm(instance=detail)
+        form_residence = forms.PersonResidenceForm(instance=detail)
+    
+    ctx['person'] = person
+    ctx['form_person'] = form_person
+    ctx['form_document'] = form_document
+    ctx['form_birth'] = form_birth
+    ctx['form_residence'] = form_residence
     
     return render_to_response('person_detail.html', ctx,
                             context_instance=RequestContext(request,))

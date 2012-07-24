@@ -71,7 +71,11 @@ class Org(models.Model):
         try:
             return self.orgdetail_set.get(is_active=True)
         except:
-            return None
+            return OrgDetail.objects.create(org=self)
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('org_detail', [str(self.id)])
     
 class OrgDetail(models.Model):
     """ Расширенная информация об организации """
@@ -172,10 +176,10 @@ class Person(models.Model):
         множественном числе, например: "нефтяники", в 
         обязательном поле last_name.
     """
-    org = models.ForeignKey(
-            Org,
-            null=True, blank=True,
-            verbose_name = u"организация")
+    SEX_CHOICES = (
+        (u'муж',u'мужской'),
+        (u'жен',u'женский')
+    )
     last_name = models.CharField(
             max_length=50,
             verbose_name = u"фамилия")
@@ -191,6 +195,15 @@ class Person(models.Model):
             max_length=50,
             blank=True,
             verbose_name = u"телефоны")
+    sex = models.CharField(
+            max_length=3,
+            choices=SEX_CHOICES,
+            blank=True,
+            verbose_name = u"пол")
+    org = models.ForeignKey(
+            Org,
+            null=True, blank=True,
+            verbose_name = u"организация")
     
     objects = models.Manager()
     privates = managers.PrivatePersonManager()
@@ -211,14 +224,15 @@ class Person(models.Model):
         try:
             return self.persondetail_set.get(is_active=True)
         except:
-            return None
+            return PersonDetail.objects.create(person=self)
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('person_detail', [str(self.id)])
 
 class PersonDetail(models.Model):
     """ Расширенная информация о клиенте """
-    SEX_CHOICES = (
-        (u'муж',u'мужской'),
-        (u'жен',u'женский')
-    )
+    
     DOCUMENT_CHOICES = (
         ('паспорт','паспорт'),
         ('водительское','водительское удостоверение')
@@ -229,15 +243,6 @@ class PersonDetail(models.Model):
     person = models.ForeignKey(
             Person,
             verbose_name = u"клиент")
-    sex = models.CharField(
-            max_length=3,
-            choices=SEX_CHOICES,
-            blank=True,
-            verbose_name = u"пол")
-    sitizenship = models.CharField(
-            max_length=16,
-            blank=True,
-            verbose_name = u"гражданство")
     # Поля места рождения
     birth_day = models.DateField(
             null=True, blank=True,
@@ -289,6 +294,10 @@ class PersonDetail(models.Model):
             blank=True,
             verbose_name = u"код органа")
     # Поля места жительства
+    residence_sitizenship = models.CharField(
+            max_length=16,
+            blank=True,
+            verbose_name = u"гражданство")
     residence_country = models.CharField(
             max_length=16,
             blank=True,
