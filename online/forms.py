@@ -47,10 +47,26 @@ class OrgForm(forms.ModelForm):
 class OrgDetailForm(forms.ModelForm):
     class Meta:
         model = models.OrgDetail
-        exclude = ('is_active',)
+        fields = ('fulltitle', 'inn', 'kpp', 'ogrn', 'address', 'phones')
         widgets = {
             'fulltitle': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
         }
+
+class OrgBankForm(forms.ModelForm):
+    class Meta:
+        model = models.OrgDetail
+        fields = ('bank_bik', 'bank_title', 'bank_set_account', 
+            'bank_cor_account')
+        widgets = {
+            'bank_title': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+        }
+
+class OrgDocumentForm(forms.ModelForm):
+    class Meta:
+        model = models.OrgDetail
+        fields = ('document_type', 'document_series', 
+            'document_number', 'document_date', 'document_organ', 
+            'document_code')
 
 class PersonForm(forms.ModelForm):
     class Meta:

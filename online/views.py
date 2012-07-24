@@ -197,9 +197,8 @@ def invoice_list(request):
     print "EXEC views.invoice_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
+    invoices = Invoice.objects.all()
+    ctx['invoice_list'] = invoices
     
     return render_to_response('invoice_list.html', ctx,
                             context_instance=RequestContext(request,))
@@ -209,9 +208,8 @@ def act_list(request):
     print "EXEC views.act_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
+    acts = Act.objects.all()
+    ctx['act_list'] = acts
     
     return render_to_response('act_list.html', ctx,
                             context_instance=RequestContext(request,))
@@ -353,9 +351,69 @@ def org_detail(request, id):
     print "EXEC views.org_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
+    
+    if id in ('0', 0):
+        org = Org(title="Новая организация")
+        detail = OrgDetail(org=org)
+        org_not_save = True
+    else:
+        org = get_object_or_404(Org.objects, id=id)
+        detail = org.detail
+        org_not_save = False
+    
+    def check_org():
+        if org_not_save:
+            org.save()
+            detail.org = org
+            form_org = forms.OrgForm(instance=org)
+            if form_org.is_valid():
+                form_org.save()
+    
+    if request.method == 'POST':
+        if 'title' in request.POST:
+            form_org = forms.OrgForm(request.POST, instance=org)
+            if form_org.is_valid():
+                form_org.save()
+        else:
+            form_org = forms.OrgForm(instance=org)
+        
+        if 'fulltitle' in request.POST:
+            form_detail = forms.OrgDetailForm(request.POST, instance=detail)
+            check_org()
+            if form_detail.is_valid():
+                form_detail.save()
+        else:
+            form_detail = forms.OrgDetailForm(instance=detail)
+        
+        if 'document_type' in request.POST:
+            form_document = forms.OrgDocumentForm(request.POST, instance=detail)
+            check_org()
+            if form_document.is_valid():
+                form_document.save()
+        else:
+            form_document = forms.OrgDocumentForm(instance=detail)
+        
+        if 'bank_bik' in request.POST:
+            form_bank = forms.OrgBankForm(request.POST, instance=detail)
+            check_org()
+            if form_bank.is_valid():
+                form_bank.save()
+        else:
+            form_bank = forms.OrgBankForm(instance=detail)
+        
+        if org_not_save:
+            return HttpResponseRedirect(org.get_absolute_url())
+    else:
+        form_org = forms.OrgForm(instance=org)
+        form_detail = forms.OrgDetailForm(instance=detail)
+        form_document = forms.OrgDocumentForm(instance=detail)
+        form_bank = forms.OrgBankForm(instance=detail)
+    
+    ctx['org'] = org
+    ctx['form_org'] = form_org
+    ctx['form_detail'] = form_detail
+    ctx['form_document'] = form_document
+    ctx['form_bank'] = form_bank
     
     return render_to_response('org_detail.html', ctx,
                             context_instance=RequestContext(request,))
