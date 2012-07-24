@@ -155,6 +155,18 @@ def order_list(request, key=None, id=None):
                             context_instance=RequestContext(request,))
 
 @login_required
+def order_detail(request, id):
+    print "EXEC views.order_detail()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    session = request.session
+    user = request.user
+    session['user_id'] = user.id
+    
+    return render_to_response('order_detail.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
 def order_new(request, key, id):
     print "EXEC views.order_new()" # DEBUG
     #~ print request # DEBUG
@@ -248,7 +260,7 @@ def client_list(request):
             #~ else:
                 fields = ('title',)
                 orgs = search(orgs, fields, query)
-                fields = ('last_name', 'first_name', 'middle_name')
+                fields = ('last_name', 'first_name', 'middle_name', 'org__title')
                 persons = search(persons, fields, query)
     
     
