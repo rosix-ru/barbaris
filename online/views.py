@@ -174,7 +174,38 @@ def order_new(request, key, id):
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
-    session['user_id'] = user.id
+    
+    person, org = (None, None)
+    
+    if key == 'person':
+        if id in ('0', 0):
+            person = Person(last_name="Новый клиент")
+            person_not_save = True
+        else:
+            person = get_object_or_404(Person.objects, id=id)
+            person_not_save = False
+    
+    elif key == 'org':
+        if id in ('0', 0):
+            org = Org(last_name="Новый клиент")
+            org_not_save = True
+        else:
+            org = get_object_or_404(Org.objects, id=id)
+            org_not_save = False
+    
+    order = Order(user=user)
+    spec = Specification(order=order)
+    
+    if request.method == 'POST':
+        form_spec = forms.SpecificationForm(request.POST, instance=spec)
+        if form_spec.is_valid():
+            form_spec.save()
+    else:
+        form_spec = forms.SpecificationForm(instance=order)
+    
+    ctx['order'] = order
+    ctx['categories'] = Category.objects.all()
+    ctx['form_spec'] = form_spec
     
     return render_to_response('order_new.html', ctx,
                             context_instance=RequestContext(request,))

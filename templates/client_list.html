@@ -119,7 +119,7 @@
                         <th>Краткое название</th>
                         <th>Полное название</th>
                         <th class="input-small">ИНН</th>
-                        <th class="input-large">Управление</th>
+                        <th class="input-medium">Управление</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -128,11 +128,10 @@
                         <td>{{ org }}</td>
                         <td>{{ org.detail.fulltitle }}</td>
                         <td class="input-small">{{ org.detail.inn }}</td>
-                        <td class="input-large">
+                        <td class="input-medium">
                             <div class="btn-group">
-                                <a href="{% url org_detail org.id %}" rel="tooltip" title="Редактировать карточку клиента" class="btn btn-info">Карточка</a>
-                                <a href="{% url order_new 'org' org.id %}" rel="tooltip" title="Создать новый заказ для клиента" class="btn btn-success">Заказ</a>
-                                <a href="{% url order_list_client 'org' org.id %}" rel="tooltip" title="Просмотр списка заказов клиента" class="btn btn-inverse">Список</a>
+                                <a href="{% url org_detail org.id %}" rel="tooltip" title="Редактировать карточку организации" class="btn btn-info">Карточка</a>
+                                <a href="{% url order_list_client 'org' org.id %}" rel="tooltip" title="Просмотр списка заказов организации" class="btn btn-inverse">Список</a>
                             </div>
                         </td>
                     </tr>

@@ -393,6 +393,9 @@ class Service(models.Model):
     is_reserved = models.BooleanField(
             default=False,
             verbose_name = u"разрешить бронирование")
+    is_on_time = models.BooleanField(
+            default=True,
+            verbose_name = u"продажи по времени")
     
     def __unicode__(self):
         return '%s: %s' % (unicode(self.category), self.title)
@@ -409,6 +412,10 @@ class Service(models.Model):
             (p.get_divider_display() or u'Единица') +'='+ str(round(p.price, 2))
             for p in prices
             ])
+    
+    @property
+    def active_prices(self):
+        return Price.actives.filter(service=self)
 
 class Room(models.Model):
     """ Гостиничные номера """
@@ -457,7 +464,9 @@ class Price(models.Model):
     actives = managers.ActivePriceManager()
     
     def __unicode__(self):
-        return unicode(self.service)
+        return self.service.title +': '+\
+            (self.get_divider_display() or u'Единица') \
+            +'='+ str(round(self.price, 2))
     
     class Meta:
         ordering = ['service__category__title','service','start_date',]
@@ -583,14 +592,14 @@ class Specification(models.Model):
             verbose_name="количество")
     start = models.DateTimeField(
             null=True, blank=True,
-            verbose_name = u"дата и время начала")
+            verbose_name = u"начало")
     end = models.DateTimeField(
             null=True, blank=True,
-            verbose_name = u"дата и время окончания")
+            verbose_name = u"окончание")
     reservation = models.ForeignKey(
             Reservation,
             null=True, blank=True,
-            verbose_name="вид бронирования")
+            verbose_name="бронирование")
     
     def __unicode__(self):
         return unicode(self.price)
@@ -609,7 +618,7 @@ class Specification(models.Model):
         return round((self.price.price*self.count)+markup, 2)
     
     def save(self, **kwargs):
-        """ Если есть делитель:
+        """ Если есть делитель и услуга предоставляется по времени:
             Получаем старый объект, сравниваем изменившееся
             приоритетное поле count.
             
@@ -658,7 +667,7 @@ class Specification(models.Model):
             self.count = count
             return True
         
-        if self.price.divider:
+        if self.price.divider and self.price.service.is_on_time:
             if self.id:
                 old = Specification.objects.get(id=self.id)
                 change_count = bool(self.count != old.count)

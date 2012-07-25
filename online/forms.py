@@ -36,6 +36,7 @@
 ###############################################################################
 
 from django import forms
+#~ from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 from barbaris.online import models
 
@@ -96,9 +97,13 @@ class PersonDocumentForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = models.Order
-        exclude = ('created','updated', 'state')
+        exclude = ('created','updated', 'state', 'user')
 
 class SpecificationForm(forms.ModelForm):
     class Meta:
         model = models.Specification
-        exclude = ('created','updated', )
+        exclude = ('created','updated', 'order' )
+        #~ widgets = {
+            #~ 'start': widgets.AdminSplitDateTime(),
+            #~ 'end': widgets.AdminSplitDateTime(),
+        #~ }
