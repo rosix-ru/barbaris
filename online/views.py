@@ -37,9 +37,9 @@
 
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
-from django.template import RequestContext, Context
+from django.template import RequestContext, Context, Template
 from django.template.loader import get_template
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.utils import simplejson  
 from django.contrib.auth.decorators import login_required  
 from django.core import serializers
@@ -72,7 +72,7 @@ def monitor(request):
     
     categories = Category.objects.all()
     hotel = categories.get(title="Hotel")
-    ctx['hotel_services'] = hotel.service_set.all()
+    ctx['hotel_services'] = hotel.service_set.filter(is_rooms=True)
     sauna = categories.get(title="Sauna")
     
     rooms = Room.objects.all()
@@ -86,7 +86,7 @@ def monitor(request):
             start__lt=now.date() + datetime.timedelta(1)
             )
     room_ids = [ x.room.id for x in sps_rooms ]
-    ctx['sps_rooms_nonfree'] = rooms.filter(id__in=sps_rooms)
+    ctx['sps_rooms_nonfree'] = sps_rooms
     ctx['rooms_free'] = rooms.exclude(id__in=room_ids)
     
     # Бронирование комнат
@@ -103,8 +103,6 @@ def monitor(request):
     ctx['sps_rooms_reserv_tomorrow'] = sps_room_reserv.filter(
             start__range=(now.date(), now.date() + datetime.timedelta(2))
             )
-    
-    
     
     return render_to_response('monitor.html', ctx,
                             context_instance=RequestContext(request,))
@@ -181,10 +179,15 @@ def order_detail(request, id=None, person=None):
     if not id:
         order = Order(user=user)
         order.person = person
-        _order_new=True
+        order_not_save = True
     else:
         order = get_object_or_404(Order, id=id)
-        _order_new=False
+        order_not_save = False
+    
+    def check_order():
+        if order_not_save:
+            order.save()
+        return order
     
     if request.method == 'POST':
         if 'delete_specification' in request.POST:
@@ -193,40 +196,72 @@ def order_detail(request, id=None, person=None):
                 Specification.objects.filter(id=id).all().delete()
             except:
                 pass
-        else:
+        elif 'specification' in request.POST:
             spec = Specification(order=order)
             form_spec = forms.SpecificationForm(request.POST, instance=spec)
             if form_spec.is_valid():
-                order.save()
-                spec.order = order
+                spec.order = check_order()
                 form_spec.save()
-    #~ else:
-    form_spec = forms.SpecificationForm()#instance=spec)
+        elif 'select_person' in request.POST:
+            order.person = get_object_or_404(Person, id=request.POST.get("selectPerson", None))
+            order.save()
+        elif 'select_other_persons' in request.POST:
+            [ order.other_persons.add(int(x)) for x in request.POST.getlist("selectPerson", [])]
+            order.save()
+        elif 'deletePerson' in request.POST:
+            [ order.other_persons.remove(int(x)) for x in request.POST.getlist("deletePerson", [])]
+            order.save()
+    
+    form_spec = forms.SpecificationForm()
+    form_person = forms.PersonForm(instance=order.person)
     
     ctx['order'] = order
     ctx['person'] = order.person
     ctx['org'] = order.person.org
     ctx['categories'] = Category.objects.all()
+    ctx['reservations'] = Reservation.objects.all()
     ctx['form_spec'] = form_spec
+    ctx['form_person'] = form_person
     
-    if _order_new:
+    if order_not_save:
         return render_to_response('order_new.html', ctx,
                             context_instance=RequestContext(request,))
     return render_to_response('order_detail.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def order_new(request, id):
+def order_action(request, id, key):
+    print "EXEC views.order_action()" # DEBUG
+    #~ print request # DEBUG
+    
+    order = get_object_or_404(Order.objects, id=id)
+    pass
+    return redirect('order_list')
+
+@login_required
+def order_new_person(request, id):
     print "EXEC views.order_new()" # DEBUG
     #~ print request # DEBUG
     
     if id in ('0', 0):
         person = Person(last_name="Новый клиент")
         person.save()
+        #~ return redirect('order_new', person.id)
     else:
         person = get_object_or_404(Person.objects, id=id)
     
     return order_detail(request, None, person)
+
+@login_required
+def order_delete(request, id):
+    print "EXEC views.order_delete()" # DEBUG
+    #~ print request # DEBUG
+    
+    order = get_object_or_404(Order.objects, id=id, state=1)
+    order.specification_set.all().delete()
+    order.delete()
+    
+    return redirect('order_list')
 
 @login_required
 def specification_delete(request, id):
@@ -404,6 +439,58 @@ def person_detail(request, id):
     
     return render_to_response('person_detail.html', ctx,
                             context_instance=RequestContext(request,))
+
+@login_required
+def person_search(request):
+    print "EXEC views.org_detail()" # DEBUG
+    #~ print request # DEBUG
+    ctx = { 'DEBUG': settings.DEBUG }
+    persons = Person.objects.all()
+    
+    query = request.GET.get('query', '')
+    destination = request.GET.get('destination', 'default')
+    
+    hidden_names = {'default':'select_person', 
+            'person':'select_person', 
+            'other_persons':'select_other_persons' 
+        }
+    ctx['hidden_name'] = hidden_names[destination]
+    
+    input_types = {'default':'radio', 'person':'radio', 'other_persons':'checkbox' }
+    ctx['input_type'] = input_types[destination]
+    
+    if query:
+        fields = ('last_name', 'first_name', 'middle_name', 'org__title')
+        persons = search(persons, fields, query)
+    
+    ctx['persons'] = persons[: 10]
+    
+    t = Template("""
+    {% if persons %}
+        <div class="controls">
+        {% for person in persons %}
+            <label class="{{ input_type }}">
+                <input type="{{ input_type }}" name="selectPerson" value="{{ person.id }}">
+                <h6>
+                    {{ person }}
+                    <small>{{ person.detail.birth_day|default:"" }}</small>
+                </h6>
+            </label>
+        {% endfor %}
+        </div>
+        <div class="form-actions">
+            <input type="hidden" name="{{ hidden_name }}" value="true" />
+            <input type="submit" class="btn btn-primary" value="Установить" />
+        </div>
+    {% else %}
+        <h3>Персоны с такими данными не найдены</h3>
+        <a target="_blank" href="{% url person_detail 0 %}">
+            Добавьте персону на специальной странице.
+        </a>
+    {% endif %}
+    """)
+    
+    return HttpResponse(t.render(Context(ctx)))
 
 @login_required
 def org_detail(request, id):

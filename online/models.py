@@ -537,6 +537,7 @@ class Order(models.Model):
             verbose_name="состояние")
     person = models.ForeignKey(
             Person,
+            null=True, blank=True,
             verbose_name="клиент")
     other_persons = models.ManyToManyField(
             Person,
@@ -590,7 +591,7 @@ class Specification(models.Model):
     room = models.ForeignKey(
             Room,
             null=True, blank=True,
-            verbose_name="комната")
+            verbose_name="номер")
     count = models.IntegerField(
             null=True, blank=True,
             verbose_name="количество")

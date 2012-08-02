@@ -63,7 +63,9 @@
                 <h6>{{ service.title }}:</h6>
             </div>
             <div class="span10">
-                <a href="#"><span class="label label-success">{{ service.prices }}</span></a>
+            {% for price in service.active_prices %}
+                <h5>{{ price.get_divider_display|default:"" }} {{ price.price }} <small>руб.</small></h5> 
+            {% endfor %}
             </div>
         </div>
         <hr class="soften" />

@@ -86,6 +86,18 @@
 <li>
     <a href="#categories">Прайс-лист</a>
 </li>
+<li>
+    <a href="#persons">Клиент(ы)</a>
+</li>
+
+{% if order.state == 1 %}
+<li>
+    <a href="{% url order_delete order.id %}" class="label label-important">Удалить</a>
+</li>
+<li>
+    <a href="{% url order_action order.id 'accept' %}" class="label label-success">Принять</a>
+</li>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -131,6 +143,55 @@
         </div>
     </div>
 {% endfor %}
+</div>
+
+<legend>Клиент(ы)</legend>
+<div id="persons" class="row-fluid">
+    <div class="well span6">
+        <legend>Оплачивает заказ</legend>
+        <input name="person" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
+        <form action="" method="post" class="form">{% csrf_token %}
+            <fieldset></fieldset>
+        </form>
+        <h6>
+            {{ order.person }}
+            <a target="_blank" href="{% url person_detail order.person.id %}" title="Редактировать карточку клиента">
+                <i class="icon-edit"></i>
+            </a>
+            <small>{{ order.person.detail.birth_day|default:"" }}</small>
+        </h6>
+    </div>
+    <div class="well span6">
+        <legend>Участвуют в заказе</legend>
+        <input name="other_persons" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
+        <form action="" method="post" class="form">{% csrf_token %}
+            <fieldset></fieldset>
+        </form>
+    {% if order.other_persons.all %}
+        <form action="" method="post" class="form">{% csrf_token %}
+            <fieldset>
+                <div class="controls ">
+                {% for person in order.other_persons.all %}
+                    <label class="checkbox">
+                        <input type="checkbox" name="deletePerson" value="{{ person.id }}">
+                        <h6>
+                            {{ person }}
+                            <a target="_blank" href="{% url person_detail person.id %}" title="Редактировать карточку клиента">
+                                <i class="icon-edit"></i>
+                            </a>
+                            <small>{{ person.detail.birth_day|default:"" }}</small>
+                        </h6>
+                    </label>
+                {% endfor %}
+                </div>
+                <div class="form-actions">
+                    <input type="hidden" name="delete_other_persons" value="true" />
+                    <input type="submit" class="btn btn-danger" value="Удалить" />
+                </div>
+            </fieldset>
+        </form>
+    {% endif %}
+    </div>
 </div>
 
 {% endblock %}

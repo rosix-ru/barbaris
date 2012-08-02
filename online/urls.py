@@ -41,14 +41,18 @@ urlpatterns = patterns('barbaris.online.views',
     url(r'^$',                          'monitor',              name='monitor'),
     
     url(r'^orders/$',                   'order_list',           name='order_list'),
-    url(r'^orders/(\w+)/(\d+)/$',       'order_list',           name='order_list_client'),
     url(r'^orders/(\d+)/$',             'order_detail',         name='order_detail'),
-    url(r'^orders/new/person/(\d+)/$',  'order_new',            name='order_new'),
+    url(r'^orders/new/$',               'order_detail',         name='order_new'),
+    url(r'^orders/new/(\d+)/$',         'order_new_person',     name='order_new_person'),
+    url(r'^orders/delete/(\d+)/$',      'order_delete',         name='order_delete'),
+    url(r'^orders/(\d+)/action/(\w+)/$','order_action',         name='order_action'),
+    url(r'^orders/(\w+)/(\d+)/$',       'order_list',           name='order_list_client'),
     
     url(r'^pricelist/$',                'price_list',           name='price_list'),
     
     url(r'^clients/$',                  'client_list',          name='client_list'),
     url(r'^person/(\d+)/$',             'person_detail',        name='person_detail'),
+    url(r'^person/search/$',            'person_search',        name='person_search'),
     url(r'^org/(\d+)/$',                'org_detail',           name='org_detail'),
     
     url(r'^reports/$',                  'report_list',          name='report_list'),

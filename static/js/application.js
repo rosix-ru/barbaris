@@ -37,78 +37,130 @@
 ###############################################################################
 */
 
+
+$(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+
 !function ($) {
-
-  $(function(){
-
-    // Disable certain links in docs
-    $('section [href^=#]').click(function (e) {
-      e.preventDefault()
-    })
-
-    // make code pretty
-    window.prettyPrint && prettyPrint()
-
-    // add-ons
-    $('.add-on :checkbox').on('click', function () {
-      var $this = $(this)
-        , method = $this.attr('checked') ? 'addClass' : 'removeClass'
-      $(this).parents('.add-on')[method]('active')
-    })
-
-    // position static twipsies for components page
-    if ($(".twipsies a").length) {
-      $(window).on('load resize', function () {
-        $(".twipsies a").each(function () {
-          $(this)
-            .tooltip({
-              placement: $(this).attr('title')
-            , trigger: 'manual'
+    $(function(){
+        
+        // Disable certain links in docs
+        $('section [href^=#]').click(function (e) {
+            e.preventDefault()
+        })
+        
+        // make code pretty
+        window.prettyPrint && prettyPrint()
+        
+        // add-ons
+        $('.add-on :checkbox').on('click', function () {
+            var $this = $(this),
+                method = $this.attr('checked') ? 'addClass' : 'removeClass'
+            $(this).parents('.add-on')[method]('active')
+        })
+        
+        // position static twipsies for components page
+        if ($(".twipsies a").length) {
+            $(window).on('load resize', function () {
+                $(".twipsies a").each(function () {
+                    $(this)
+                        .tooltip({
+                            placement: $(this).attr('title'),
+                            trigger: 'manual'
+                        })
+                        .tooltip('show')
+                })
             })
-            .tooltip('show')
-          })
-      })
-    }
-
-    // add tipsies to grid for scaffolding
-    if ($('#grid-system').length) {
-      $('#grid-system').tooltip({
-          selector: '.show-grid > div'
-        , title: function () { return $(this).width() + 'px' }
-      })
-    }
-
-    // fix sub nav on scroll
-    var $win = $(window)
-      , $nav = $('.subnav')
-      , navTop = $('.subnav').length && $('.subnav').offset().top - 40
-      , isFixed = 0
-
-    processScroll()
-
-    // hack sad times - holdover until rewrite for 2.1
-    $nav.on('click', function () {
-      if (!isFixed) setTimeout(function () {  $win.scrollTop($win.scrollTop() - 47) }, 10)
+        }
+        
+        // add tipsies to grid for scaffolding
+        if ($('#grid-system').length) {
+            $('#grid-system').tooltip({
+                selector: '.show-grid > div',
+                title: function () { return $(this).width() + 'px' }
+            })
+        }
+        
+        // fix sub nav on scroll
+        var $win = $(window),
+            $nav = $('.subnav'),
+            navTop = $('.subnav').length && $('.subnav').offset().top - 40,
+            isFixed = 0
+        
+        processScroll()
+        
+        // hack sad times - holdover until rewrite for 2.1
+        $nav.on('click', function () {
+            if (!isFixed) setTimeout(function () { 
+                    $win.scrollTop($win.scrollTop() - 47) 
+                }, 10)
+        })
+        
+        $win.on('scroll', processScroll)
+        
+        function processScroll() {
+            var i, scrollTop = $win.scrollTop()
+            if (scrollTop >= navTop && !isFixed) {
+                isFixed = 1
+                $nav.addClass('subnav-fixed')
+            }
+            else if (scrollTop <= navTop && isFixed) {
+                isFixed = 0
+                $nav.removeClass('subnav-fixed')
+            }
+        }
     })
+}(window.jQuery)
 
-    $win.on('scroll', processScroll)
+function runMiniClock() {
+    var time = new Date();
+    var hours = time.getHours();
+    var minutes = time.getMinutes();
+    var seconds = time.getSeconds();
+    seconds=((seconds < 10) ? "0" : "") + seconds;
+    minutes=((minutes < 10) ? "0" : "") + minutes;
+    hours=(hours > 24) ? hours-24 : hours;
+    hours=(hours == 0) ? 0 : hours;
+    var clock = hours + ":" + minutes + ":" + seconds;
+    if(clock != document.getElementById('clock').innerHTML) document.getElementById('clock').innerHTML = clock;
+    timer = setTimeout("runMiniClock()",1000);
+}
 
-    function processScroll() {
-      var i, scrollTop = $win.scrollTop()
-      if (scrollTop >= navTop && !isFixed) {
-        isFixed = 1
-        $nav.addClass('subnav-fixed')
-      } else if (scrollTop <= navTop && isFixed) {
-        isFixed = 0
-        $nav.removeClass('subnav-fixed')
-      }
-    }
-    
-    //~ $('td div.btn-group').tooltip({
-        //~ selector: "a[rel=tooltip]"
-    //~ }) 
-    
-    
+function setDatePickerOption() {
     $.datepicker.regional['ru'] = {
         closeText: 'Закрыть',
         prevText: '&#x3c;Пред',
@@ -152,54 +204,39 @@
         timeFormat: 'hh:mm:ss'
     });
     
-    })
+    $('input[name=birth_day], input[name=document_date]').datepicker({
+        numberOfMonths: 1,
+        showTime: false,
+    });
+}
 
-// Modified from the original jsonpi https://github.com/benvinegar/jquery-jsonpi
-$.ajaxTransport('jsonpi', function(opts, originalOptions, jqXHR) {
-  var url = opts.url;
+function goSearchPerson(input_text) {
+    //~ alert("goSearchPerson()"); //debug
+    var div = input_text.next().children("fieldset");
+    var query = input_text.val();
+    if (query == '') { return false }
+    div.load("/person/search/?query="+ query +"&destination="+ input_text.attr("name"));
+    return false;
+}
 
-  return {
-    send: function(_, completeCallback) {
-      var name = 'jQuery_iframe_' + jQuery.now()
-        , iframe, form
 
-      iframe = $('<iframe>')
-        .attr('name', name)
-        .appendTo('head')
 
-      form = $('<form>')
-        .attr('method', opts.type) // GET or POST
-        .attr('action', url)
-        .attr('target', name)
 
-      $.each(opts.params, function(k, v) {
-
-        $('<input>')
-          .attr('type', 'hidden')
-          .attr('name', k)
-          .attr('value', typeof v == 'string' ? v : JSON.stringify(v))
-          .appendTo(form)
-      })
-
-      form.appendTo('body').submit()
-    }
-  }
+$(document).ready(function($) {
+    runMiniClock();
+    setDatePickerOption();
+    
+    var delay = (function(){
+      var timer = 0;
+      return function(callback, ms){
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+      };
+    })();
+    
+    $("#persons input.search").keyup(function() {
+        goSearchPerson($(this));
+    });
 })
 
-}(window.jQuery)
 
-function runMiniClock()
-{
-    var time = new Date();
-    var hours = time.getHours();
-    var minutes = time.getMinutes();
-    var seconds = time.getSeconds();
-    seconds=((seconds < 10) ? "0" : "") + seconds;
-    minutes=((minutes < 10) ? "0" : "") + minutes;
-    hours=(hours > 24) ? hours-24 : hours;
-    hours=(hours == 0) ? 0 : hours;
-    var clock = hours + ":" + minutes + ":" + seconds;
-    if(clock != document.getElementById('clock').innerHTML) document.getElementById('clock').innerHTML = clock;
-    timer = setTimeout("runMiniClock()",1000);
-}
-runMiniClock();

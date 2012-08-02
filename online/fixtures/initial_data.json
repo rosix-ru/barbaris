@@ -12,87 +12,7 @@
         "model": "online.org",
         "fields": {
             "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 1"
-        }
-    },
-    {
-        "pk": 11,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 10"
-        }
-    },
-    {
-        "pk": 12,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 11"
-        }
-    },
-    {
-        "pk": 13,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 12"
-        }
-    },
-    {
-        "pk": 14,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 13"
-        }
-    },
-    {
-        "pk": 15,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 14"
-        }
-    },
-    {
-        "pk": 16,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 15"
-        }
-    },
-    {
-        "pk": 17,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 16"
-        }
-    },
-    {
-        "pk": 18,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 17"
-        }
-    },
-    {
-        "pk": 19,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 18"
-        }
-    },
-    {
-        "pk": 20,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 19"
+            "title": "\u041e\u041e\u041e \"\u0420\u043e\u0433\u0430 \u0438 \u043a\u043e\u043f\u044b\u0442\u0430\""
         }
     },
     {
@@ -100,23 +20,7 @@
         "model": "online.org",
         "fields": {
             "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 2"
-        }
-    },
-    {
-        "pk": 21,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 20"
-        }
-    },
-    {
-        "pk": 22,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 21"
+            "title": "\u041e\u041e\u041e \"\u0421\u0432\u0435\u0442\u043b\u044b\u0439 \u043f\u0443\u0442\u044c\""
         }
     },
     {
@@ -124,55 +28,7 @@
         "model": "online.org",
         "fields": {
             "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 3"
-        }
-    },
-    {
-        "pk": 5,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 4"
-        }
-    },
-    {
-        "pk": 6,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 5"
-        }
-    },
-    {
-        "pk": 7,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 6"
-        }
-    },
-    {
-        "pk": 8,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 7"
-        }
-    },
-    {
-        "pk": 9,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 8"
-        }
-    },
-    {
-        "pk": 10,
-        "model": "online.org",
-        "fields": {
-            "is_seller": false,
-            "title": "\u0422\u0435\u0441\u0442 \u041e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044f 9"
+            "title": "\u041e\u041e\u041e \"\u0422\u0443\u0440\u044b \u043f\u043e \u041a\u043e\u043b\u044b\u043c\u0435\""
         }
     },
     {
@@ -204,7 +60,7 @@
         "model": "online.orgdetail",
         "fields": {
             "kpp": "",
-            "bank_title": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0431\u0430\u043d\u043a\u0430\r\n",
+            "bank_title": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0431\u0430\u043d\u043a\u0430",
             "document_series": "",
             "phones": "",
             "document_number": "",
@@ -218,247 +74,7 @@
             "address": "",
             "document_code": "",
             "org": 2,
-            "fulltitle": "\u041f\u043e\u043b\u043d\u043e\u0435 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u0438 \u041e\u041e\u041e \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0438\u0435 \u0431\u0443\u043c\u0430\u0436\u043d\u044b\u0435 \u043a\u043e\u043b\u0431\u0430\u0441\u043a\u0438",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 3,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 11,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 4,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 12,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 5,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 13,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 6,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 14,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 7,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 15,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 8,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 16,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 9,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 17,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 10,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 18,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 11,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 19,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 12,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 20,
-            "fulltitle": "",
+            "fulltitle": "\u041f\u043e\u043b\u043d\u043e\u0435 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u0438 \u041e\u041e\u041e \u0420\u043e\u0433\u0430 \u0438 \u043a\u043e\u043f\u044b\u0442\u0430",
             "document_type": "",
             "document_date": ""
         }
@@ -477,59 +93,11 @@
             "bank_bik": "",
             "ogrn": "",
             "bank_set_account": "",
-            "inn": "",
+            "inn": "2222222222222222",
             "bank_cor_account": "",
             "address": "",
             "document_code": "",
             "org": 3,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 14,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 21,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 22,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 22,
             "fulltitle": "",
             "document_type": "",
             "document_date": ""
@@ -549,7 +117,7 @@
             "bank_bik": "",
             "ogrn": "",
             "bank_set_account": "",
-            "inn": "",
+            "inn": "3333333333333333",
             "bank_cor_account": "",
             "address": "",
             "document_code": "",
@@ -560,303 +128,69 @@
         }
     },
     {
-        "pk": 16,
-        "model": "online.orgdetail",
+        "pk": 1,
+        "model": "online.person",
         "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 5,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 17,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 6,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 18,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 7,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 19,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 8,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 20,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 9,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
-        }
-    },
-    {
-        "pk": 21,
-        "model": "online.orgdetail",
-        "fields": {
-            "kpp": "",
-            "bank_title": "",
-            "document_series": "",
-            "phones": "",
-            "document_number": "",
-            "document_organ": "",
-            "is_active": true,
-            "bank_bik": "",
-            "ogrn": "",
-            "bank_set_account": "",
-            "inn": "",
-            "bank_cor_account": "",
-            "address": "",
-            "document_code": "",
-            "org": 10,
-            "fulltitle": "",
-            "document_type": "",
-            "document_date": ""
+            "first_name": "\u0418\u0432\u0430\u043d",
+            "last_name": "\u0418\u0432\u0430\u043d\u043e\u0432",
+            "middle_name": "\u0418\u0432\u0430\u043d\u043e\u0432\u0438\u0447",
+            "phones": "22222",
+            "sex": "\u043c\u0443\u0436",
+            "org": 2
         }
     },
     {
         "pk": 2,
         "model": "online.person",
         "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": 2
+            "first_name": "\u041f\u0435\u0442\u0440",
+            "last_name": "\u041f\u0435\u0442\u0440\u043e\u0432",
+            "middle_name": "\u041f\u0435\u0442\u0440\u043e\u0432\u0438\u0447",
+            "phones": "33333",
+            "sex": "\u043c\u0443\u0436",
+            "org": 3
         }
     },
     {
         "pk": 3,
         "model": "online.person",
         "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 4,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 5,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 6,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 7,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 8,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 9,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 10,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 11,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 12,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
-        }
-    },
-    {
-        "pk": 13,
-        "model": "online.person",
-        "fields": {
-            "first_name": "",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "",
-            "phones": "",
-            "sex": "",
-            "org": null
+            "first_name": "\u0421\u0438\u0434\u043e\u0440",
+            "last_name": "\u0421\u0438\u0434\u043e\u0440\u043e\u0432",
+            "middle_name": "\u0421\u0438\u0434\u043e\u0440\u043e\u0432\u0438\u0447",
+            "phones": "44444",
+            "sex": "\u043c\u0443\u0436",
+            "org": 4
         }
     },
     {
         "pk": 1,
-        "model": "online.person",
+        "model": "online.persondetail",
         "fields": {
-            "first_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "last_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "middle_name": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "phones": "\u0422\u0435\u0441\u0442 \u043a\u043b\u0438\u0435\u043d\u0442",
-            "sex": "",
-            "org": null
+            "residence_sity": "",
+            "document_series": "",
+            "residence_case": "",
+            "residence_country": "",
+            "birth_country": "\u0420\u043e\u0441\u0441\u0438\u044f",
+            "birth_day": "1980-08-01",
+            "document_date": "",
+            "residence_apartment": "",
+            "birth_area": "",
+            "document_number": "",
+            "document_organ": "",
+            "birth_sity": "\u0411\u0438\u0440\u043e\u0431\u0438\u0434\u0436\u0430\u043d",
+            "residence_street": "",
+            "residence_sitizenship": "\u0420\u043e\u0441\u0441\u0438\u044f",
+            "residence_region": "",
+            "is_active": true,
+            "birth_region": "",
+            "birth_settlement": "",
+            "document_code": "",
+            "document_type": "",
+            "residence_house": "",
+            "residence_settlement": "",
+            "person": 1,
+            "residence_area": ""
         }
     },
     {
@@ -916,276 +250,6 @@
             "residence_house": "",
             "residence_settlement": "",
             "person": 3,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 4,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 4,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 5,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 5,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 6,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 6,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 7,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 7,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 8,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "dgfgd",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 10,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 9,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "dsfdfsdf",
-            "document_organ": "",
-            "birth_sity": "asdasd",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 11,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 10,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "1212313",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 12,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 11,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 13,
-            "residence_area": ""
-        }
-    },
-    {
-        "pk": 1,
-        "model": "online.persondetail",
-        "fields": {
-            "residence_sity": "",
-            "document_series": "",
-            "residence_case": "",
-            "residence_country": "",
-            "birth_country": "",
-            "birth_day": null,
-            "document_date": "",
-            "residence_apartment": "",
-            "birth_area": "",
-            "document_number": "",
-            "document_organ": "",
-            "birth_sity": "",
-            "residence_street": "",
-            "residence_sitizenship": "\u0420\u043e\u0441\u0441\u0438\u044f",
-            "residence_region": "",
-            "is_active": true,
-            "birth_region": "",
-            "birth_settlement": "",
-            "document_code": "",
-            "document_type": "",
-            "residence_house": "",
-            "residence_settlement": "",
-            "person": 1,
             "residence_area": ""
         }
     },
@@ -1388,14 +452,6 @@
         }
     },
     {
-        "pk": 2,
-        "model": "online.room",
-        "fields": {
-            "num": 2,
-            "service": 1
-        }
-    },
-    {
         "pk": 3,
         "model": "online.room",
         "fields": {
@@ -1404,11 +460,35 @@
         }
     },
     {
+        "pk": 12,
+        "model": "online.room",
+        "fields": {
+            "num": 12,
+            "service": 1
+        }
+    },
+    {
+        "pk": 15,
+        "model": "online.room",
+        "fields": {
+            "num": 15,
+            "service": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "online.room",
+        "fields": {
+            "num": 2,
+            "service": 2
+        }
+    },
+    {
         "pk": 4,
         "model": "online.room",
         "fields": {
             "num": 4,
-            "service": 1
+            "service": 2
         }
     },
     {
@@ -1416,7 +496,7 @@
         "model": "online.room",
         "fields": {
             "num": 5,
-            "service": 1
+            "service": 2
         }
     },
     {
@@ -1424,7 +504,7 @@
         "model": "online.room",
         "fields": {
             "num": 6,
-            "service": 1
+            "service": 2
         }
     },
     {
@@ -1432,7 +512,7 @@
         "model": "online.room",
         "fields": {
             "num": 7,
-            "service": 1
+            "service": 2
         }
     },
     {
@@ -1460,42 +540,10 @@
         }
     },
     {
-        "pk": 11,
-        "model": "online.room",
-        "fields": {
-            "num": 11,
-            "service": 2
-        }
-    },
-    {
-        "pk": 12,
-        "model": "online.room",
-        "fields": {
-            "num": 12,
-            "service": 2
-        }
-    },
-    {
-        "pk": 13,
-        "model": "online.room",
-        "fields": {
-            "num": 13,
-            "service": 2
-        }
-    },
-    {
         "pk": 14,
         "model": "online.room",
         "fields": {
             "num": 14,
-            "service": 2
-        }
-    },
-    {
-        "pk": 15,
-        "model": "online.room",
-        "fields": {
-            "num": 15,
             "service": 2
         }
     },
@@ -1508,11 +556,27 @@
         }
     },
     {
+        "pk": 11,
+        "model": "online.room",
+        "fields": {
+            "num": 11,
+            "service": 10
+        }
+    },
+    {
+        "pk": 13,
+        "model": "online.room",
+        "fields": {
+            "num": 13,
+            "service": 10
+        }
+    },
+    {
         "pk": 17,
         "model": "online.room",
         "fields": {
             "num": 17,
-            "service": 2
+            "service": 11
         }
     },
     {
@@ -1743,108 +807,6 @@
             "expired_days": 0,
             "percent": "0.1",
             "title": "\u041e\u0431\u044b\u0447\u043d\u043e\u0435"
-        }
-    },
-    {
-        "pk": 3,
-        "model": "online.order",
-        "fields": {
-            "comment": "",
-            "updated": "2012-07-30T10:44:44.104",
-            "other_persons": [],
-            "created": "2012-07-30T10:44:44.104",
-            "person": 1,
-            "state": 1,
-            "user": 1,
-            "attributes": []
-        }
-    },
-    {
-        "pk": 2,
-        "model": "online.order",
-        "fields": {
-            "comment": "",
-            "updated": "2012-07-30T06:19:35.467",
-            "other_persons": [],
-            "created": "2012-07-30T06:19:35.467",
-            "person": 2,
-            "state": 1,
-            "user": 1,
-            "attributes": []
-        }
-    },
-    {
-        "pk": 1,
-        "model": "online.order",
-        "fields": {
-            "comment": "",
-            "updated": "2012-07-30T06:16:48.682",
-            "other_persons": [],
-            "created": "2012-07-30T06:16:48.682",
-            "person": 2,
-            "state": 1,
-            "user": 1,
-            "attributes": []
-        }
-    },
-    {
-        "pk": 4,
-        "model": "online.specification",
-        "fields": {
-            "count": 1,
-            "updated": "2012-07-30T10:44:44.136",
-            "end": "2012-07-31T10:44:44.135",
-            "room": 1,
-            "created": "2012-07-30T10:44:44.136",
-            "price": 1,
-            "start": "2012-07-30T10:44:44.135",
-            "reservation": null,
-            "order": 3
-        }
-    },
-    {
-        "pk": 3,
-        "model": "online.specification",
-        "fields": {
-            "count": 3,
-            "updated": "2012-07-30T09:16:44.203",
-            "end": "2012-07-30T12:16:44.203",
-            "room": null,
-            "created": "2012-07-30T09:16:44.203",
-            "price": 10,
-            "start": "2012-07-30T09:16:44.203",
-            "reservation": null,
-            "order": 2
-        }
-    },
-    {
-        "pk": 2,
-        "model": "online.specification",
-        "fields": {
-            "count": 10,
-            "updated": "2012-07-30T09:13:47.488",
-            "end": "2012-08-09T09:13:47.488",
-            "room": null,
-            "created": "2012-07-30T09:13:47.488",
-            "price": 8,
-            "start": "2012-07-30T09:13:47.488",
-            "reservation": null,
-            "order": 2
-        }
-    },
-    {
-        "pk": 1,
-        "model": "online.specification",
-        "fields": {
-            "count": 12,
-            "updated": "2012-07-30T06:19:35.493",
-            "end": "2012-08-11T06:19:35.492",
-            "room": 1,
-            "created": "2012-07-30T06:19:35.493",
-            "price": 1,
-            "start": "2012-07-30T06:19:35.492",
-            "reservation": null,
-            "order": 2
         }
     }
 ]
