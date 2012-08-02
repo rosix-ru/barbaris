@@ -40,7 +40,18 @@
 
 {% load i18n base_extras %}
 
-{% block page_name %}Заказы{% endblock %}
+{% block page_name %}Заказы
+
+    {% if person %}
+        <small>по клиенту: {{ person }}</small>
+    {% endif %}
+
+    {% if org %}
+        <small>по организации: {{ org }}</small>
+    {% endif %}
+
+{% endblock %}
+
 {% block search_placeholder %}Поиск по клиенту{% endblock %}
 
 {% block subnav_content %}
@@ -70,27 +81,42 @@
 <table id="table-orders" class="table table-condensed">
     <thead>
         <tr>
-            <th class="client"><span>Клиент</span></th>
+            <th class="person"><span>Клиент</span></th>
 <!--
             <th class="comment"><span>Комментарий</span></th>
 -->
-            <th class="input-mini full-summa"><span class="pull-right">Сумма</span></th>
-            <th class="input-mini start_date"><span>Дата</span></th>
-            <th class="input-small user"><span>Принял</span></th>
-            <th class="input-mini state"><span>Статус</span></th>
+            <th class="input-mini"><span class="pull-right">Сумма</span></th>
+            <th class="input-mini"><span>Дата</span></th>
+            <th class="input-small"><span>Принял</span></th>
+            <th class="input-mini"><span>Статус</span></th>
+            <th class="input-small"><span>Действия</span></th>
         </tr>
     </thead>
     <tbody>
     {% for order in orders %}
         <tr id="order_{{ order.id }}">
-            <td class="client"><span>{{ order.client }}</span></td>
+            <td class="person"><span>{{ order.person }}</span></td>
 <!--
             <td class="comment"><span>{{ order.comment }}</span></td>
 -->
-            <td class="input-mini full-summa"><span class="pull-right">{{ order.summa }}</span></td>
-            <td class="input-mini start_date"><span>{{ order.updated|date:'d/m/y' }}</span></td>
-            <td class="input-small user"><span>{% short_username order.user %}</span></td>
-            <td class="input-mini state"><span>{{ order.get_state_display }}</span></td>
+            <td class="input-mini"><span class="pull-right">{{ order.summa }}</span></td>
+            <td class="input-mini"><span>{{ order.updated|date:'d/m/y' }}</span></td>
+            <td class="input-small"><span>{% short_username order.user %}</span></td>
+            <td class="input-mini"><span>{{ order.get_state_display }}</span></td>
+            <td class="input-mini">
+                <a href="{% url order_detail order.id %}">
+                    <i class="icon-eye-open" title="Быстрый просмотр"></i>
+                </a>
+                <a href="{% url order_detail order.id %}">
+                    <i class="icon-edit" title="Изменить заказ"></i>
+                </a>
+                <a href="{% url order_list_client 'person' order.person.id %}">
+                    <i class="icon-list" title="Заказы этого клиента"></i>
+                </a>
+                <a href="{% url order_detail order.id %}">
+                    <i class="icon-plus" title="Новый заказ для этого клиента"></i>
+                </a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

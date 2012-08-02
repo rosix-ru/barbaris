@@ -573,6 +573,10 @@ class Order(models.Model):
     def summa(self):
         return sum([ x.summa for x in self.specification_set.all() ])
     
+    @property
+    def state_create(self):
+        return self.state == 1
+    
 class Specification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

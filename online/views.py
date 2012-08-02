@@ -112,13 +112,25 @@ def monitor(request):
 @login_required
 def order_list(request, key=None, id=None):
     print "EXEC views.order_list()" # DEBUG
-    #~ print request # DEBUG
+    print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
     session['user_id'] = user.id
     
     orders = Order.objects.all()
+    
+    person, org = (None, None)
+    
+    if key == 'person':
+        person = get_object_or_404(Person.objects, id=id)
+        person_not_save = False
+        orders = orders.filter(person=person)
+    
+    elif key == 'org':
+        org = get_object_or_404(Org.objects, id=id)
+        org_not_save = False
+        orders = orders.filter(person__org=org)
     
     if request.GET:
         try:
@@ -146,6 +158,8 @@ def order_list(request, key=None, id=None):
             orders = search(orders, search_fields, query)
         ctx['query'] = query
     
+    ctx['person'] = person
+    ctx['org'] = org
     ctx['orders'] = orders
     ctx['years']  = [ x.year  for x in orders.dates('updated', 'year') ]
     ctx['months'] = [ x.month for x in orders.dates('updated', 'month') ]
@@ -156,7 +170,7 @@ def order_list(request, key=None, id=None):
                             context_instance=RequestContext(request,))
 
 @login_required
-def order_detail(request, id):
+def order_detail(request, id=None, person=None):
     print "EXEC views.order_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
@@ -164,51 +178,65 @@ def order_detail(request, id):
     user = request.user
     session['user_id'] = user.id
     
+    if not id:
+        order = Order(user=user)
+        order.person = person
+        _order_new=True
+    else:
+        order = get_object_or_404(Order, id=id)
+        _order_new=False
+    
+    if request.method == 'POST':
+        if 'delete_specification' in request.POST:
+            try:
+                id = request.POST['delete_specification']
+                Specification.objects.filter(id=id).all().delete()
+            except:
+                pass
+        else:
+            spec = Specification(order=order)
+            form_spec = forms.SpecificationForm(request.POST, instance=spec)
+            if form_spec.is_valid():
+                order.save()
+                spec.order = order
+                form_spec.save()
+    #~ else:
+    form_spec = forms.SpecificationForm()#instance=spec)
+    
+    ctx['order'] = order
+    ctx['person'] = order.person
+    ctx['org'] = order.person.org
+    ctx['categories'] = Category.objects.all()
+    ctx['form_spec'] = form_spec
+    
+    if _order_new:
+        return render_to_response('order_new.html', ctx,
+                            context_instance=RequestContext(request,))
     return render_to_response('order_detail.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def order_new(request, key, id):
+def order_new(request, id):
     print "EXEC views.order_new()" # DEBUG
     #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
     
-    person, org = (None, None)
-    
-    if key == 'person':
-        if id in ('0', 0):
-            person = Person(last_name="Новый клиент")
-            person_not_save = True
-        else:
-            person = get_object_or_404(Person.objects, id=id)
-            person_not_save = False
-    
-    elif key == 'org':
-        if id in ('0', 0):
-            org = Org(last_name="Новый клиент")
-            org_not_save = True
-        else:
-            org = get_object_or_404(Org.objects, id=id)
-            org_not_save = False
-    
-    order = Order(user=user)
-    spec = Specification(order=order)
-    
-    if request.method == 'POST':
-        form_spec = forms.SpecificationForm(request.POST, instance=spec)
-        if form_spec.is_valid():
-            form_spec.save()
+    if id in ('0', 0):
+        person = Person(last_name="Новый клиент")
+        person.save()
     else:
-        form_spec = forms.SpecificationForm(instance=order)
+        person = get_object_or_404(Person.objects, id=id)
     
-    ctx['order'] = order
-    ctx['categories'] = Category.objects.all()
-    ctx['form_spec'] = form_spec
+    return order_detail(request, None, person)
+
+@login_required
+def specification_delete(request, id):
+    print "EXEC views.order_new()" # DEBUG
+    #~ print request # DEBUG
     
-    return render_to_response('order_new.html', ctx,
-                            context_instance=RequestContext(request,))
+    sp = get_object_or_404(Specification.objects, id=id)
+    sp.delete()
+    
+    return  HttpResponseRedirect()
 
 @login_required
 def price_list(request):
@@ -506,6 +534,12 @@ def search(queryset, search_fields, query):
                       for orm_lookup in orm_lookups]
         queryset = queryset.filter(reduce(operator.or_, or_queries))
     
+    if settings.DEBUG:
+        try:
+            print queryset.query
+        except:
+            print unicode(queryset.query)
+        
     return queryset
 
 def get_paginator(qs, page=1, on_page=25):

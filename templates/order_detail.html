@@ -40,11 +40,97 @@
 
 {% load i18n base_extras %}
 
-{% block page_name %}Заказ №{{ order.id }} от {{ order.created|date:"d.m.Y"}}{% endblock %}
+{% block extrahead %}
 
-{% block content %}
-{{ client }}
+<!--
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css"/>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/widgets.css"/>
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/actions.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/calendar.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/DateTimeShortcuts.js"></script>
+<script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{{ STATIC_URL }}admin/{% endfilter %}";
+</script>
+-->
 
 {% endblock %}
 
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flick/jquery-ui-1.8.22.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jquery-ui-timepicker-addon.css"/>
+    
+{% endblock %}
 
+{% block extrajs %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-ru.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-sliderAccess.js"></script>
+{% endblock %}
+
+
+{% block page_name %}Заказ №{{ order.id }} от {{ order.created|date:"d.m.Y"}}{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block subnav_content %}
+<li>
+    <a href="#specifications">Просмотр заказа</a>
+</li>
+<li>
+    <a href="#categories">Прайс-лист</a>
+</li>
+{% endblock %}
+
+{% block content %}
+
+<legend>Просмотр заказа</legend>
+<div id="specifications" class="row-fluid">
+    <div class="well span12">
+    {% include "order_specifications.html" %}
+    </div>
+</div>
+
+<legend>Прайс-лист</legend>
+<div id="categories" class="accordion">
+{% for category in categories %}
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a href="#category_{{ category.id }}" data-parent="#categories" data-toggle="collapse" class="accordion-toggle">
+                {{ category }}
+            </a>
+        </div>
+        <div class="accordion-body collapse" id="category_{{ category.id }}" style="height: 0px;">
+            <div class="accordion-inner">
+                <div id="service_group_{{ category.id }}" class="accordion">
+            {% for service in category.service_set.all %}
+                {% if service.active_prices %}
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a href="#service_{{ service.id }}" data-parent="#service_group_{{ category.id }}" data-toggle="collapse" class="accordion-toggle">
+                                {{ service.title }}
+                            </a>
+                        </div>
+                        <div class="accordion-body collapse" id="service_{{ service.id }}" style="height: 0px;">
+                            <div class="accordion-inner">
+                                {{ form.media }}
+                                {% include "specification_forms.html" %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock %}

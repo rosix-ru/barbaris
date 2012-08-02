@@ -36,6 +36,7 @@
 ###############################################################################
 
 from django import forms
+from django.forms.models import modelformset_factory
 #~ from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 from barbaris.online import models
@@ -107,3 +108,4 @@ class SpecificationForm(forms.ModelForm):
             #~ 'start': widgets.AdminSplitDateTime(),
             #~ 'end': widgets.AdminSplitDateTime(),
         #~ }
+SpecificationFormSet = modelformset_factory(models.Specification)

@@ -43,7 +43,7 @@ urlpatterns = patterns('barbaris.online.views',
     url(r'^orders/$',                   'order_list',           name='order_list'),
     url(r'^orders/(\w+)/(\d+)/$',       'order_list',           name='order_list_client'),
     url(r'^orders/(\d+)/$',             'order_detail',         name='order_detail'),
-    url(r'^orders/new/(\w+)/(\d+)/$',   'order_new',            name='order_new'),
+    url(r'^orders/new/person/(\d+)/$',  'order_new',            name='order_new'),
     
     url(r'^pricelist/$',                'price_list',           name='price_list'),
     
