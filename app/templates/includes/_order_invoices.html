@@ -1,0 +1,99 @@
+{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+
+-->{% endcomment %}
+{% load i18n base_extras %}
+
+<div class="span6">
+    <h3>Список счетов на оплату</h3>
+</div>
+
+{% if not order.state_close %}
+    <div class="span6">
+        <form class="form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset class="pull-right">
+                <input type="hidden" name='invoice_add' value="" />
+                <button type="submit" class="btn btn-primary">Добавить</button>
+             </fieldset>
+        </form>
+    </div>
+{% endif %}
+
+{% if order.invoice_set.all %}
+<table id="table-specifications" class="table table-condensed">
+    <thead>
+        <tr>
+            <th class="input-medium"><span>Дата</span></th>
+            <th class="input-mini"><span class="pull-right">Сумма</span></th>
+            <th class="input-mini"><span>Тип</span></th>
+            <th class="input-mini"><span>Статус</span></th>
+            <th class="input-mini"><span>Расчёт</span></th>
+            <th class=""><span>Комментарий</span></th>
+            <th class="input-medium"><span>Создал</span></th>
+            <th class="input-small"><span class="pull-right">Действия</span></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for invoice in order.invoice_set.all %}
+        <tr id="invoice_{{ invoice.id }}">
+            <td><span>{{ invoice.date }}</span></td>
+            <td><span class="pull-right">{{ invoice.summa }}</span></td>
+            <td><span>{{ invoice.is_avance|yesno:"аванс,оплата" }}</span></td>
+            <td><span>{{ invoice.get_state_display }}</span></td>
+            <td><span>{{ invoice.get_payment_display }}</span></td>
+            <td><span>{{ invoice.comment }}</span></td>
+            <td><span>{% short_username invoice.user %}</span></td>
+            <td><span class="pull-right">
+                <a href="#" data-toggle="_modal_invoice_delete_{{ invoice.id }}_">
+                    <i class="icon-trash" title="Удалить"></i>
+                </a>
+                <a href="#" data-toggle="_modal_invoice_change_{{ invoice.id }}_">
+                    <i class="icon-edit" title="Изменить"></i>
+                </a>
+                <a href="#" data-toggle="_modal_invoice_payment_{{ invoice.id }}_">
+                    <i class="icon-ok" title="Оплатить"></i>
+                </a>
+                <a href="{% url document_print 'invoice' invoice.id %}" target="_blank">
+                    <i class="icon-print" title="Печать"></i>
+                </a>
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}

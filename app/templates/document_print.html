@@ -1,4 +1,5 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+{% extends 'base.html' %}
+{% comment %}<!--
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -39,10 +40,42 @@
 
 {% load i18n base_extras %}
 
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
+{% block title %}{{ block.super }} - {{ document.document }} №{{ document.id }} от {{ document.date }}{% endblock %}
 
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
+{% block extrastyle %}{{ block.super }}
+    <link rel="stylesheet" media="print" type="text/css" href="{{ STATIC_URL }}css/print.css"/>
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+
+{% block page_name %}{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block subnav_content %}
+<li>
+    <a href="" onclick="javascript:print()" class="label label-primary">
+        <i class="icon-print"></i>
+        Печать
+    </a>
+</li>
+
+<li class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Печатные формы <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+    {% for doctemplate in template_list %}
+        <li{% if doctemplate.id == template.id %} class="active"{% endif %}>
+            <a href="?form={{ doctemplate.id }}">
+            {{ doctemplate.title }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="document">
+    {{ document_body|safe }}
+</div>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% comment %}<!--
+{% extends 'registration/login.html' %}{% comment %}<!--
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -37,22 +37,11 @@
 
 -->{% endcomment %}
 {% load i18n %}
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/logout.css" />{% endblock %}
 
-{% block bodyclass %}logout{% endblock %}
-{% block navbar %}{% endblock %}
-{% block header %}{% endblock %}
-{% block footer %}{% endblock %}
-{% block content %}
-    <div class="navbar">
-        <div class="navbar-inner">
-            <p class="brand">АИС Барбарис</p>
-        </div>
-    </div>
+{% block login_place %}
     <div class="alert alert-success">
         <button class="close" data-dismiss="alert">×</button>
-        <p><strong>Вы вышли из системы!</strong></p>
-        <p>Но можете зайти снова...</p>
+        <p><strong>{% trans "Thanks for spending some quality time with the Web site today." %}</strong></p>
     </div>
     <div align=center>
         <p><a href="{% url login %}">{% trans 'Log in again' %}</a></p>

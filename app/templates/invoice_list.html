@@ -1,4 +1,5 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+{% extends 'base.html' %}
+{% comment %}<!--
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -39,10 +40,51 @@
 
 {% load i18n base_extras %}
 
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
+{% block page_name %}Счета{% endblock %}
 
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
+{% block content %}
+<table id="table-specifications" class="table table-condensed">
+    <thead>
+        <tr>
+            <th class="input-medium"><span>Дата</span></th>
+            <th class="input-mini"><span class="pull-right">Сумма</span></th>
+            <th class="input-mini"><span>Тип</span></th>
+            <th class="input-mini"><span>Статус</span></th>
+            <th class="input-mini"><span>Расчёт</span></th>
+            <th class=""><span>Комментарий</span></th>
+            <th class="input-medium"><span>Создал</span></th>
+            <th class="input-small"><span class="pull-right">Действия</span></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for invoice in invoice_list %}
+        <tr id="invoice_{{ invoice.id }}">
+            <td><span>{{ invoice.date }}</span></td>
+            <td><span class="pull-right">{{ invoice.summa }}</span></td>
+            <td><span>{{ invoice.is_avance|yesno:"аванс,оплата" }}</span></td>
+            <td><span>{{ invoice.get_state_display }}</span></td>
+            <td><span>{{ invoice.get_payment_display }}</span></td>
+            <td><span>{{ invoice.comment }}</span></td>
+            <td><span>{% short_username invoice.user %}</span></td>
+            <td><span class="pull-right">
+                <a href="#" data-toggle="_modal_invoice_delete_{{ invoice.id }}_">
+                    <i class="icon-trash" title="Удалить"></i>
+                </a>
+                <a href="#" data-toggle="_modal_invoice_change_{{ invoice.id }}_">
+                    <i class="icon-edit" title="Изменить"></i>
+                </a>
+                <a href="#" data-toggle="_modal_invoice_payment_{{ invoice.id }}_">
+                    <i class="icon-ok" title="Оплатить"></i>
+                </a>
+                <a href="{% url document_print 'invoice' invoice.id %}" target="_blank">
+                    <i class="icon-print" title="Печать"></i>
+                </a>
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+

@@ -1,0 +1,123 @@
+{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+
+-->{% endcomment %}
+
+{% load pytils_numeral %}
+
+<div class="align-right"><img src="{{ static_url }}img/logo.png"></div>
+
+<hr class="soften">
+
+<h2>{{ document.document }} №{{ document.id }} от {{ document.date }}</h2>
+
+<hr>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="row-fluid">
+      <div class="span2 align-right">Исполнитель:</div>
+      <div class="span10"><strong>{{ seller.detail.get_string_requsites }}</strong></div>
+    </div>
+    <div class="row-fluid"><div class="span12"></div></div>
+    <div class="row-fluid">
+      <div class="span2 align-right">Заказчик:</div>
+      <div class="span10"><strong>{{ document.order.person }}</strong></div>
+    </div>
+    <div class="row-fluid"><div class="span12"></div></div>
+  </div>
+</div>
+
+<table class="table table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th class="span1 align-center">№</th>
+            <th class="span6 align-center">наименование работ, услуг</th>
+            <th class="span1 align-center">кол-во</th>
+            <th class="span1 align-center">ед.</th>
+            <th class="span1 align-center">цена</th>
+            <th class="span2 align-center">сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for spec in document.order.specification_set.all %}
+        <tr>
+            <td class="span1 align-center">{{ forloop.counter }}</td>
+            <td class="span6 align-left">{{ spec.price.service.title }}</td>
+            <td class="span1 align-center">{{ spec.count }}</td>
+            <td class="span1 align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
+            <td class="span1 align-right">{{ spec.price.price }}</td>
+            <td class="span2 align-right">{{ spec.summa }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
+            <td class="span2 align-right"><strong>{{ document.order.summa }}</strong></td>
+        </tr>
+        <tr>
+            <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
+            <td class="span2 align-right"><strong>-</strong></td>
+        </tr>
+    </tfoot>
+</table>
+
+<div>Всего оказано услуг {{ document.order.count_service }}, на сумму {{ document.order.summa }} руб.</div>
+<div><strong>{{ document.order.summa|rubles }}</strong></div>
+
+<hr>
+<p>Вышеперечисленные услуги выполнены полностью и в срок. 
+Заказчик претензий по объему, качеству и срокам оказания 
+услуг не имеет.
+</p>
+
+<hr>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="row-fluid">
+      <div class="span1 align-left">Исполнитель:</div>
+      <div class="span5 align-right signature">Бекетов С.В.</div>
+      <div class="span1 align-left">Заказчик:</div>
+      <div class="span5 align-right signature">{{ payer.get_short_fio }}</div>
+    </div>
+  </div>
+</div>
+
+
+

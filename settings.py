@@ -1,4 +1,3 @@
-# Django settings for barbaris project.
 # -*- coding: utf-8 -*-
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
@@ -36,6 +35,7 @@
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
 
+# Django settings for this project.
 
 from django.utils.translation import ugettext_lazy as _
 import os
@@ -48,15 +48,24 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    # ('Grigoriy Kramarenko', 'root@rosix.ru'),
 )
-
 MANAGERS = ADMINS
+
+try:
+    f = open(abspath('AUTHORS'), 'rb')
+    AUTHORS = f.readlines()
+    f.close()
+except:
+    AUTHORS = ('Webmaster Name', 'Manager Name')
+COPYRIGHT = 'Гостиница «Барбарис»'
+COPYRIGHT_YEAR = 2010 # start year of copyright
+PROJECT_NAME = u'АИС «Барбарис»'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': abspath('data.sqlite'),                      # Or path to database file if using sqlite3.
+        'NAME': abspath('sqlite.db'),                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -71,7 +80,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'Asia/Vladivostok'
+TIME_ZONE = 'Asia/Vladivostok' #'Europe/Moscow'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -88,7 +97,15 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = False
+if DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
+    USE_TZ = False
+else:
+    USE_TZ = True
+
+LOCALE_PATHS = (
+    # abspath('locale'),
+    abspath('app','locale'),
+)
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -103,7 +120,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = abspath('static')
+STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -114,6 +131,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    abspath('static'),
+    abspath('app', 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -125,7 +144,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'p_u(d)es4q)d!x!ajft5sx3q#hjc3c)x%=j4rd+k!o&amp;*#%_+0d'
+SECRET_KEY = 'generate-this-unique-key!!!'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -144,16 +163,17 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'barbaris.urls'
+ROOT_URLCONF = 'project.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'barbaris.wsgi.application'
+WSGI_APPLICATION = 'project.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     abspath("templates"),
+    abspath("app","templates"),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
@@ -173,15 +193,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    #'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'barbaris.online',
-    'barbaris.auth_fix',
-    'cachebot',
-    'memcache_status',
+    'project.auth_fix',
+    'project.app',
+    'pytils',
+    #~ 'cachebot',
+    #~ 'memcache_status',
 )
 
 # Settings for applications:
@@ -189,14 +210,14 @@ INSTALLED_APPS = (
 START_YEAR = 2011
 
 STATE_ORDER_CREATE   = 1
-STATE_ORDER_RESERV   = 2
-STATE_ORDER_ACCEPT   = 3
+STATE_ORDER_ACCEPT   = 2
+STATE_ORDER_AVANCE   = 3
 STATE_ORDER_CLOSE    = 4
 STATE_ORDER_CANCEL   = 5
 STATE_ORDER_CHOICES = (
         (STATE_ORDER_CREATE, u'Создан'),
-        (STATE_ORDER_RESERV, u'Бронь'),
         (STATE_ORDER_ACCEPT, u'Принят'),
+        (STATE_ORDER_AVANCE, u'Аванс'),
         (STATE_ORDER_CLOSE,  u'Закрыт'),
         (STATE_ORDER_CANCEL, u'Отменён'),
     )
@@ -244,6 +265,7 @@ CATEGORY_CHOICES = (
         (u'Parking',u'Автостоянка'),
     )
 
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -273,11 +295,11 @@ LOGGING = {
     }
 }
 
-CACHES = {
-    'default': {
-        #~ 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'BACKEND': 'cachebot.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-        'KEY_PREFIX': 'barbaris',
-    }
-}
+# This import re-definition current top settings, 
+# e.g. DATABASES, SECRET_KEY, etc.
+# Default path: ../securesettings.py
+# outer from project paths and unavailable in Mercurial repository. 
+try:
+    from securesettings import *
+except:
+    pass

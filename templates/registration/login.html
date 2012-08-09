@@ -37,8 +37,62 @@
 
 -->{% endcomment %}
 
-{% load i18n %}
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/login.css" />{% endblock %}
+{% load i18n base_extras %}
+{% block extrastyle %}{{ block.super }}
+    <style type="text/css">
+        body.login {
+            background: #eee;
+        }
+        
+        .login .container {
+            background: white;
+            border: 1px solid #ccc;
+            width: 28em;
+            min-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+        }
+        
+        .login #content-main {
+            width: 100%;
+        }
+        
+        .login form {
+            margin-top: 1em;
+        }
+        
+        .login .form-row {
+            padding: 4px 0;
+            float: left;
+            width: 100%;
+        }
+        
+        .login .form-row label {
+            float: left;
+            width: 9em;
+            padding-right: 0.5em;
+            line-height: 2em;
+            text-align: right;
+            font-size: 1em;
+            color: #333;
+        }
+        
+        .login .form-row #username, .login .form-row #password {
+            width: 14em;
+        }
+        
+        .login span.help {
+            font-size: 10px;
+            display: block;
+        }
+        
+        .login .submit-row {
+            clear: both;
+            padding: 1em 0 0 9.4em;
+        }
+    </style>
+{% endblock %}
 
 {% block bodyclass %}login{% endblock %}
 {% block navbar %}{% endblock %}
@@ -47,14 +101,15 @@
 {% block content %}
     <div class="navbar">
         <div class="navbar-inner">
-            <p class="brand">АИС Барбарис</p>
+            <p class="brand">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</p>
         </div>
     </div>
+    {% block login_place %}
     {% if form.errors %}
         <div class="alert alert-error">
             <button class="close" data-dismiss="alert">×</button>
-            <p><strong>Ошибка!</strong></p>
-            <p>Неверное имя или пароль...</p>
+            <p><strong>{% trans 'Error' %}</strong></p>
+            <p>{{ form.errors }}</p>
         </div>
     {% endif %}
     
@@ -68,13 +123,14 @@
             <input type="password" name="password" value="" id="password">
         </div>
         <div class="submit-row">
-            <input type="submit" value="{% trans 'Log in' %}"/>
+            <input type="submit" class="btn btn-primary" value="{% trans 'Log in' %}"/>
         </div>
         <input type="hidden" name="next" value="{{ next|escape }}" />
     </form>
     <script type="text/javascript">
         $('#username').focus()
     </script>
+    {% endblock %}
 {% endblock %}
 
 

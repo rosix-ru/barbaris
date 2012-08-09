@@ -1,0 +1,191 @@
+{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+-->{% endcomment %}
+{% load i18n l10n base_extras %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>{% block title %}{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}{% endblock %}</title>
+    <link rel="icon" href="{{ STATIC_URL }}img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico"  type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="{% filter force_escape %}{% AUTHORS %}{% endfilter %}">
+
+<!-- START: styles -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
+    <style type="text/css">
+        body {
+            position: relative;
+            padding-top: 60px;
+            padding-bottom: 40px;
+            background-color: #fff;
+            background-image: url({{ STATIC_URL }}img/grid-18px-masked.png);
+            background-repeat: repeat-x;
+            background-position: 0 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/flick/jquery-ui.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-timepicker-addon.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/docs.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/app.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
+    
+    <!-- for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="{{ STATIC_URL }}css/html5.js"></script>
+    <![endif]-->
+
+<!-- START: block extrastyle -->
+    {% block extrastyle %}{% endblock %}
+<!-- END: block extrastyle -->
+
+<!-- END: styles -->
+</head>
+
+<body data-offset="50" data-target=".subnav" data-spy="scroll" class="{% block bodyclass %}home{% endblock %}">
+<!-- START: block navbar -->
+    {% block navbar %}{% include "includes/_navbar.html" %}{% endblock %}
+<!-- END: block navbar -->
+    
+    <div class="{% block container_type %}container{% endblock %}">
+<!-- START: header -->
+        {% block header %}
+        <header id="header">
+            <div class="row">
+                <div class="span7">
+                    <h1>{% block page_name %}BASE TEMPLATE{% endblock %}</h1>
+                </div>
+                <div class="span5">
+                    <div class="pull-right">
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- START: subnav -->
+            {% block subnav %}
+            <div class="subnav">
+                <ul class="nav nav-pills">
+                    <!-- START: search -->
+                    {% block search %}
+                    <li class="">
+                        <form id="form-search" class="form-search" action="" method="get">
+                            <fieldset>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            <input id="search" value="{{ query }}" name="query" type="text" class="input-large" placeholder="{% block search_placeholder %}Найти{% endblock %}" />
+                                            <button id="search-submit" type="submit" class="btn">&rang;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </li>
+                    {% endblock %}
+                    <!-- END: search -->
+                    <!-- START: subnav_content -->
+                    {% block subnav_content %}{% endblock %}
+                    <!-- END: subnav_content -->
+                </ul>
+            </div>
+            {% endblock %}
+            <!-- END: subnav -->
+            <div style="clear:both;"></div>
+        <hr class="soften">
+        </header>
+        {% endblock %}
+<!-- END: header -->
+    
+    
+<!-- START: block content -->
+        {% block content %}
+        {% endblock %}
+<!-- END: block content -->
+        
+        <hr>
+        
+<!-- START: block footer -->
+        {% block footer %}
+        <footer>
+            <p>© {% filter force_escape %}{% COPYRIGHT %} {% COPYRIGHT_YEARS %}{% endfilter %}</p>
+        </footer>
+        {% endblock %}
+<!-- END: block footer -->
+    
+    </div><!-- /.container -->
+    
+    {% block modals %}
+    <!-- START: share modalWindow -->
+    <div id="modalWindow" class="modal hide"></div>
+    <!-- END: share modalWindow -->
+    {% endblock %}
+        
+<!-- START: javascript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-scrollspy.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tab.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-button.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-typeahead.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-std.js"></script>
+    <script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
+    <script src="{{ STATIC_URL }}js/jquery-ui-sliderAccess.js"></script>
+    <script src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
+    <script src="{{ STATIC_URL }}js/date-ru-RU.js"></script>
+    <script src="{{ STATIC_URL }}js/django-ajax-csrf.js"></script>
+    <script src="{{ STATIC_URL }}js/app.js"></script>
+
+<!-- START: block extrajs -->
+    {% block extrajs %}{% endblock %}
+<!-- END: block extrajs -->
+
+<!-- END: javascript -->
+</body></html>

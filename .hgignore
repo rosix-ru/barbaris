@@ -5,4 +5,6 @@
 \.gzip$
 \.bz2$
 \.7z$
+\.rar$
 \.sqlite$
+\.db$

@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+
+-->{% endcomment %}
+
+{% load i18n base_extras %}
+
+{% block title %}{{ block.super }} - Карточка организации: {{ org }}{% endblock %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flick/jquery-ui-1.8.22.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jquery-ui-timepicker-addon.css"/>
+    
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-ru.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-sliderAccess.js"></script>
+{% endblock %}
+
+
+{% block page_name %}Карточка организации <p><small>{{ org }}</small></p>{% endblock %}
+{% block subnav %}{% endblock %}
+
+{% block content %}
+<form class="well form-inline" action="" method="post">{% csrf_token %}
+    <fieldset>
+    {% for field in form_org %}
+        <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+        {{ field }}
+        {{ field.errors }}
+    {% endfor %}
+        <input type="submit" class="btn btn-success" value="Сохранить" />
+    </fieldset>
+</form>
+<div class="row-fluid">
+    <div class="span6">
+        <form class="well form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset>
+                <legend>Реквизиты</legend>
+            {% for field in form_detail %}
+                <div class="control-group">
+                    <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="span6">
+        <form class="well form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset>
+                <legend>Расчётная информация</legend>
+            {% for field in form_bank %}
+                <div class="control-group">
+                    <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    
+</div>
+<div class="row-fluid">
+    <div class="span6">
+        <form class="well form-horizontal" action="" method="post">{% csrf_token %}
+            <fieldset>
+                <legend>Документ-основание</legend>
+            {% for field in form_document %}
+                <div class="control-group">
+                    <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

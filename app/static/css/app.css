@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+/* APPLICATION HACK 
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,15 +34,25 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
+*/
 
--->{% endcomment %}
+hr.soften { margin: 10px 0; }
+.subnav fieldset { padding: 4px; }
+.align-center, table th.align-center, table td.align-center { text-align: center; }
+.align-right, table th.align-right, table td.align-right { text-align: right; }
+.align-left, table th.align-left, table td.align-left { text-align: left; }
+div.signature { border-bottom: 1px solid; }
+.document {
+    background-color: #F5F5F5;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
+}
+section { padding-top: 0; }
+.navbar .brand {
+    color: #999999;
+}
 
-{% load i18n base_extras %}
-
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
-
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+/* PRINT PAGE
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,15 +34,23 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
+*/
 
--->{% endcomment %}
+.navbar, .subnav, header, footer, .btn {display: none;}
+body {background:#FFF; color:#000;}
+a {text-decoration: underline; color:#00F;}
 
-{% load i18n base_extras %}
+div.document { 
+    display: block; 
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: none;
+    box-shadow: none;
+    margin-bottom: 0;
+    min-height: 0;
+    padding: 0;
+}
 
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
-
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
+hr {
+    border-color: #000000;
+}

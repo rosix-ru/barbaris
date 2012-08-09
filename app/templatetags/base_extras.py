@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+# -*- coding: utf-8 -*-
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -35,14 +35,88 @@
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
 
--->{% endcomment %}
+from django import template
+from django.core.urlresolvers import reverse
+from django.conf import settings
+from datetime import date
 
-{% load i18n base_extras %}
+register = template.Library()
 
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
+@register.simple_tag
+def PROJECT_NAME():
+    try:
+        return settings.PROJECT_NAME
+    except:
+        return ''
 
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
-{% endblock %}
+@register.simple_tag
+def AUTHORS():
+    try:
+        return ', '.join(settings.AUTHORS)
+    except:
+        return ''
 
-{% block nav-global %}{% endblock %}
+@register.simple_tag
+def COPYRIGHT():
+    try:
+        return settings.COPYRIGHT
+    except:
+        return ''
+
+@register.simple_tag
+def COPYRIGHT_YEARS():
+    end = date.today().year
+    try:
+        start =  settings.COPYRIGHT_YEAR
+    except:
+        start = date.today().year
+    if start != end:
+        return "%s-%s" % (start, end)
+    else:
+        return "%s" % end
+
+@register.simple_tag
+def navactive(request, urls):
+    if request.path in ( reverse(url) for url in urls.split() ):
+        return "active"
+    return ""
+
+@register.simple_tag
+def subnavactive(request, key, val=None):
+    if val == None and (key in request.GET):
+        return "active"
+    if (val in ('', 0)) and (key not in request.GET):
+        return "active"
+    if key in request.GET:
+        if isinstance(val, int):
+            try:
+                get_val = int(request.GET.get(key))
+            except:
+                get_val = None
+        if isinstance(val, str):
+            try:
+                get_val = str(request.GET.get(key))
+            except:
+                get_val = None
+        if get_val == val:
+                return "active"
+    return ""
+
+@register.simple_tag
+def addGET(request, key, val=''):
+    dic = request.GET.copy()
+    if val:
+        dic[key] = val
+    else:
+        try:
+            del dic[key]
+        except:
+            pass
+    L = ['%s=%s' % (k, v) for k,v in dic.items()] 
+    return "?" + '&'.join(L)
+
+@register.simple_tag
+def short_username(user):
+    if not user.last_name and not user.first_name:
+        return user.username
+    return u'%s %s.' % (user.last_name, unicode(user.first_name)[0])

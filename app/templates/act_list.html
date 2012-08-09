@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+{% extends 'base.html' %}{% comment %}<!--
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -39,10 +39,37 @@
 
 {% load i18n base_extras %}
 
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
+{% block page_name %}Акты{% endblock %}
 
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
+{% block content %}
+<table id="table-specifications" class="table table-condensed">
+    <thead>
+        <tr>
+            <th class="input-medium"><span>Дата</span></th>
+            <th class=""><span>Комментарий</span></th>
+            <th class="input-medium"><span>Создал</span></th>
+            <th class="input-mini"><span class="pull-right">Действия</span></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for act in act_list %}
+        <tr id="act_{{ act.id }}">
+            <td><span>{{ act.date }}</span></td>
+            <td><span>{{ act.comment }}</span></td>
+            <td><span>{% short_username act.user %}</span></td>
+            <td><span class="pull-right">
+                <a href="#" data-toggle="_modal_act_change_{{ act.id }}">
+                    <i class="icon-edit" title="Изменить"></i>
+                </a>
+                <a href="{% url document_print 'act' act.id %}" target="_blank">
+                    <i class="icon-print" title="Печать"></i>
+                </a>
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+

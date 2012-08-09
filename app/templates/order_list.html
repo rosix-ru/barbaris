@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+
+-->{% endcomment %}
+
+{% load i18n base_extras %}
+
+{% block page_name %}Заказы
+
+    {% if person %}
+        <small>по клиенту: {{ person }}</small>
+    {% endif %}
+
+    {% if org %}
+        <small>по организации: {{ org }}</small>
+    {% endif %}
+
+{% endblock %}
+
+{% block search_placeholder %}Поиск по клиенту{% endblock %}
+
+{% block subnav_content %}
+{% include "includes/_subnav_date_filter.html" %}
+<li class="dropdown {% subnavactive request 'state' %}">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Статус <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li class="{% subnavactive request 'state' 0 %}">
+            <a href="{% addGET request 'state' 0 %}">Любой</a>
+        </li>
+        <li class="divider"></li>
+    {% for state, display in stats %}
+        <li class="{% subnavactive request 'state' state %}">
+            <a href="{% addGET request 'state' state %}">{{ display }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</li>
+<li>
+    <a href="{% url order_detail 0 %}" title="Новый заказ"><i class="icon-plus"></i></a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+
+<table id="table-orders" class="table table-condensed">
+    <thead>
+        <tr>
+            <th class="person"><span>Клиент</span></th>
+            <th class="input-mini"><span class="pull-right">Сумма</span></th>
+            <th class="input-mini"><span>Дата</span></th>
+            <th class="input-small"><span>Принял</span></th>
+            <th class="input-mini"><span>Статус</span></th>
+            <th class="input-small"><span class="pull-right">Действия</span></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for order in orders %}
+        <tr id="order_{{ order.id }}">
+            <td><span>{{ order.person|default:"Не установлено!" }}</span></td>
+            <td><span class="pull-right">{{ order.summa }}</span></td>
+            <td><span>{{ order.updated|date:'d/m/y' }}</span></td>
+            <td><span>{% short_username order.user %}</span></td>
+            <td><span>{{ order.get_state_display }}</span></td>
+            <td><span class="pull-right">
+                <a id="show_order_preview_{{ order.id }}" href="#modalOrderPreview" data-toggle="modal" >
+                    <i class="icon-eye-open" title="Быстрый просмотр"></i>
+                </a>
+                <a href="{% url order_detail order.id %}">
+                    <i class="icon-edit" title="Изменить заказ"></i>
+                </a>
+            {% if order.person %}
+                <a href="{% url order_list_client 'person' order.person.id %}">
+                    <i class="icon-list" title="Заказы этого клиента"></i>
+                </a>
+            {% endif  %}
+                <a href="{% url order_detail order.id %}">
+                    <i class="icon-plus" title="Новый заказ для этого клиента"></i>
+                </a>
+            </td></span>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="modal hide" id="modalOrderPreview">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Просмотр заказа</h3>
+    </div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
+    </div>
+</div>
+
+{% endblock %}
+
+

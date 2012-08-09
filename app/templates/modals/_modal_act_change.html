@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+{% comment %}<!--
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -39,10 +39,28 @@
 
 {% load i18n base_extras %}
 
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
-
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>Акт №{{ object.id }} от {{ object.date|date:"DATE_FORMAT"}}</h3>
+</div>
+<form class="well" action="" method="post">{% csrf_token %}
+    <fieldset>
+        <div class="modal-body">
+            <div class="control-group">
+            {% for field in form %}
+                <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                <div class="controls">
+                    {{ field.errors }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name='invoice_change' value="{{ object.id }}" />
+            <input type="hidden" name='id' value="{{ object.id }}" />
+            <a href="#" class="btn" data-dismiss="modal">Нет</a>
+            <input type="submit" class="btn btn-primary" value="Да" />
+        </div>
+     </fieldset>
+</form>

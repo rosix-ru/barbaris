@@ -35,26 +35,39 @@
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-from django.conf.urls.defaults import patterns, include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.shortcuts import redirect
-from django.contrib import admin
+from django.conf.urls.defaults import patterns, url
 
-admin.autodiscover()
-
-urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('project.app.urls')),
+urlpatterns = patterns('project.app.views',
+    url(r'^$',                          'monitor',              name='monitor'),
+    
+    url(r'^orders/$',                   'order_list',           name='order_list'),
+    url(r'^orders/(\d+)/$',             'order_detail',         name='order_detail'),
+    url(r'^orders/new/$',               'order_detail',         name='order_new'),
+    url(r'^orders/new/(\d+)/$',         'order_new_person',     name='order_new_person'),
+    url(r'^orders/delete/(\d+)/$',      'order_delete',         name='order_delete'),
+    url(r'^orders/(\d+)/action/(\w+)/$','order_action',         name='order_action'),
+    url(r'^orders/(\w+)/(\d+)/$',       'order_list',           name='order_list_client'),
+    
+    url(r'^pricelist/$',                'price_list',           name='price_list'),
+    
+    url(r'^clients/$',                  'client_list',          name='client_list'),
+    url(r'^person/(\d+)/$',             'person_detail',        name='person_detail'),
+    url(r'^person/search/$',            'person_search',        name='person_search'),
+    url(r'^org/(\d+)/$',                'org_detail',           name='org_detail'),
+    
+    url(r'^reports/$',                  'report_list',          name='report_list'),
+    url(r'^invoices/$',                 'invoice_list',         name='invoice_list'),
+    url(r'^invoices/list/(\d+)/$',      'invoice_list',         name='invoice_list_order'),
+    url(r'^invoices/(\d+)/$',           'invoice_detail',       name='invoice_detail'),
+    url(r'^invoices/(\d+)/(add)/$',     'invoice_detail',       name='invoice_add'),
+    url(r'^acts/$',                     'act_list',             name='act_list'),
+    url(r'^acts/(\d+)/$',               'act_detail',           name='act_detail'),
+    url(r'^analyze/$',                  'analyze',              name='analyze'),
+    
+    url(r'^print/(\w+)/(\d+)/$',        'document_print',       name='document_print'),
+    
+    url(r'^questions/$',                'question_list',        name='question_list'),
+    
+    url(r'^modal/(?P<obj>\w+)/(?P<key>\w+)/(?P<id>\d+)/$',
+                                        'get_modal',            name='get_modal'),
 )
-
-def homeredirect(request):
-    return redirect('/')
-
-urlpatterns += patterns('django.contrib.auth.views',
-    url(r'^accounts/login/$', 'login', name="login"),
-    url(r'^accounts/logout/$', 'logout', name="logout"),
-    url(r'^accounts/profile/$', homeredirect, name="profile"),
-)
-
-# For develop:
-urlpatterns += staticfiles_urlpatterns()

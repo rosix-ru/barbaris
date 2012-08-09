@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+
+-->{% endcomment %}
+
+{% load i18n base_extras %}
+
+{% block title %}{{ block.super }} - Заказ №{{ order.id }} от {{ order.created }}{% endblock %}
+
+{% block page_name %}{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block subnav_content %}
+<li>
+    <a href="#header">Просмотр заказа</a>
+</li>
+<li>
+    <a href="#categories">Прайс-лист</a>
+</li>
+<li>
+    <a href="#persons">Клиент(ы)</a>
+</li>
+
+{% if order.id %}
+    {% if order.state_create %}
+        <li>
+            <a href="{% url order_delete order.id %}" class="label label-important">Удалить</a>
+        </li>
+        <li>
+            <a href="{% url order_action order.id 'accept' %}" class="label label-success">Принять</a>
+        </li>
+    {% else %}
+        <li>
+            <a href="{% url order_action order.id 'close' %}" class="label label-success">Оплата</a>
+        </li>
+        {% if order.invoice_set.all.count > 1 %}
+            <li>
+                <a href="{% url invoice_list_order order.id %}" class="label label-info">Счета</a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{% url invoice_detail order.id %}" class="label label-info">Счёт</a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="{% url invoice_add order.id 'add' %}" title="Добавить счёт"><i class="icon-plus"></i></a>
+        </li>
+        <li>
+            <a href="{% url act_detail order.id %}" class="label label-info">Акт</a>
+        </li>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!--
+<legend>Просмотр заказа</legend>
+-->
+
+<div id="specifications" class="row-fluid">
+    <div class="well span12">
+    {% if order.id %}
+        <h3>Заказ №{{ order.id }} от {{ order.created|date:"DATE_FORMAT"}}
+            <small>статус: {{ order.get_state_display|lower }}</small>
+        </h3>
+        {% include "includes/_order_specifications.html" %}
+    {% endif %}
+    </div>
+</div>
+
+{% if not order.state_create %}
+    <div id="invoices" class="row-fluid">
+        <div class="well span12">
+            {% include "includes/_order_invoices.html" %}
+        </div>
+    </div>
+    
+    <div id="act" class="row-fluid">
+        <div class="well span12">
+            {% include "includes/_order_acts.html" %}
+        </div>
+    </div>
+{% endif %}
+
+<legend>Прайс-лист</legend>
+<div id="categories" class="accordion">
+{% for category in categories %}
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a href="#category_{{ category.id }}" data-parent="#categories" data-toggle="collapse" class="accordion-toggle">
+                {{ category }}
+            </a>
+        </div>
+        <div class="accordion-body collapse" id="category_{{ category.id }}" style="height: 0px;">
+            <div class="accordion-inner">
+                <div id="service_group_{{ category.id }}" class="accordion">
+            {% for service in category.service_set.all %}
+                {% if service.active_prices %}
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a href="#service_{{ service.id }}" data-parent="#service_group_{{ category.id }}" data-toggle="collapse" class="accordion-toggle">
+                                {{ service.title }}
+                            </a>
+                        </div>
+                        <div class="accordion-body collapse" id="service_{{ service.id }}" style="height: 0px;">
+                            <div class="accordion-inner">
+                                {{ form.media }}
+                                {% include "includes/_specification_forms.html" %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+<legend>Клиент(ы)</legend>
+<div id="persons" class="row-fluid">
+    <div class="well span6">
+        <legend>Оплачивает заказ</legend>
+        <input name="person" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
+        <form action="" method="post" class="form">{% csrf_token %}
+            <fieldset></fieldset>
+        </form>
+        {% if order.person.id %}
+        <h6>
+            {{ order.person }}
+            <a target="_blank" href="{% url person_detail order.person.id %}" title="Редактировать карточку клиента">
+                <i class="icon-edit"></i>
+            </a>
+            <small>{{ order.person.detail.birth_day|default:"" }}</small>
+        </h6>
+        {% endif %}
+    </div>
+    <div class="well span6">
+        <legend>Участвуют в заказе</legend>
+        <input name="other_persons" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
+        <form action="" method="post" class="form">{% csrf_token %}
+            <fieldset></fieldset>
+        </form>
+{% if order.id %}
+    {% if order.other_persons.all %}
+        <form action="" method="post" class="form">{% csrf_token %}
+            <fieldset>
+                <div class="controls ">
+                {% for person in order.other_persons.all %}
+                    <label class="checkbox">
+                        <input type="checkbox" name="deletePerson" value="{{ person.id }}">
+                        <h6>
+                            {{ person }}
+                            <a target="_blank" href="{% url person_detail person.id %}" title="Редактировать карточку клиента">
+                                <i class="icon-edit"></i>
+                            </a>
+                            <small>{{ person.detail.birth_day|default:"" }}</small>
+                        </h6>
+                    </label>
+                {% endfor %}
+                </div>
+                <div class="form-actions">
+                    <input type="hidden" name="delete_other_persons" value="true" />
+                    <input type="submit" class="btn btn-danger" value="Удалить" />
+                </div>
+            </fieldset>
+        </form>
+    {% endif %}
+{% endif %}
+    </div>
+</div>
+
+{% endblock %}

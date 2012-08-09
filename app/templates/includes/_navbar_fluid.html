@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+{% extends "includes/_navbar.html" %}{% comment %}<!--
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -37,12 +37,4 @@
 
 -->{% endcomment %}
 
-{% load i18n base_extras %}
-
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
-
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
+{% block container_type %}container-fluid{% endblock %}

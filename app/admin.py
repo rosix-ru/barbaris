@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}{% comment %}<!--
+# -*- coding: utf-8 -*-
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -35,14 +35,7 @@
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
 
--->{% endcomment %}
+from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
+from models import *
 
-{% load i18n base_extras %}
-
-{% block title %}{{ title }} | {% trans "Administration" %} | {{ user }}{% endblock %}
-
-{% block branding %}
-<h1 id="site-name"><a href="/">{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}</a></h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}

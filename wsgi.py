@@ -1,5 +1,5 @@
 """
-WSGI config for barbaris project.
+WSGI config for project project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
@@ -15,14 +15,19 @@ framework.
 """
 import os, sys
 
-HOME = '/home/djbaldey'
-PYTHON = 'python2.7'
-ENV = os.path.join(HOME, 'env-django1.4')
-PACKAGES = os.path.join(ENV, 'lib', PYTHON, 'site-packages')
+# Set environ at your home directory
+# Example: ENV = 'env/django1.4' ==>> '/home/user/env/django1.4'
+ENV = 'env-django1.4'
 
-sys.path.insert(0, PACKAGES)
+if ENV:
+    home = os.path.expanduser('~')
+    python = 'python%s.%s' % ( sys.version_info.major,  sys.version_info.minor)
+    environ = os.path.join(home, ENV)
+    packages = os.path.join(environ, 'lib', python, 'site-packages')
+    sys.path.insert(0, packages)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "barbaris.settings")
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

@@ -1,1 +1,16 @@
-This is application tested on Django 1.4 and SQLite3
+This is application tested on Django 1.4
+
+1. Remove Mercurial catalog and files in parent directory (where are located files manage.py and securesettings.py):
+
+	rm ../.hg* -R
+
+2. Init your Mercurial repository in current directory (where are located files settings.py and wsgi.py):
+
+	hg init
+	hg addremove
+	hg commit
+
+3. At will, create a virtual environment and specify it in files wsgi.py and manage.py
+
+
+...develop...
