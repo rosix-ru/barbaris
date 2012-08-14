@@ -81,54 +81,54 @@
 <table id="table-orders" class="table table-condensed">
     <thead>
         <tr>
-            <th class="person"><span>Клиент</span></th>
+            <th class=""><span>№</span></th>
+            <th class=""><span>Персона</span></th>
+            <th class=""><span>Организация</span></th>
+            <th class=""><span>Дата</span></th>
+            <th class=""><span>Комментарий</span></th>
             <th class="input-mini"><span class="pull-right">Сумма</span></th>
-            <th class="input-mini"><span>Дата</span></th>
-            <th class="input-small"><span>Принял</span></th>
-            <th class="input-mini"><span>Статус</span></th>
-            <th class="input-small"><span class="pull-right">Действия</span></th>
+            <th class="input-mini"><span class="pull-right">Оплата</span></th>
+            <th class=""><span>Статус</span></th>
+            <th class=""><span>Оператор</span></th>
+            <th class=""><span class="pull-right">Действия</span></th>
         </tr>
     </thead>
     <tbody>
-    {% for order in orders %}
+    {% for order in paginator.object_list %}
         <tr id="order_{{ order.id }}">
-            <td><span>{{ order.person|default:"Не установлено!" }}</span></td>
+            <td><span>{{ order.id }}</span></td>
+            <td><span class="{% if not order.person %}badge badge-important{% endif %}">{{ order.person|default:"Персона обязательна!" }}</span></td>
+            <td><span>{{ order.person.org }}</span></td>
+            <td><span>{{ order.updated|date:'d.m.y' }}</span></td>
+            <td><span>{{ order.comment }}</span></td>
             <td><span class="pull-right">{{ order.summa }}</span></td>
-            <td><span>{{ order.updated|date:'d/m/y' }}</span></td>
-            <td><span>{% short_username order.user %}</span></td>
+            <td><span class="pull-right">{{ order.invoice.payment|default:'' }}</span></td>
             <td><span>{{ order.get_state_display }}</span></td>
+            <td><span>{% short_username order.user %}</span></td>
             <td><span class="pull-right">
-                <a id="show_order_preview_{{ order.id }}" href="#modalOrderPreview" data-toggle="modal" >
+                <a href="#" data-toggle="_modal_order_preview_{{ order.id }}_" >
                     <i class="icon-eye-open" title="Быстрый просмотр"></i>
+                </a>
+                <a href="#" data-toggle="_modal_order_dubble_{{ order.id }}_" >
+                    <i class="icon-magnet" title="Дублировать заказ"></i>
                 </a>
                 <a href="{% url order_detail order.id %}">
                     <i class="icon-edit" title="Изменить заказ"></i>
                 </a>
             {% if order.person %}
-                <a href="{% url order_list_client 'person' order.person.id %}">
+                <a href="{% url person_orders order.person.id %}">
                     <i class="icon-list" title="Заказы этого клиента"></i>
                 </a>
-            {% endif  %}
-                <a href="{% url order_detail order.id %}">
+                <a href="{% url person_new_order order.person.id %}">
                     <i class="icon-plus" title="Новый заказ для этого клиента"></i>
                 </a>
+            {% endif %}
             </td></span>
         </tr>
     {% endfor %}
     </tbody>
 </table>
-
-<div class="modal hide" id="modalOrderPreview">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Просмотр заказа</h3>
-    </div>
-    <div class="modal-body"></div>
-    <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
-    </div>
-</div>
-
+{% include "includes/_paginator.html" %}
 {% endblock %}
 
 

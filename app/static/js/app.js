@@ -40,6 +40,7 @@
 
 function setDateTimePickerObjects() {
     $('input[data-toggle=datetimepicker]').datetimepicker({
+        dateFormat: 'yy-mm-dd',
         numberOfMonths: 2,
         hourGrid: 2,
         minuteGrid: 10,
@@ -51,6 +52,7 @@ function setDateTimePickerObjects() {
     $('input[data-toggle=datepicker]').datepicker({
         numberOfMonths: 1,
         showTime: false,
+        dateFormat: 'yy-mm-dd',
     });
     
     $('input[data-toggle=timepicker]').timepicker({
@@ -100,6 +102,7 @@ function setDateTimePickerOptions() {
 }
 
 function runMiniClock() {
+    
     var time = new Date();
     var hours = time.getHours();
     var minutes = time.getMinutes();
@@ -109,12 +112,12 @@ function runMiniClock() {
     hours=(hours > 24) ? hours-24 : hours;
     hours=(hours == 0) ? 0 : hours;
     var clock = hours + ":" + minutes + ":" + seconds;
-    if(clock != document.getElementById('clock').innerHTML) document.getElementById('clock').innerHTML = clock;
+    if(clock != $('#clock').html()) $('#clock').html(clock);
     timer = setTimeout("runMiniClock()",1000);
 }
 
-function testLog() {
-    console.log('test');
+function testLog(text) {
+    console.log(text);
 }
 
 function goSearchPerson(input_text) {
@@ -150,5 +153,8 @@ $(document).ready(function($) {
     });
     
     $("a[data-toggle^=_modal_]").click(loadModal);
-    
+    var path = window.location.pathname.split('/')[1]
+    testLog(path)
+    if (path) $('div.navbar a[href^="/' + path + '/"]').parents().addClass('active');
+    else $('div.navbar a[href="/"]').parents().addClass('active');
 })

@@ -35,17 +35,24 @@
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
 
+paginator.paginator.count
+paginator.paginator.num_pages
+paginator.paginator.page_range
+paginator.object_list
+paginator.has_next
+paginator.has_previous
+paginator.has_other_pages
+paginator.next_page_number
+paginator.previous_page_number
+paginator.start_index
+paginator.end_index
+
+
 -->{% endcomment %}
-{% load i18n l10n %}
-<div class="pagination">
-    <ul>
-        <li><a href="#">{% trans "Prev" %}</a></li>
-        <li class="active">
-            <a href="#">1</a>
-        </li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">{% trans "Next" %}</a></li>
-    </ul>
+{% load i18n l10n base_extras %}
+
+{% if paginator.paginator.num_pages > 1 %}
+<div class="pagination pagination-centered">
+    <ul>{% pagination request paginator %}</ul>
 </div>
+{% endif %}

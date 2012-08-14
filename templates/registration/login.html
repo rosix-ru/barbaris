@@ -127,10 +127,12 @@
         </div>
         <input type="hidden" name="next" value="{{ next|escape }}" />
     </form>
-    <script type="text/javascript">
-        $('#username').focus()
-    </script>
+    
     {% endblock %}
 {% endblock %}
-
+{% block extrajs %}
+<script type="text/javascript">
+        $('#username').focus()
+    </script>
+{% endblock %}
 

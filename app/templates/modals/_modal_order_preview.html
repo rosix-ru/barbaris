@@ -41,26 +41,39 @@
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3>Акт №{{ object.id }} от {{ object.date|date:"DATE_FORMAT"}}</h3>
+    <h3>Заказ №{{ object.id }} от {{ object.updated|date:"DATE_FORMAT"}}</h3>
 </div>
-<form class="well" action="" method="post">{% csrf_token %}
-    <fieldset>
-        <div class="modal-body">
-            <div class="control-group">
-            {% for field in form %}
-                <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
-                <div class="controls">
-                    {{ field.errors }}
-                    {{ field }}
-                </div>
+<div class="modal-body">
+    <div class="control-group">
+        <table id="table-specifications" class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class=""><span>Услуга</span></th>
+                    <th class="input-mini"><span class="pull-right">Цена</span></th>
+                    <th class="input-mini"><span class="pull-right">Кол-во</span></th>
+                    <th class="input-mini"><span class="pull-right">Бронь</span></th>
+                    <th class="input-mini"><span class="pull-right">Сумма</span></th>
+                    <th class="input-mini"><span>Начало</span></th>
+                    <th class="input-mini"><span>Оконч.</span></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for sp in object.specification_set.all %}
+                <tr id="specification_{{ sp.id }}">
+                    <td><span>{{ sp.price.service.title }}</span></td>
+                    <td><span class="pull-right">{{ sp.price.price }}</span></td>
+                    <td><span class="pull-right">{{ sp.count }}</span></td>
+                    <td><span class="pull-right">{{ sp.summa_markup|default:'' }}</span></td>
+                    <td><span class="pull-right">{{ sp.summa }}</span></td>
+                    <td><span>{{ sp.start|date:'d.m.y H:i' }}</span></td>
+                    <td><span>{{ sp.end|date:'d.m.y H:i' }}</span></td>
+                    
+                </tr>
             {% endfor %}
-            </div>
-        </div>
-        <div class="modal-footer">
-            <input type="hidden" name='act_change' value="{{ object.id }}" />
-            <input type="hidden" name='id' value="{{ object.id }}" />
-            <a href="#" class="btn" data-dismiss="modal">Нет</a>
-            <input type="submit" class="btn btn-primary" value="Да" />
-        </div>
-     </fieldset>
-</form>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
+</div>

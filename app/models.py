@@ -518,20 +518,6 @@ class Reservation(models.Model):
         verbose_name = u"вид бронирования"
         verbose_name_plural = u"виды бронирования"
 
-class Attribute(models.Model):
-    value = models.IntegerField(
-            choices=settings.ATTRIBUTE_CHOICES,
-            unique=True,
-            verbose_name = u"значение")
-    
-    def __unicode__(self):
-        return self.value
-        
-    class Meta:
-        ordering = ['value']
-        verbose_name = u"атрибут"
-        verbose_name_plural = u"атрибуты"
-
 class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -552,10 +538,6 @@ class Order(models.Model):
             null=True, blank=True,
             related_name = 'order_other_set',
             verbose_name = u"другие клиенты")
-    attributes = models.ManyToManyField(
-            Attribute,
-            null=True, blank=True,
-            verbose_name = u"атрибуты")
     comment = models.TextField(
             blank=True,
             verbose_name="комментарий")
@@ -564,7 +546,6 @@ class Order(models.Model):
     objects  = models.Manager()
     creates  = managers.CreateOrderManager()
     accepts  = managers.AcceptOrderManager()
-    avances  = managers.AvanceOrderManager()
     closes   = managers.CloseOrderManager()
     cancels  = managers.CancelOrderManager()
     workeds  = managers.WorkOrderManager()
@@ -583,20 +564,34 @@ class Order(models.Model):
         return sum([ x.summa for x in self.specification_set.all() ])
     
     @property
+    def invoice(self):
+        try:
+            return self.invoice_set.all()[0]
+        except:
+            return None
+    
+    @property
+    def act(self):
+        try:
+            return self.act_set.all()[0]
+        except:
+            return None
+    
+    @property
     def state_create(self):
         return self.state == settings.STATE_ORDER_CREATE
     @property
     def state_accept(self):
         return self.state == settings.STATE_ORDER_ACCEPT
     @property
-    def state_avance(self):
-        return self.state == settings.STATE_ORDER_AVANCE
-    @property
     def state_close(self):
         return self.state == settings.STATE_ORDER_CLOSE
     @property
     def state_cancel(self):
         return self.state == settings.STATE_ORDER_CANCEL
+    
+    def save(self, **kwargs):
+        super(Order, self).save(**kwargs)
     
 class Specification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -634,13 +629,24 @@ class Specification(models.Model):
         verbose_name = u"спецификацию"
         verbose_name_plural = u"спецификации"
     
-    @property
-    def summa(self):
+    def markup(self):
         if self.reservation and self.price.service.is_reserved:
             markup = self.price.price*self.reservation.percent
         else:
             markup = 0
-        return round((self.price.price*self.count)+markup, 2)
+        return markup
+    
+    @property
+    def summa(self):
+        return round((self.price.price*self.count)+self.markup(), 2)
+    
+    @property
+    def summa_clean(self):
+        return round((self.price.price*self.count), 2)
+    
+    @property
+    def summa_markup(self):
+        return round(self.markup(), 2)
     
     def save(self, **kwargs):
         """ Если есть делитель и услуга предоставляется по времени:
@@ -656,35 +662,54 @@ class Specification(models.Model):
             Наоборот, если есть количество,
             то рассчитываем интервал согласно делителя.
         """
-        def get_divider_sec():
+        
+        def add_months(dt, count):
+            _year = dt.year + (dt.month + count) / 12
+            _month = (dt.month + count) % 12 or 12
+            for i in range(0,4):
+                try:
+                    return dt.replace(_year, _month, dt.day-i)
+                except:
+                    continue
+        
+        def get_end(start, count):
             d = self.price.divider
             if d == settings.DIVIDER_DAY:
-                return 24*60*60 # часы*минуты*секунды
+                return start + datetime.timedelta(days=count)
             elif d == settings.DIVIDER_HOUR:
-                return 60*60 # минуты*секунды
+                return start + datetime.timedelta(hours=count)
             elif d == settings.DIVIDER_MONTH:
-                days = calendar.monthrange(self.start.year, self.start.month)
-                return days*24*60*60 # дни*часы*минуты*секунды
+                return add_months(start, count)
             else:
-                return 0
+                return start
         
+        def roundTime(dt=None, roundTo=60):
+            """Round a datetime object to any time laps in seconds
+            dt : datetime.datetime object, default now.
+            roundTo : Closest number of seconds to round to, default 1 minute.
+            Author: Thierry Husson 2012 - Use it as you want but don't blame me.
+            """
+            if dt == None : dt = datetime.datetime.now()
+            seconds = (dt - dt.min).seconds
+            # // is a floor division, not a comment on following line:
+            rounding = (seconds+roundTo/2) // roundTo * roundTo
+            return dt + datetime.timedelta(0,rounding-seconds,-dt.microsecond)
+ 
         def set_interval():
-            print 'def set_interval()' # DEBUG
-            ds = get_divider_sec()
-            if not self.count or not ds:
+            #~ print 'def set_interval()' # DEBUG
+            if not self.count or not self.price.divider:
                 return False
-            self.start = self.start or datetime.datetime.now()
-            delta = datetime.timedelta(seconds=ds*self.count)
-            print ds, self.count, delta # DEBUG
-            self.end = self.start + delta
+            self.start = self.start or roundTime()
+            self.end = get_end(self.start, self.count)
             return True
         
         def set_count():
-            print 'def set_count()' # DEBUG
+            #~ print 'def set_count()' # DEBUG
             ds = get_divider_sec()
             if not self.end or not ds:
+                #~ print "if not self.end or not ds" # DEBUG
                 return False
-            self.start = self.start or self.start.now()
+            self.start = self.start or roundTime()
             delta = self.end - self.start
             count = int(round(delta.total_seconds() / ds))
             if not count:
@@ -693,24 +718,41 @@ class Specification(models.Model):
             return True
         
         if self.price.divider and self.price.service.is_on_time:
+            print 1
             if self.id:
                 old = Specification.objects.get(id=self.id)
                 change_count = bool(self.count != old.count)
             else:
                 change_count = bool(self.count)
             if not change_count:
+                #~ print "if not change_count" # DEBUG
                 if not set_count():
+                    #~ print "if not set_count()" # DEBUG
                     self.count = 1
                     if not set_interval():
                         print u'ошибка изменения спецификации'
                         return False
             else:
+                #~ print "else" # DEBUG
                 if not set_interval():
                     if not set_count():
                         print u'ошибка изменения спецификации'
                         return False
-            
+        
+        # Заказ помечается как принятый, при любых изменениях
+        if not self.order.state_create:
+            self.order.state = settings.STATE_ORDER_ACCEPT
+            self.order.save()
+        
         super(Specification, self).save(**kwargs)
+    
+    def delete(self, **kwargs):
+        print 'delete'
+        # Всегда заказ помечается как принятый
+        self.order.state = settings.STATE_ORDER_ACCEPT
+        self.order.save()
+        print self.order.state
+        super(Specification, self).delete(**kwargs)
     
 class DocTemplate(models.Model):
     """ Шаблоны актов и счетов """
@@ -745,35 +787,27 @@ class DocTemplate(models.Model):
         verbose_name_plural = u"шаблоны документов"
     
 class Invoice(models.Model):
-    """ Счёт нужен для частичной оплаты заказа"""
-    created = models.DateField(
-            auto_now_add=True,
-            editable=True,
-            verbose_name = u"дата")
+    """ Счёт на оплату """
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
     user = models.ForeignKey(
             User,
             verbose_name="пользователь")
-    is_avance = models.BooleanField(
-            default=True,
-            verbose_name = u"аванс")
     state = models.IntegerField(
             choices=settings.STATE_INVOICE_CHOICES,
             default=1,
             verbose_name = u"состояние")
-    payment = models.IntegerField(
-            choices=settings.PAYMENT_INVOICE_CHOICES,
-            default=1,
-            verbose_name = u"вид расчёта")
     order = models.ForeignKey(
             Order,
             verbose_name = u"заказ")
     date = models.DateField(
             null=True, blank=True,
             verbose_name = u"дата документа")
-    summa = models.DecimalField(
-            max_digits=10, decimal_places=2,
-            default=0.0,
-            verbose_name = u"сумма")
+    #~ summa = models.DecimalField(
+            #~ max_digits=10, decimal_places=2,
+            #~ default=0.0,
+            #~ verbose_name = u"сумма")
     comment = models.TextField(
             blank=True,
             verbose_name = u"комментарий")
@@ -788,22 +822,13 @@ class Invoice(models.Model):
         verbose_name_plural = u"счета"
     
     def save(self, **kwargs):
-        other_invoice = self.order.invoice_set.all().exclude(id=self.id)
-        payment_invoice = other_invoice.filter(state=settings.STATE_INVOICE_PAYMENT)
-        create_invoice = other_invoice.filter(state=settings.STATE_INVOICE_CREATE)
-        def payed():
-            return sum([x.summa for x in payment_invoice])
+        if not self.summa:
+            self.summa = self.order.summa
         
         if self.state == settings.STATE_INVOICE_PAYMENT:
             self.order.state = settings.STATE_ORDER_CLOSE
             self.order.save()
-            if not self.summa:
-                self.summa = self.order.summa - payed()
-                create_invoice.update(state=settings.STATE_INVOICE_CANCEL)
-            elif (self.summa + payed()) >= self.order.summa:
-                self.is_avance = False
-                create_invoice.update(state=settings.STATE_INVOICE_CANCEL)
-                
+        
         super(Invoice, self).save(**kwargs)
     
     @property
@@ -813,13 +838,86 @@ class Invoice(models.Model):
     @property
     def document_type(self):
         return u'invoice'
+    
+    @property
+    def state_create(self):
+        return self.state == settings.STATE_INVOICE_CREATE
+    @property
+    def state_payment(self):
+        return self.state == settings.STATE_INVOICE_PAYMENT
+    @property
+    def state_avance(self):
+        return self.state == settings.STATE_INVOICE_AVANCE
+    
+    @property
+    def summa(self):
+        return self.order.summa
+    @property
+    def payment(self):
+        return sum([ x.summa for x in self.payment_set.filter(is_paid=True) ])
+    @property
+    def debet(self):
+        return float(self.summa) - float(self.payment)
+    
+class Payment(models.Model):
+    """ Приходный ордер """
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
+    user = models.ForeignKey(
+            User,
+            verbose_name="пользователь")
+    payment = models.IntegerField(
+            choices=settings.PAYMENT_INVOICE_CHOICES,
+            default=1,
+            verbose_name = u"вид расчёта")
+    invoice = models.ForeignKey(
+            Invoice,
+            verbose_name = u"счёт")
+    summa = models.DecimalField(
+            max_digits=10, decimal_places=2,
+            default=0.0,
+            verbose_name = u"сумма")
+    comment = models.TextField(
+            blank=True,
+            verbose_name = u"комментарий")
+    is_paid = models.BooleanField(
+        default=False,
+        verbose_name = u"оплата подтверждена",
+        )
+    
+    def __unicode__(self):
+        return unicode(self.invoice)
+    
+    class Meta:
+        ordering = ['user', '-created',]
+        verbose_name = u"приходный ордер"
+        verbose_name_plural = u"приходные ордеры"
+    
+    def save(self, **kwargs):
+        if not self.summa:
+            self.summa = self.invoice.debet
+        
+        if self.is_paid:
+            if self.summa >= self.invoice.debet:
+                self.invoice.state = settings.STATE_INVOICE_PAYMENT
+            else:
+                self.invoice.state = settings.STATE_INVOICE_AVANCE
+            self.invoice.save()
+                
+        super(Payment, self).save(**kwargs)
+    
+    @property
+    def document(self):
+        return u'Приходный ордер'
+    
+    @property
+    def document_type(self):
+        return u'payment'
 
 class Act(models.Model):
     """ Акт выполненных работ """
-    created = models.DateField(
-            auto_now_add=True,
-            editable=True,
-            verbose_name = u"дата")
+    created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
             User,
             verbose_name="пользователь")
@@ -848,3 +946,44 @@ class Act(models.Model):
     @property
     def document_type(self):
         return u'act'
+
+class Question(models.Model):
+    """ Вопросы """
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+            User,
+            verbose_name="пользователь")
+    text = models.TextField(
+            blank=True,
+            verbose_name = u"текст вопроса")
+    
+    def __unicode__(self):
+        return self.text
+    
+    class Meta:
+        ordering = ['-created']
+        verbose_name = u"вопрос"
+        verbose_name_plural = u"вопросы"
+
+class Answer(models.Model):
+    """ Ответы """
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
+    question = models.ForeignKey(
+            Question,
+            verbose_name="вопрос")
+    user = models.ForeignKey(
+            User,
+            verbose_name="пользователь")
+    text = models.TextField(
+            blank=True,
+            verbose_name = u"текст вопроса")
+    
+    def __unicode__(self):
+        return self.text
+    
+    class Meta:
+        ordering = ['-updated']
+        verbose_name = u"ответ"
+        verbose_name_plural = u"ответы"

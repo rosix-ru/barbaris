@@ -38,46 +38,32 @@
 -->{% endcomment %}
 {% load i18n base_extras %}
 
-<div class="span6">
-    <h3>Акт выполненных работ</h3>
-</div>
-{% if not order.act_set.all %}
-    <div class="span6">
+
+{% if not order.act %}
+    <div class="span10">
+        <h3>Акт выполненных работ</h3>
+    </div>
+    <div class="span2">
         <form class="form-horizontal" action="" method="post">{% csrf_token %}
             <fieldset class="pull-right">
                 <input type="hidden" name='act_add' value="" />
-                <button type="submit" class="btn btn-primary">Добавить</button>
+                <button type="submit" class="btn btn-primary">Создать акт</button>
              </fieldset>
         </form>
     </div>
 {% else %}
-
-<table id="table-specifications" class="table table-condensed">
-    <thead>
-        <tr>
-            <th class="input-medium"><span>Дата</span></th>
-            <th class=""><span>Комментарий</span></th>
-            <th class="input-medium"><span>Создал</span></th>
-            <th class="input-mini"><span class="pull-right">Действия</span></th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for act in order.act_set.all %}
-        <tr id="act_{{ act.id }}">
-            <td><span>{{ act.date }}</span></td>
-            <td><span>{{ act.comment }}</span></td>
-            <td><span>{% short_username act.user %}</span></td>
-            <td><span class="pull-right">
-                <a href="#" data-toggle="_modal_act_change_{{ act.id }}">
-                    <i class="icon-edit" title="Изменить"></i>
-                </a>
-                <a href="{% url document_print 'act' act.id %}" target="_blank">
-                    <i class="icon-print" title="Печать"></i>
-                </a>
-                </span>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    <div class="span10">
+        <h3>Акт выполненных работ №{{ order.act.id }} от {{ order.act.date|date:"DATE_FORMAT"}}
+            <a href="#" data-toggle="_modal_act_change_{{ order.act.id }}_">
+                <i class="icon-edit" title="Изменить"></i>
+            </a>
+            <a href="{% url act_print order.act.id %}" target="_blank">
+                <i class="icon-print" title="Печать"></i>
+            </a>
+            </small>
+        </h3>
+    {% if order.act.comment %}
+        <p>{{ order.act.comment }}</p>
+    {% endif %}
+    </div>
 {% endif %}

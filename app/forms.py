@@ -36,9 +36,6 @@
 ###############################################################################
 
 from django import forms
-from django.forms.models import modelformset_factory
-from django.forms.formsets import formset_factory
-#~ from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 import models
 
@@ -119,8 +116,6 @@ class SpecificationForm(forms.ModelForm):
             'start': forms.TextInput(attrs={'data-toggle': 'datetimepicker'}),
             'end':  forms.TextInput(attrs={'data-toggle': 'datetimepicker'}),
         }
-        
-SpecificationFormSet = modelformset_factory(models.Specification, can_delete=True)
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
@@ -130,7 +125,14 @@ class InvoiceForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 1}),
             'date':  forms.TextInput(attrs={'data-toggle': 'datepicker'}),
         }
-InvoiceFormSet = modelformset_factory(models.Invoice, can_delete=True)
+
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = models.Payment
+        exclude = ('created', 'updated', 'user', 'invoice' )
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 1}),
+        }
 
 class ActForm(forms.ModelForm):
     class Meta:
@@ -140,4 +142,3 @@ class ActForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 1}),
             'date':  forms.TextInput(attrs={'data-toggle': 'datepicker'}),
         }
-ActFormSet = modelformset_factory(models.Act, can_delete=True)

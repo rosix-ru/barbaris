@@ -75,14 +75,33 @@
     </thead>
     <tbody>
     {% for spec in document.order.specification_set.all %}
-        <tr>
-            <td class="span1 align-center">{{ forloop.counter }}</td>
-            <td class="span6 align-left">{{ spec.price.service.title }}</td>
-            <td class="span1 align-center">{{ spec.count }}</td>
-            <td class="span1 align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
-            <td class="span1 align-right">{{ spec.price.price }}</td>
-            <td class="span2 align-right">{{ spec.summa }}</td>
-        </tr>
+        {% if spec.reservation %}
+            <tr>
+                <td rowspan="2" class="align-center">{{ forloop.counter }}</td>
+                <td class="align-left">{{ spec.price.service.title }}</td>
+                <td class="align-center">{{ spec.count }}</td>
+                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
+                <td class="align-right">{{ spec.price.price }}</td>
+                <td class="align-right">{{ spec.summa_clean }}</td>
+            </tr>
+         
+            <tr>
+                <td colspan="3" class="align-left">Бронирование услуги</td>
+                <td class="align-right">{{ spec.markup }}</td>
+                <td class="align-right">{{ spec.markup }}</td>
+            </tr>
+        
+        {% else %}
+            <tr>
+                <td class="align-center">{{ forloop.counter }}</td>
+                <td class="align-left">{{ spec.price.service.title }}</td>
+                <td class="align-center">{{ spec.count }}</td>
+                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
+                <td class="align-right">{{ spec.price.price }}</td>
+                <td class="align-right">{{ spec.summa_clean }}</td>
+            </tr>
+        {% endif %}
+        
     {% endfor %}
     </tbody>
     <tfoot>
@@ -97,7 +116,7 @@
     </tfoot>
 </table>
 
-<div>Всего оказано услуг {{ document.order.count_service }}, на сумму {{ document.order.summa }} руб.</div>
+<div>Всего оказано услуг: {{ document.order.specification_set.count }}, на сумму {{ document.order.summa }} руб.</div>
 <div><strong>{{ document.order.summa|rubles }}</strong></div>
 
 <hr>

@@ -36,7 +36,7 @@
 ###############################################################################
 
 from django.utils.translation import ugettext_lazy as _
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django import http
 from django.template import RequestContext, Context, Template
 from django.template.loader import get_template
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -64,7 +64,7 @@ def monitor(request):
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
-    session['user_id'] = user.id
+    session['user_id'] = user.pk
     
     now = datetime.datetime.now()
     ctx['current_month'] = _date(now, 'F')
@@ -85,9 +85,9 @@ def monitor(request):
             end__gt=now,
             start__lt=now.date() + datetime.timedelta(1)
             )
-    room_ids = [ x.room.id for x in sps_rooms ]
+    room_ids = [ x.room.pk for x in sps_rooms ]
     ctx['sps_rooms_nonfree'] = sps_rooms
-    ctx['rooms_free'] = rooms.exclude(id__in=room_ids)
+    ctx['rooms_free'] = rooms.exclude(pk__in=room_ids)
     
     # Бронирование комнат
     sps_room_reserv = sps.filter(room__isnull=False,
@@ -107,81 +107,86 @@ def monitor(request):
     return render_to_response('monitor.html', ctx,
                             context_instance=RequestContext(request,))
 
-@login_required
-def order_list(request, key=None, id=None):
-    print "EXEC views.order_list()" # DEBUG
-    print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
-    
-    orders = Order.objects.all()
-    
-    person, org = (None, None)
-    
-    if key == 'person':
-        person = get_object_or_404(Person.objects, id=id)
-        person_not_save = False
-        orders = orders.filter(person=person)
-    
-    elif key == 'org':
-        org = get_object_or_404(Org.objects, id=id)
-        org_not_save = False
-        orders = orders.filter(person__org=org)
-    
-    if request.GET:
-        try:
-            state = int(request.GET.get('state', 0))
-            year = int(request.GET.get('year', 0))
-            month = int(request.GET.get('month', 0))
-            day = int(request.GET.get('day', 0))
-            query = request.GET.get('query', '')
-        except:
-            return HttpResponseBadRequest(u'Неверные параметры запроса')
-        if state:
-            orders = orders.filter(state=state)
-        if year:
-            orders = orders.filter(updated__year=year)
-        if month:
-            orders = orders.filter(updated__month=month)
-        if day:
-            orders = orders.filter(updated__day=day)
-        if query:
-            search_fields = (
-                'person__last_name',
-                'person__first_name',
-                'person__middle_name',
-            )
-            orders = search(orders, search_fields, query)
-        ctx['query'] = query
-    
-    ctx['person'] = person
-    ctx['org'] = org
-    ctx['orders'] = orders
-    ctx['years']  = [ x.year  for x in orders.dates('updated', 'year') ]
-    ctx['months'] = [ x.month for x in orders.dates('updated', 'month') ]
-    ctx['days']   = [ x.day   for x in orders.dates('updated', 'day') ]
-    ctx['stats']   = settings.STATE_ORDER_CHOICES
-    
-    return render_to_response('order_list.html', ctx,
-                            context_instance=RequestContext(request,))
+#~ @login_required
+#~ def order_list(request, key=None, pk=None):
+    #~ print "EXEC views.order_list()" # DEBUG
+    #~ print request # DEBUG
+    #~ ctx = {'DEBUG': settings.DEBUG}
+    #~ session = request.session
+    #~ user = request.user
+    #~ session['user_id'] = user.pk
+    #~ 
+    #~ orders = Order.objects.all()
+    #~ 
+    #~ person, org = (None, None)
+    #~ 
+    #~ if key == 'person':
+        #~ person = get_object_or_404(Person.objects, pk=pk)
+        #~ person_not_save = False
+        #~ orders = orders.filter(person=person)
+    #~ 
+    #~ elif key == 'org':
+        #~ org = get_object_or_404(Org.objects, pk=pk)
+        #~ org_not_save = False
+        #~ orders = orders.filter(person__org=org)
+    #~ 
+    #~ if request.GET:
+        #~ try:
+            #~ state = int(request.GET.get('state', 0))
+            #~ year = int(request.GET.get('year', 0))
+            #~ month = int(request.GET.get('month', 0))
+            #~ day = int(request.GET.get('day', 0))
+            #~ query = request.GET.get('query', '')
+        #~ except:
+            #~ return http.HttpResponseBadRequest(u'Неверные параметры запроса')
+        #~ if state:
+            #~ orders = orders.filter(state=state)
+        #~ if year:
+            #~ orders = orders.filter(updated__year=year)
+        #~ if month:
+            #~ orders = orders.filter(updated__month=month)
+        #~ if day:
+            #~ orders = orders.filter(updated__day=day)
+        #~ if query:
+            #~ search_fields = (
+                #~ 'person__last_name',
+                #~ 'person__first_name',
+                #~ 'person__middle_name',
+            #~ )
+            #~ orders = search(orders, search_fields, query)
+        #~ ctx['query'] = query
+    #~ 
+    #~ ctx['person'] = person
+    #~ ctx['org'] = org
+    #~ ctx['orders'] = orders
+    #~ ctx['years']  = [ x.year  for x in orders.dates('updated', 'year') ]
+    #~ ctx['months'] = [ x.month for x in orders.dates('updated', 'month') ]
+    #~ ctx['days']   = [ x.day   for x in orders.dates('updated', 'day') ]
+    #~ ctx['stats']   = settings.STATE_ORDER_CHOICES
+    #~ 
+    #~ return render_to_response('order_list.html', ctx,
+                            #~ context_instance=RequestContext(request,))
 
 @login_required
-def order_detail(request, id=None, person=None):
+def order_detail(request, pk=None, person_pk=None):
     print "EXEC views.order_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
-    session['user_id'] = user.id
+    session['user_id'] = user.pk
     
-    if not id or id in (0, '0'):
+    if person_pk:
+        person = get_object_or_404(Person.objects, pk=person_pk)
+    else:
+        person = Person()
+    
+    if not pk or pk in (0, '0'):
         order = Order(user=user)
         order.person = person
         order_not_save = True
     else:
-        order = get_object_or_404(Order, id=id)
+        order = get_object_or_404(Order, pk=pk)
         order_not_save = False
     
     def check_order():
@@ -190,20 +195,8 @@ def order_detail(request, id=None, person=None):
         return order
     
     if request.method == 'POST':
-        if 'specification_delete' in request.POST:
-            try:
-                id = request.POST['specification_delete']
-                Specification.objects.filter(id=id).all().delete()
-            except:
-                pass
-        elif 'specification' in request.POST:
-            spec = Specification(order=order)
-            form_spec = forms.SpecificationForm(request.POST, instance=spec)
-            if form_spec.is_valid():
-                spec.order = check_order()
-                form_spec.save()
-        elif 'select_person' in request.POST:
-            order.person = get_object_or_404(Person, id=request.POST.get("selectPerson", None))
+        if 'select_person' in request.POST:
+            order.person = get_object_or_404(Person, pk=request.POST.get("selectPerson", None))
             order.save()
         elif 'select_other_persons' in request.POST:
             [ order.other_persons.add(int(x)) for x in request.POST.getlist("selectPerson", [])]
@@ -211,34 +204,69 @@ def order_detail(request, id=None, person=None):
         elif 'deletePerson' in request.POST:
             [ order.other_persons.remove(int(x)) for x in request.POST.getlist("deletePerson", [])]
             order.save()
+        
+        elif 'order_comment' in request.POST:
+            order.comment = request.POST.get('order_comment', '')
+            order.save()
+        
+        # Specification
+        elif 'specification_add' in request.POST:
+            spec = Specification(order=order)
+            form_spec = forms.SpecificationForm(request.POST, instance=spec)
+            if form_spec.is_valid():
+                spec.order = check_order()
+                form_spec.save()
+        elif 'specification_change' in request.POST:
+            spec = Specification.objects.get(pk=request.POST.get('id',0))
+            form_spec = forms.SpecificationForm(request.POST, instance=spec)
+            if form_spec.is_valid():
+                form_spec.save()
+        elif 'specification_delete' in request.POST:
+            spec = Specification.objects.get(pk=request.POST.get('id',0))
+            spec.delete()
+        
+        # Invoice
         elif 'invoice_add' in request.POST:
             invoice = Invoice( user=user, order=check_order(), date=datetime.date.today() )
             invoice.save()
-        elif 'invoice_delete' in request.POST:
-            try:
-                id = request.POST['invoice_delete']
-                print id
-                Invoice.objects.filter(id=id).all().delete()
-            except:
-                pass
         elif 'invoice_change' in request.POST:
-            invoice = Invoice.objects.get(id=request.POST.get('id',0))
+            invoice = Invoice.objects.get(pk=request.POST.get('id',0))
             form_invoice = forms.InvoiceForm(request.POST, instance=invoice)
             if form_invoice.is_valid():
                 form_invoice.save()
+        elif 'invoice_delete' in request.POST:
+            invoice = Invoice.objects.get(pk=request.POST.get('id',0))
+            invoice.delete()
+        
+        # Payment
+        elif 'payment_add' in request.POST:
+            payment = Payment( user=user, invoice=order.invoice, )
+            payment.save()
+        elif 'payment_change' in request.POST:
+            payment = Payment.objects.get(pk=request.POST.get('id',0))
+            form_payment = forms.PaymentForm(request.POST, instance=payment)
+            if form_payment.is_valid():
+                form_payment.save()
+        elif 'payment_delete' in request.POST:
+            payment = Payment.objects.get(pk=request.POST.get('id',0))
+            payment.delete()
+        
+        # Акт
         elif 'act_add' in request.POST:
-            invoice = Act( user=user, order=check_order(), date=datetime.date.today() )
-            invoice.save()
+            act = Act( user=user, order=check_order(), date=datetime.date.today() )
+            act.save()
+        elif 'act_change' in request.POST:
+            act = Act.objects.get(pk=request.POST.get('id',0))
+            form_act = forms.ActForm(request.POST, instance=act)
+            if form_act.is_valid():
+                form_act.save()
         elif 'act_delete' in request.POST:
-            try:
-                id = request.POST['invoice_delete']
-                Invoice.objects.filter(id=id).all().delete()
-            except:
-                pass
+            act = Act.objects.get(pk=request.POST.get('id',0))
+            act.delete()
         
         
-        if order.id:
-            return redirect("order_detail", order.id)
+        if order.pk:
+            return redirect("order_detail", order.pk)
     
     form_spec = forms.SpecificationForm()
     form_person = forms.PersonForm(instance=order.person)
@@ -262,55 +290,64 @@ def order_detail(request, id=None, person=None):
                             context_instance=RequestContext(request,))
 
 @login_required
-def order_action(request, id, key):
-    print "EXEC views.order_action()" # DEBUG
+def order_accept(request):
+    print "EXEC views.order_accept()" # DEBUG
     #~ print request # DEBUG
     
-    order = get_object_or_404(Order.objects, id=id)
-    if key == 'reserv' and order.state_create:
-        order.state = settings.STATE_ORDER_RESERV
-        order.save()
-    if key == 'accept' and ( order.state_create or order.state_reserv ):
+    if 'order_accept' in request.POST:
+        order = get_object_or_404(Order.objects, pk=request.POST.get('id', 0))
         order.state = settings.STATE_ORDER_ACCEPT
         order.save()
+        
+        return redirect('order_detail', order.pk)
     
-    
-    return redirect('order_detail', order.id)
+    return http.HttpResponseBadRequest()
 
 @login_required
-def order_new_person(request, id):
+def order_dubble(request):
+    print "EXEC views.order_dubble(request)" # DEBUG
+    
+    if 'order_dubble' in request.POST:
+        order = get_object_or_404(Order.objects, pk=request.POST.get('id', 0))
+        specs = order.specification_set.all()
+        order.pk = None
+        order.state = settings.STATE_ORDER_CREATE
+        order.save()
+        for spec in specs:
+            spec.pk = None
+            spec.order = order
+            spec.save()
+        
+        return redirect('order_detail', order.pk)
+    
+    return http.HttpResponseBadRequest()
+
+@login_required
+def order_new_person(request, pk):
     print "EXEC views.order_new()" # DEBUG
     #~ print request # DEBUG
     
-    if id in ('0', 0):
+    if pk in ('0', 0):
         person = Person(last_name="Новый клиент")
         person.save()
-        #~ return redirect('order_new', person.id)
+        #~ return redirect('order_new', person.pk)
     else:
-        person = get_object_or_404(Person.objects, id=id)
+        person = get_object_or_404(Person.objects, pk=pk)
     
     return order_detail(request, None, person)
 
 @login_required
-def order_delete(request, id):
+def order_delete(request):
     print "EXEC views.order_delete()" # DEBUG
     #~ print request # DEBUG
+    if 'order_delete' in request.POST:
+        order = get_object_or_404(Order.objects, pk=request.POST.get('id', 0))
+        order.specification_set.all().delete()
+        order.delete()
     
-    order = get_object_or_404(Order.objects, id=id, state=1)
-    order.specification_set.all().delete()
-    order.delete()
+        return redirect('order_list')
     
-    return redirect('order_list')
-
-@login_required
-def specification_delete(request, id):
-    print "EXEC views.order_new()" # DEBUG
-    #~ print request # DEBUG
-    
-    sp = get_object_or_404(Specification.objects, id=id)
-    sp.delete()
-    
-    return  HttpResponseRedirect()
+    return http.HttpResponseBadRequest()
 
 @login_required
 def price_list(request):
@@ -319,50 +356,10 @@ def price_list(request):
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
-    session['user_id'] = user.id
+    session['user_id'] = user.pk
     ctx['categories'] = Category.objects.all()
     
     return render_to_response('price_list.html', ctx,
-                            context_instance=RequestContext(request,))
-
-@login_required
-def invoice_list(request, id=None):
-    print "EXEC views.invoice_list()" # DEBUG
-    #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
-    invoices = Invoice.objects.all()
-    ctx['invoice_list'] = invoices
-    
-    return render_to_response('invoice_list.html', ctx,
-                            context_instance=RequestContext(request,))
-
-@login_required
-def invoice_detail(request, id, add=None):
-    print "EXEC views.invoice_detail()" # DEBUG
-    #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
-    
-    return render_to_response('invoice_detail.html', ctx,
-                            context_instance=RequestContext(request,))
-
-@login_required
-def act_list(request):
-    print "EXEC views.act_list()" # DEBUG
-    #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
-    acts = Act.objects.all()
-    ctx['act_list'] = acts
-    
-    return render_to_response('act_list.html', ctx,
-                            context_instance=RequestContext(request,))
-
-@login_required
-def act_detail(request, id):
-    print "EXEC views.act_order()" # DEBUG
-    #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
-    
-    return render_to_response('act_detail.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
@@ -372,7 +369,7 @@ def client_list(request):
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
     user = request.user
-    session['user_id'] = user.id
+    session['user_id'] = user.pk
     
     # Организации
     orgs = Org.buyers.all()
@@ -397,7 +394,7 @@ def client_list(request):
         show_orgs = request.GET.get('show_orgs', 1)
         show_persons = request.GET.get('show_persons', 1)
         #~ if show_orgs and show_persons and page > 1:
-            #~ return HttpResponseBadRequest()
+            #~ return http.HttpResponseBadRequest()
         query = request.GET.get('query', '')
     
         if query:
@@ -429,17 +426,17 @@ def client_list(request):
                             context_instance=RequestContext(request,))
 
 @login_required
-def person_detail(request, id):
+def person_detail(request, pk):
     print "EXEC views.person_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     
-    if id in ('0', 0):
+    if pk in ('0', 0):
         person = Person(last_name="Новый клиент")
         detail = PersonDetail(person=person)
         person_not_save = True
     else:
-        person = get_object_or_404(Person.objects, id=id)
+        person = get_object_or_404(Person.objects, pk=pk)
         detail = person.detail
         person_not_save = False
     
@@ -481,7 +478,7 @@ def person_detail(request, id):
         else:
             form_residence = forms.PersonResidenceForm(instance=detail)
         if person_not_save:
-            return HttpResponseRedirect(person.get_absolute_url())
+            return http.HttpResponseRedirect(person.get_absolute_url())
     else:
         form_person = forms.PersonForm(instance=person)
         form_document = forms.PersonDocumentForm(instance=detail)
@@ -547,20 +544,20 @@ def person_search(request):
     {% endif %}
     """)
     
-    return HttpResponse(t.render(Context(ctx)))
+    return http.HttpResponse(t.render(Context(ctx)))
 
 @login_required
-def org_detail(request, id):
+def org_detail(request, pk):
     print "EXEC views.org_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     
-    if id in ('0', 0):
+    if pk in ('0', 0):
         org = Org(title="Новая организация")
         detail = OrgDetail(org=org)
         org_not_save = True
     else:
-        org = get_object_or_404(Org.objects, id=id)
+        org = get_object_or_404(Org.objects, pk=pk)
         detail = org.detail
         org_not_save = False
     
@@ -605,7 +602,7 @@ def org_detail(request, id):
             form_bank = forms.OrgBankForm(instance=detail)
         
         if org_not_save:
-            return HttpResponseRedirect(org.get_absolute_url())
+            return http.HttpResponseRedirect(org.get_absolute_url())
     else:
         form_org = forms.OrgForm(instance=org)
         form_detail = forms.OrgDetailForm(instance=detail)
@@ -626,45 +623,87 @@ def analyze(request):
     print "EXEC views.analyze()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
-    
     return render_to_response('analyze.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def report_list(request):
-    print "EXEC views.report_list()" # DEBUG
+def object_list(request, model, template_name, search_fields=[],
+    date_field="", use_stats=False, foreign_field="", foreign_key=""
+    ):
+    print "EXEC views.object_list(...)" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
+    page = 1
+    qs = model.objects.all()
     
-    return render_to_response('report_list.html', ctx,
+    if foreign_field and foreign_key:
+        qs = qs.filter(Q(**{ foreign_field + "__exact": foreign_key }))
+    
+    if date_field:
+        
+        ctx['years']  = [ x.year  for x in qs.dates(date_field, 'year') ]
+        ctx['months'] = [ x.month for x in qs.dates(date_field, 'month') ]
+        ctx['days']   = [ x.day   for x in qs.dates(date_field, 'day') ]
+        
+        for key in ('year','month', 'day'):
+            val = request.GET.get(key, "")
+            if val:
+                qs = qs.filter(Q(**{ date_field + "__" + key: val }))
+        
+        date_start = request.GET.get("date_start", "")
+        if date_start:
+            qs = qs.filter(Q(**{ date_field + "__gte": date_start }))
+        
+        date_end = request.GET.get("date_end", "")
+        if date_end:
+            qs = qs.filter(Q(**{ date_field + "__lte": date_end }))
+    
+    if use_stats:
+        ctx['stats'] = eval("settings.STATE_%s_CHOICES" % model.__name__.upper())
+        
+        state = request.GET.get("state", "")
+        if state:
+            qs = qs.filter(state=state)
+    
+    if 'q' in request.GET:
+        qs = search(qs,search_fields, request.GET.get('q', ""))
+        ctx['q'] = request.GET.get('q', "")
+    if 'query' in request.GET:
+        qs = search(qs,search_fields, request.GET.get('query', ""))
+        ctx['query'] = request.GET.get('query', "")
+    if 'page' in request.GET:
+        page = request.GET.get('page', 1)
+    ctx['paginator'] = get_paginator(qs, page)
+    
+    return render_to_response(template_name, ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def document_print(request, key, id):
-    print "EXEC views.document_print(request, key, id)" # DEBUG
+def object_detail(request, model, template_name, pk):
+    print "EXEC views.object_detail(...)" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    ctx['object'] = get_object_or_404(model.objects, pk=pk)
+    return render_to_response(template_name, ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def document_print(request, pk, model, document):
+    print "EXEC views.document_print(...)" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     
-    try:
-        doc = get_object_or_404(eval(key.title()), id=id)
-    except:
-        return HttpResponseBadRequest()
+    doc = get_object_or_404(model, pk=pk)
     
     if 'form' in request.GET:
-        temp = get_object_or_404(DocTemplate, document=key, id=request.GET.get('form',0))
+        temp = get_object_or_404(DocTemplate, document=document, pk=request.GET.get('form',0))
     else:
-        temp = get_object_or_404(DocTemplate, document=key, is_default=True)
+        temp = get_object_or_404(DocTemplate, document=document, is_default=True)
     
     ctx['document'] = doc
     ctx['seller'] = Org.sellers.all()[0]
     ctx['static_url'] = settings.STATIC_URL
-    ctx['template_list'] = DocTemplate.objects.filter(document=key)
+    ctx['template_list'] = DocTemplate.objects.filter(document=document)
     if temp.fname:
         t = get_template(temp.fname)
     else:
@@ -675,40 +714,28 @@ def document_print(request, key, id):
                             context_instance=RequestContext(request,))
 
 @login_required
-def question_list(request):
-    print "EXEC views.question_list()" # DEBUG
-    #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.id
-    
-    return render_to_response('question_list.html', ctx,
-                            context_instance=RequestContext(request,))
-
-@login_required
-def get_modal(request, obj, key, id):
+def get_modal(request, obj, key, pk):
     print "EXEC views.get_modal()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     #~ if not request.is_ajax():
-        #~ return HttpResponseBadRequest
+        #~ return http.HttpResponseBadRequest
     session = request.session
     user = request.user
-    session['user_id'] = user.id
+    session['user_id'] = user.pk
     
     #~ try:
     Class = eval(obj.title())
-    instance = get_object_or_404(Class, id=id)
+    instance = get_object_or_404(Class, pk=pk)
     Form = eval('forms.'+obj.title()+'Form')
     form = Form(instance = instance)
     
     ctx['object'] = instance
     ctx['form'] = form
     #~ except:
-        #~ return HttpResponseBadRequest()
+        #~ return http.HttpResponseBadRequest()
     template = 'modals/_modal_%s_%s.html' % (obj.lower(), key.lower())
-    print template
+    
     return render_to_response(
             template, ctx, context_instance=RequestContext(request,))
 
@@ -741,11 +768,11 @@ def search(queryset, search_fields, query):
         
     return queryset
 
-def get_paginator(qs, page=1, on_page=25):
+def get_paginator(qs, page=1, on_page=50):
     paginator = Paginator(qs, on_page)
     try:
-        page_qs = paginator.page(page)
+        page_qs = paginator.page(int(page))
     except (EmptyPage, InvalidPage):
         page_qs = paginator.page(paginator.num_pages)
-    
+    #~ print 'get_paginator:',page, 'from', page_qs.paginator.num_pages
     return page_qs

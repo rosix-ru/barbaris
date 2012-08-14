@@ -45,6 +45,10 @@
 </div>
 <div class="modal-body">
     <h4>Вы действительно желаете удалить услугу {{ object }}?</h4>
+    {% if object.order.state_close %}
+        <p class="badge badge-warning">Заказ перейдёт в статус "Принят"!</p>
+    {% endif %}
+    {% get_credit object.order object %}
 </div>
 
 <form class="well form-horizontal" action="" method="post">{% csrf_token %}

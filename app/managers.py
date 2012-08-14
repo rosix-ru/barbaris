@@ -69,13 +69,6 @@ class CreateOrderManager(models.Manager):
             state=settings.STATE_ORDER_CREATE
         )
 
-class AvanceOrderManager(models.Manager):
-    use_for_related_fields = True
-    def get_query_set(self):
-        return super(AvanceOrderManager, self).get_query_set().filter(
-            state=settings.STATE_ORDER_AVANCE
-        )
-
 class AcceptOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
@@ -118,11 +111,11 @@ class PaymentInvoiceManager(models.Manager):
             state=settings.STATE_INVOICE_PAYMENT
         )
 
-class CancelInvoiceManager(models.Manager):
+class AvanceInvoiceManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
-        return super(CancelInvoiceManager, self).get_query_set().filter(
-            state=settings.STATE_INVOICE_CANCEL
+        return super(AvanceInvoiceManager, self).get_query_set().filter(
+            state=settings.STATE_INVOICE_AVANCE
         )
 
 class SellerOrgManager(models.Manager):

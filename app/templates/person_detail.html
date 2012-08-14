@@ -41,19 +41,6 @@
 {% load i18n base_extras %}
 {% block title %}{{ block.super }} - Карточка физического лица: {{ person }}{% endblock %}
 
-{% block extrastyle %}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flick/jquery-ui-1.8.22.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jquery-ui-timepicker-addon.css"/>
-    
-{% endblock %}
-
-{% block extrajs %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.22.custom.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-ru.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-sliderAccess.js"></script>
-{% endblock %}
-
 {% block page_name %}Карточка физического лица <p><small>{{ person }}</small></p>{% endblock %}
 {% block subnav %}{% endblock %}
 

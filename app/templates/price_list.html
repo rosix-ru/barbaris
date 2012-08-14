@@ -44,7 +44,7 @@
 {% block search %}{% endblock %}
 
 {% block subnav_content %}
-{% for category in categories %}
+{% for category in paginator.object_list %}
     <li>
         <a href="#category_{{ category.id }}">{{ category }}</a>
     </li>
@@ -52,7 +52,7 @@
 {% endblock %}
 
 {% block content %}
-{% for category in categories %}
+{% for category in paginator.object_list %}
     <section id="category_{{ category.id }}">
         <div class="page-header">
             <h3>{{ category }}<small></small></h3>

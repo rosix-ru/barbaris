@@ -38,62 +38,99 @@
 -->{% endcomment %}
 {% load i18n base_extras %}
 
-<div class="span6">
-    <h3>Список счетов на оплату</h3>
-</div>
-
-{% if not order.state_close %}
-    <div class="span6">
+{% if not order.invoice %}
+    <div class="span10"><h3>Счета и оплаты</h3></div>
+    <div class="span2">
         <form class="form-horizontal" action="" method="post">{% csrf_token %}
             <fieldset class="pull-right">
                 <input type="hidden" name='invoice_add' value="" />
-                <button type="submit" class="btn btn-primary">Добавить</button>
-             </fieldset>
+                <button type="submit" class="btn btn-primary">Создать счёт</button>
+            </fieldset>
         </form>
     </div>
-{% endif %}
+{% else %}
 
-{% if order.invoice_set.all %}
-<table id="table-specifications" class="table table-condensed">
+<div class="span10">
+    <h3>Оплаты по счёту №{{ order.invoice.id }} от {{ order.invoice.date|date:"DATE_FORMAT"}}
+        <small>
+    {% if not order.invoice.state_payment %}
+        <a href="#" data-toggle="_modal_invoice_change_{{ order.invoice.id }}_">
+            <i class="icon-edit" title="Изменить"></i>
+        </a>
+    {% endif %}
+        <a href="{% url invoice_print order.invoice.id %}" target="_blank">
+            <i class="icon-print" title="Печать"></i>
+        </a>
+        </small>
+    </h3>
+    {% if order.invoice.comment %}
+    <p>{{ order.invoice.comment }}</p>
+    {% endif %}
+    {% get_credit order %}
+</div>
+    {% if not order.state_close %}
+        <div class="span2">
+            <form class="form-horizontal" action="" method="post">{% csrf_token %}
+                <fieldset class="pull-right">
+                    <input type="hidden" name='payment_add' value="" />
+                    <button type="submit" class="btn btn-primary">Добавить оплату</button>
+                 </fieldset>
+            </form>
+        </div>
+    {% endif %}
+
+<table id="table-payments" class="table table-condensed">
     <thead>
         <tr>
             <th class="input-medium"><span>Дата</span></th>
-            <th class="input-mini"><span class="pull-right">Сумма</span></th>
-            <th class="input-mini"><span>Тип</span></th>
-            <th class="input-mini"><span>Статус</span></th>
-            <th class="input-mini"><span>Расчёт</span></th>
             <th class=""><span>Комментарий</span></th>
-            <th class="input-medium"><span>Создал</span></th>
-            <th class="input-small"><span class="pull-right">Действия</span></th>
+            <th class="input-small"><span>Расчёт</span></th>
+            <th class="input-mini"><span class="pull-right">Сумма</span></th>
+            <th class="input-medium"><span>Принял</span></th>
+            <th class="input-mini"><span class="pull-right">Действия</span></th>
         </tr>
     </thead>
     <tbody>
-    {% for invoice in order.invoice_set.all %}
-        <tr id="invoice_{{ invoice.id }}">
-            <td><span>{{ invoice.date }}</span></td>
-            <td><span class="pull-right">{{ invoice.summa }}</span></td>
-            <td><span>{{ invoice.is_avance|yesno:"аванс,оплата" }}</span></td>
-            <td><span>{{ invoice.get_state_display }}</span></td>
-            <td><span>{{ invoice.get_payment_display }}</span></td>
-            <td><span>{{ invoice.comment }}</span></td>
-            <td><span>{% short_username invoice.user %}</span></td>
+    {% for payment in order.invoice.payment_set.all %}
+        <tr id="payment_{{ payment.id }}"{% if payment.is_paid %} class="muted"{% endif %}>
+            <td><span>{{ payment.updated|date:"DATE_FORMAT" }}</span></td>
+            <td><span>{{ payment.comment }}</span></td>
+            <td><span>{{ payment.get_payment_display }}</span></td>
+            <td><span class="pull-right">{{ payment.summa }}</span></td>
+            <td><span>{% short_username payment.user %}</span></td>
             <td><span class="pull-right">
-                <a href="#" data-toggle="_modal_invoice_delete_{{ invoice.id }}_">
-                    <i class="icon-trash" title="Удалить"></i>
-                </a>
-                <a href="#" data-toggle="_modal_invoice_change_{{ invoice.id }}_">
+            {% if not payment.is_paid %}
+                <a href="#" data-toggle="_modal_payment_change_{{ payment.id }}_">
                     <i class="icon-edit" title="Изменить"></i>
                 </a>
-                <a href="#" data-toggle="_modal_invoice_payment_{{ invoice.id }}_">
-                    <i class="icon-ok" title="Оплатить"></i>
-                </a>
-                <a href="{% url document_print 'invoice' invoice.id %}" target="_blank">
-                    <i class="icon-print" title="Печать"></i>
-                </a>
+            {% else %}
+                оплачено
+            {% endif %}
                 </span>
             </td>
         </tr>
     {% endfor %}
     </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3"><span class="pull-right">Итого:</span></th>
+            <th><span class="pull-right">{{ order.invoice.payment }}</span></th>
+            <th colspan="1"></th>
+        </tr>
+    {% if order.invoice.debet > 0 %}
+        <tr>
+            <th colspan="3"><span class="pull-right">К оплате:</span></th>
+            <th><span class="pull-right">{{ order.invoice.debet }}</span></th>
+            <th colspan="1"></th>
+        </tr>
+    {% endif %}
+    {% if order.invoice.debet < 0 %}
+        <tr>
+            <th colspan="3"><span class="pull-right">Переплата:</span></th>
+            <th><span class="pull-right">{{ order.invoice.debet }}</span></th>
+            <th colspan="1"></th>
+        </tr>
+    {% endif %}
+    </tfoot>
 </table>
 {% endif %}

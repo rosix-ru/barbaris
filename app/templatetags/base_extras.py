@@ -116,7 +116,76 @@ def addGET(request, key, val=''):
     return "?" + '&'.join(L)
 
 @register.simple_tag
+def pagination(request, paginator):
+    """ paginator.paginator.count
+        paginator.paginator.num_pages
+        paginator.paginator.page_range
+        paginator.object_list
+        paginator.number
+        paginator.has_next()
+        paginator.has_previous()
+        paginator.has_other_pages()
+        paginator.next_page_number()
+        paginator.previous_page_number()
+        paginator.start_index()
+        paginator.end_index()
+    """
+    temp = '<li class="%s"><a href="%s">%s</a></li>'
+    number = paginator.number
+    num_pages = paginator.paginator.num_pages
+    DOT = '.'
+    ON_EACH_SIDE = 3
+    ON_ENDS = 2
+    page_range = paginator.paginator.page_range
+    #~ print 0, page_range
+    if num_pages > 9:
+        page_range = []
+        if number > (ON_EACH_SIDE + ON_ENDS):
+            page_range.extend(range(1, ON_EACH_SIDE))
+            page_range.append(DOT)
+            page_range.extend(range(number +1 - ON_EACH_SIDE, number + 1))
+            #~ print 1, page_range
+        else:
+            page_range.extend(range(1, number + 1))
+            #~ print 2, page_range
+        if number < (num_pages - ON_EACH_SIDE - ON_ENDS + 1):
+            page_range.extend(range(number + 1, number + ON_EACH_SIDE))
+            page_range.append(DOT)
+            page_range.extend(range(num_pages - ON_ENDS +1, num_pages+1))
+            #~ print 3, page_range
+        else:
+            page_range.extend(range(number + 1, num_pages+1))
+            #~ print 4, page_range
+        #~ print page_range
+    L = []
+    for num in page_range:
+        css = ""
+        link = '#'
+        if num == DOT:
+            css = "disabled"
+            num = '...'
+        elif num == paginator.number:
+            css = "active"
+        else:
+            link = addGET(request, 'page', num)
+        L.append(temp % (css, link, num))
+    
+    return u''.join(L)
+
+@register.simple_tag
 def short_username(user):
     if not user.last_name and not user.first_name:
         return user.username
     return u'%s %s.' % (user.last_name, unicode(user.first_name)[0])
+
+@register.simple_tag
+def get_credit(order, spec=None):
+    if spec:
+        summa = spec.summa
+    else:
+        summa = 0
+    if order.invoice.debet < summa:
+        credit = summa - order.invoice.debet
+        return u'<p class="badge badge-important">Переплата: %s</p>' % credit
+    
+    return ''

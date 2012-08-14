@@ -42,20 +42,6 @@
 
 {% block title %}{{ block.super }} - Карточка организации: {{ org }}{% endblock %}
 
-{% block extrastyle %}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flick/jquery-ui-1.8.22.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jquery-ui-timepicker-addon.css"/>
-    
-{% endblock %}
-
-{% block extrajs %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.22.custom.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-ru.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-sliderAccess.js"></script>
-{% endblock %}
-
-
 {% block page_name %}Карточка организации <p><small>{{ org }}</small></p>{% endblock %}
 {% block subnav %}{% endblock %}
 

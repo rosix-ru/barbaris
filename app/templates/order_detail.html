@@ -60,29 +60,10 @@
 {% if order.id %}
     {% if order.state_create %}
         <li>
-            <a href="{% url order_delete order.id %}" class="label label-important">Удалить</a>
+            <a href="#" data-toggle="_modal_order_delete_{{ order.id }}_" class="label label-important">Удалить</a>
         </li>
         <li>
-            <a href="{% url order_action order.id 'accept' %}" class="label label-success">Принять</a>
-        </li>
-    {% else %}
-        <li>
-            <a href="{% url order_action order.id 'close' %}" class="label label-success">Оплата</a>
-        </li>
-        {% if order.invoice_set.all.count > 1 %}
-            <li>
-                <a href="{% url invoice_list_order order.id %}" class="label label-info">Счета</a>
-            </li>
-        {% else %}
-            <li>
-                <a href="{% url invoice_detail order.id %}" class="label label-info">Счёт</a>
-            </li>
-        {% endif %}
-        <li>
-            <a href="{% url invoice_add order.id 'add' %}" title="Добавить счёт"><i class="icon-plus"></i></a>
-        </li>
-        <li>
-            <a href="{% url act_detail order.id %}" class="label label-info">Акт</a>
+            <a href="#" data-toggle="_modal_order_accept_{{ order.id }}_" class="label label-success">Принять</a>
         </li>
     {% endif %}
 {% endif %}
@@ -90,17 +71,37 @@
 
 {% block content %}
 
-<!--
-<legend>Просмотр заказа</legend>
--->
+<form class="well form-horizontal" action="" method="post">{% csrf_token %}
+    <input type="hidden" name="id" value="{{ order.id }}" />
+    <div class="input-append">
+        <h3 class="span2">Комментарий</h3>
+        <input type="text" value="{{ order.comment }}" class="input-xxlarge" name="order_comment" id="id_order_comment">
+        <input type="submit" class="btn btn-primary" value="Сохранить" />
+    </div>
+</form>
 
 <div id="specifications" class="row-fluid">
     <div class="well span12">
     {% if order.id %}
-        <h3>Заказ №{{ order.id }} от {{ order.created|date:"DATE_FORMAT"}}
-            <small>статус: {{ order.get_state_display|lower }}</small>
-        </h3>
+        <div class="span10">
+            <h3>Заказ №{{ order.id }} от {{ order.created|date:"DATE_FORMAT"}}</h3>
+        </div>
+        <div class="span2">
+            <p class="pull-right">
+                <span class="badge
+                    {% if order.state_create %} badge-info{% endif %}
+                    {% if order.state_accept %} badge-success{% endif %}
+                    {% if order.state_close %} badge-inverse{% endif %}
+                    ">
+                    {{ order.get_state_display|lower }}
+                </span>
+            </p>
+        </div>
         {% include "includes/_order_specifications.html" %}
+    {% else %}
+        <div class="span12">
+            <p class="pull-right"><span class="badge">не сохранён</span></p>
+        </div>
     {% endif %}
     </div>
 </div>
@@ -158,7 +159,7 @@
 <legend>Клиент(ы)</legend>
 <div id="persons" class="row-fluid">
     <div class="well span6">
-        <legend>Оплачивает заказ</legend>
+        <legend>Оплачивает заказ{% if not order.person %} <span class="badge badge-important">Требуется установить!</span>{% endif %}</legend>
         <input name="person" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
         <form action="" method="post" class="form">{% csrf_token %}
             <fieldset></fieldset>

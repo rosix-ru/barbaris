@@ -97,7 +97,7 @@
     </tfoot>
 </table>
 
-<div>Всего оказано услуг {{ document.order.count_service }}, на сумму {{ document.order.summa }} руб.</div>
+<div>Всего оказано услуг {{ document.order.specification_set.count }}, на сумму {{ document.order.summa }} руб.</div>
 <div><strong>{{ document.order.summa|rubles }}</strong></div>
 
 <hr>

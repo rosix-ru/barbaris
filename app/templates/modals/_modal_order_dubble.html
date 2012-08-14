@@ -41,23 +41,16 @@
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3>Акт №{{ object.id }} от {{ object.date|date:"DATE_FORMAT"}}</h3>
+    <h3>Заказ №{{ object.id }} от {{ object.updated|date:"DATE_FORMAT"}}</h3>
 </div>
-<form class="well" action="" method="post">{% csrf_token %}
+<div class="modal-body">
+    <h4>Вы действительно желаете создать новый заказ
+    на основании этого?</h4>
+</div>
+<form class="well form-horizontal" action="{% url order_dubble %}" method="post">{% csrf_token %}
     <fieldset>
-        <div class="modal-body">
-            <div class="control-group">
-            {% for field in form %}
-                <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
-                <div class="controls">
-                    {{ field.errors }}
-                    {{ field }}
-                </div>
-            {% endfor %}
-            </div>
-        </div>
         <div class="modal-footer">
-            <input type="hidden" name='act_change' value="{{ object.id }}" />
+            <input type="hidden" name='order_dubble' value="{{ object.id }}" />
             <input type="hidden" name='id' value="{{ object.id }}" />
             <a href="#" class="btn" data-dismiss="modal">Нет</a>
             <input type="submit" class="btn btn-primary" value="Да" />
