@@ -193,3 +193,17 @@ def get_credit(order, spec=None):
 @register.simple_tag
 def integer_plus(digit1, digit2=1):
     return digit1 + digit2
+
+@register.simple_tag
+def room_occupied(room):
+    today = date.today()
+    sps = room.specification_set.filter(end__gt=today).order_by('end')
+    try:
+        sp = sps[0]
+    except:
+        return u''
+    return u'Освобождается %s' % sp.end.strftime("%d.%m.%y %H:%M")
+
+@register.simple_tag
+def room_reserved(room):
+    return u'Бронь с'

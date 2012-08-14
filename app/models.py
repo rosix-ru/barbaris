@@ -446,6 +446,39 @@ class Room(models.Model):
     @property
     def price(self):
         return self.service.price
+    
+    @property
+    def is_free(self):
+        now = datetime.datetime.now()
+        sps = Specification.objects.filter(room=self,
+            end__gt=now,
+            start__lt=now.date() + datetime.timedelta(1)
+            )
+        if sps:
+            return False
+        return True
+    
+    @property
+    def is_free_tomorrow(self):
+        now = datetime.datetime.now() + datetime.timedelta(1)
+        sps = Specification.objects.filter(room=self,
+            end__gt=now,
+            start__lt=now.date() + datetime.timedelta(1)
+            )
+        if sps:
+            return False
+        return True
+    
+    @property
+    def order(self):
+        now = datetime.datetime.now()
+        sps = Specification.objects.filter(room=self,
+            end__gt=now,
+            start__lt=now.date() + datetime.timedelta(1)
+            ).order_by('start')
+        if sps:
+            return sps[0].order
+        return None
 
 class Price(models.Model):
     """ Цены на услуги """
@@ -702,6 +735,18 @@ class Specification(models.Model):
             self.start = self.start or roundTime()
             self.end = get_end(self.start, self.count)
             return True
+        
+        def get_divider_sec():
+            d = self.price.divider
+            if d == settings.DIVIDER_DAY:
+                return 24*60*60 # часы*минуты*секунды
+            elif d == settings.DIVIDER_HOUR:
+                return 60*60 # минуты*секунды
+            elif d == settings.DIVIDER_MONTH:
+                days = calendar.monthrange(self.start.year, self.start.month)
+                return days*24*60*60 # дни*часы*минуты*секунды
+            else:
+                return 0
         
         def set_count():
             #~ print 'def set_count()' # DEBUG

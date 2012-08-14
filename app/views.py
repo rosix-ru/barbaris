@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,6 +35,7 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
+"""
 
 from django.utils.translation import ugettext_lazy as _
 from django import http
@@ -76,7 +78,7 @@ def monitor(request):
     sauna = categories.get(title="Sauna")
     
     rooms = Room.objects.all()
-    
+    ctx['rooms'] = rooms
     sps = Specification.objects.all()
     
     # Занятые комнаты: освободились на текущий момент,
@@ -106,66 +108,6 @@ def monitor(request):
     
     return render_to_response('monitor.html', ctx,
                             context_instance=RequestContext(request,))
-
-#~ @login_required
-#~ def order_list(request, key=None, pk=None):
-    #~ print "EXEC views.order_list()" # DEBUG
-    #~ print request # DEBUG
-    #~ ctx = {'DEBUG': settings.DEBUG}
-    #~ session = request.session
-    #~ user = request.user
-    #~ session['user_id'] = user.pk
-    #~ 
-    #~ orders = Order.objects.all()
-    #~ 
-    #~ person, org = (None, None)
-    #~ 
-    #~ if key == 'person':
-        #~ person = get_object_or_404(Person.objects, pk=pk)
-        #~ person_not_save = False
-        #~ orders = orders.filter(person=person)
-    #~ 
-    #~ elif key == 'org':
-        #~ org = get_object_or_404(Org.objects, pk=pk)
-        #~ org_not_save = False
-        #~ orders = orders.filter(person__org=org)
-    #~ 
-    #~ if request.GET:
-        #~ try:
-            #~ state = int(request.GET.get('state', 0))
-            #~ year = int(request.GET.get('year', 0))
-            #~ month = int(request.GET.get('month', 0))
-            #~ day = int(request.GET.get('day', 0))
-            #~ query = request.GET.get('query', '')
-        #~ except:
-            #~ return http.HttpResponseBadRequest(u'Неверные параметры запроса')
-        #~ if state:
-            #~ orders = orders.filter(state=state)
-        #~ if year:
-            #~ orders = orders.filter(updated__year=year)
-        #~ if month:
-            #~ orders = orders.filter(updated__month=month)
-        #~ if day:
-            #~ orders = orders.filter(updated__day=day)
-        #~ if query:
-            #~ search_fields = (
-                #~ 'person__last_name',
-                #~ 'person__first_name',
-                #~ 'person__middle_name',
-            #~ )
-            #~ orders = search(orders, search_fields, query)
-        #~ ctx['query'] = query
-    #~ 
-    #~ ctx['person'] = person
-    #~ ctx['org'] = org
-    #~ ctx['orders'] = orders
-    #~ ctx['years']  = [ x.year  for x in orders.dates('updated', 'year') ]
-    #~ ctx['months'] = [ x.month for x in orders.dates('updated', 'month') ]
-    #~ ctx['days']   = [ x.day   for x in orders.dates('updated', 'day') ]
-    #~ ctx['stats']   = settings.STATE_ORDER_CHOICES
-    #~ 
-    #~ return render_to_response('order_list.html', ctx,
-                            #~ context_instance=RequestContext(request,))
 
 @login_required
 def order_detail(request, pk=None, person_pk=None, action=None):
