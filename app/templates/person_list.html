@@ -67,11 +67,6 @@
                 <td>{{ person.org|default:"" }}</td>
                 <td class="input-large">{{ person.phones }}</td>
                 <td class="input-mini">
-<!--
-                    <a href="{% url person_detail person.id %}">
-                        <i class="icon-eye-open" title="Быстрый просмотр"></i>
-                    </a>
--->
                     <a href="{% url person_detail person.id %}">
                         <i class="icon-edit" title="Редактировать карточку клиента"></i>
                     </a>

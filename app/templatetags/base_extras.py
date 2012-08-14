@@ -189,3 +189,7 @@ def get_credit(order, spec=None):
         return u'<p class="badge badge-important">Переплата: %s</p>' % credit
     
     return ''
+
+@register.simple_tag
+def integer_plus(digit1, digit2=1):
+    return digit1 + digit2

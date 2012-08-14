@@ -38,40 +38,45 @@
 
 -->{% endcomment %}
 
-{% load i18n %}
+{% load i18n base_extras %}
 
 {% block page_name %}Прайс-лист{% endblock %}
 {% block search %}{% endblock %}
 
-{% block subnav_content %}
-{% for category in paginator.object_list %}
-    <li>
-        <a href="#category_{{ category.id }}">{{ category }}</a>
-    </li>
-{% endfor %}
-{% endblock %}
+{% block subnav %}{% endblock %}
 
 {% block content %}
+
+
+{% if paginator.object_list %}
+<div class="row-fluid">
+    <table class="table table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th class=""><span>Услуга</span></th>
+                <th class="input-mini"><span class="pull-right">Цена</span></th>
+                <th class="input-mini"><span>Единица</span></th>
+            </tr>
+        </thead>
+        <tbody>
 {% for category in paginator.object_list %}
-    <section id="category_{{ category.id }}">
-        <div class="page-header">
-            <h3>{{ category }}<small></small></h3>
-        </div>
+    <tr id="category_{{ category.id }}" class="alert alert-info"><th colspan="4" class="align-center ">{{ category }}</th></tr>
     {% for service in category.service_set.all %}
-        <div class="row">
-            <div align="right" class="span2">
-                <h6>{{ service.title }}:</h6>
-            </div>
-            <div class="span10">
-            {% for price in service.active_prices %}
-                <h5>{{ price.get_divider_display|default:"" }} {{ price.price }} <small>руб.</small></h5> 
-            {% endfor %}
-            </div>
-        </div>
-        <hr class="soften" />
+        <tr id="service_{{ service.id }}"><td rowspan="{% integer_plus service.active_prices.count %}">{{ service.title }}</td></tr>
+        {% for price in service.active_prices %}
+            <tr id="price_{{ price.id }}">
+                <td><span class="pull-right">{{ price.price }}</span></td>
+                <td><span>{{ price.get_divider_display|default:"" }}</span></td>
+            </tr>
+        {% endfor %}
     {% endfor %}
-    </section>
 {% endfor %}
+        </tbody>
+    </table>
+    <hr />
+</div>
+{% endif %}
+{% include "includes/_paginator.html" %}
 {% endblock %}
 
 
