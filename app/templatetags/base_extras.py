@@ -184,7 +184,7 @@ def get_credit(order, spec=None):
         summa = spec.summa
     else:
         summa = 0
-    if order.invoice.debet < summa:
+    if order.invoice and order.invoice.debet < summa:
         credit = summa - order.invoice.debet
         return u'<p class="badge badge-important">Переплата: %s</p>' % credit
     
@@ -198,10 +198,13 @@ def integer_plus(digit1, digit2=1):
 def room_occupied(room):
     today = date.today()
     sps = room.specification_set.filter(end__gt=today).order_by('end')
+    sps = sps.filter(order__state__in=settings.SELECT_WORK_ORDERS)
     try:
         sp = sps[0]
     except:
         return u''
+    if room.is_free:
+        return u'Заказ на %s' % sp.start.strftime("%d.%m.%y %H:%M")
     return u'Освобождается %s' % sp.end.strftime("%d.%m.%y %H:%M")
 
 @register.simple_tag

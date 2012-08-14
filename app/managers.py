@@ -97,6 +97,13 @@ class WorkOrderManager(models.Manager):
             state__in=settings.SELECT_WORK_ORDERS
         )
 
+class WorkSpecificationManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(WorkSpecificationManager, self).get_query_set().filter(
+            order__state__in=settings.SELECT_WORK_ORDERS
+        )
+
 class CreateInvoiceManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):

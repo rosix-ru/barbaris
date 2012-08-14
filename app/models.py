@@ -450,7 +450,7 @@ class Room(models.Model):
     @property
     def is_free(self):
         now = datetime.datetime.now()
-        sps = Specification.objects.filter(room=self,
+        sps = Specification.workeds.filter(room=self,
             end__gt=now,
             start__lt=now.date() + datetime.timedelta(1)
             )
@@ -461,13 +461,24 @@ class Room(models.Model):
     @property
     def is_free_tomorrow(self):
         now = datetime.datetime.now() + datetime.timedelta(1)
-        sps = Specification.objects.filter(room=self,
+        sps = Specification.workeds.filter(room=self,
             end__gt=now,
             start__lt=now.date() + datetime.timedelta(1)
             )
         if sps:
             return False
         return True
+    
+    @property
+    def is_nonfree_tomorrow(self):
+        now = datetime.datetime.now() + datetime.timedelta(1)
+        sps = Specification.workeds.filter(room=self,
+            end__gt=now,
+            start__lt=now.date() + datetime.timedelta(1)
+            )
+        if sps:
+            return True
+        return False
     
     @property
     def order(self):
@@ -653,6 +664,9 @@ class Specification(models.Model):
             Reservation,
             null=True, blank=True,
             verbose_name="бронирование")
+    
+    objects  = models.Manager()
+    workeds  = managers.WorkSpecificationManager()
     
     def __unicode__(self):
         return unicode(self.price)
