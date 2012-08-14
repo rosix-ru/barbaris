@@ -108,7 +108,8 @@ QUESTION_LIST = { 'model': Question, 'template_name': "question_list.html",
             'user__last_name',
             'user__first_name',
             'user__username',
-            ]
+            ],
+        'date_field': 'created',
         }
 
 PERSON_DETAIL = { "model" : Person, "template_name" : "person_detail.html" }
@@ -146,6 +147,9 @@ urlpatterns = patterns('project.app.views',
     
     url(r'^print/(?P<pk>\d+)/$',        'document_print',       name='invoice_print',   kwargs = INVOICE_PRINT),
     url(r'^print/(?P<pk>\d+)/$',        'document_print',       name='act_print',       kwargs = ACT_PRINT),
+    
+    url(r'^question/(?P<pk>\d+)/$',     'question_detail',      name='question_detail', ),
+    url(r'^question/new/$',             'question_detail',      name='question_new',            kwargs = {'action': 'new'}),
     
     url(r'^modal/(?P<obj>\w+)/(?P<key>\w+)/(?P<pk>\d+)/$',
                                         'get_modal',            name='get_modal'),

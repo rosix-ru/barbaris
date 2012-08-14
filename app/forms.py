@@ -142,3 +142,20 @@ class ActForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 1}),
             'date':  forms.TextInput(attrs={'data-toggle': 'datepicker'}),
         }
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = models.Question
+        exclude = ('created', 'user', )
+        widgets = {
+            'theme':  forms.TextInput(attrs={'class': 'span12'}),
+            'text': forms.Textarea(attrs={'class': 'span12', 'rows': 2}),
+        }
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = models.Answer
+        exclude = ('created', 'user', 'question' )
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'span12', 'rows': 2}),
+        }

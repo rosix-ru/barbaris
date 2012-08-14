@@ -40,66 +40,66 @@
 
 {% load i18n base_extras %}
 
-{% block page_name %}Поддержка{% endblock %}
+{% block title %}{{ block.super }} - Вопрос {% endblock %}
 
-{% block search_placeholder %}Поиск{% endblock %}
-
-{% block subnav_content %}
-{% include "includes/_subnav_date_filter.html" %}
-<li>
-    <a href="{% url question_new %}" title="Новый вопрос"><i class="icon-plus"></i></a>
-</li>
-{% endblock %}
+{% block page_name %}{% endblock %}
+{% block subnav %}{% endblock %}
 
 {% block content %}
-
-<div id="questions" class="accordion">
-{% for question in paginator.object_list %}
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a href="#question{{ question.id }}" data-parent="#questions" data-toggle="collapse" class="accordion-toggle">
-                <div class="row-fluid">
-                    <div class="span8">
-                        <h2>{{ question.theme }}</h2>
-                    </div>
-                    <div class="span2">
-                        {{ question.created|date:"DATETIME_FORMAT" }}
-                    </div>
-                    <div class="span2">
-                        <h6>{% short_username question.user %}</h6>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="accordion-body collapse" id="question{{ question.id }}">
-            <div class="accordion-inner">
-                <div class="row-fluid">
-                    <div class="span12">
-                        <div class="span4">
-                            <h3>Вопрос</h3>
-                            <div class="well">
-                                <p>{{ question.text }}</p>
-                            </div>
-                        </div>
-                        <div class="span8">
-                            <h3>Ответы</h3>
-                        {% for answer in question.answer_set.all %}
-                            <div class="well">
-                                <h6>{% short_username question.user %} <small>( {{ answer.created|date:"DATETIME_FORMAT" }} )</small></h6>
-                                <p>{{ answer.text }}</p>
-                            </div>
-                        {% endfor %}
-                            <a href="{% url question_detail question.id %}" class="btn">Ответить</a>
-                        </div>
-                    </div>
-                </div>
+{% if user == question.user %} 
+<form class="well" action="" method="post">{% csrf_token %}
+    <legend>Вопрос от пользователя {% short_username question.user %}</legend>
+    <fieldset>
+        {% for field in form_question %}
+        <div class="control-group">
+            <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+            <div class="row-fluid">
+            {{ field }}
+            {{ field.errors }}
             </div>
         </div>
+        {% endfor %}
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="Задать" />
+        </div>
+    </fieldset>
+</form>
+{% else %}
+<h3>Вопрос</h3>
+<div class="well">
+    <legend>Вопрос от пользователя {% short_username question.user %}</legend>
+    <p>{{ question.text }}</p>
+</div>
+{% endif %} 
+
+{% if form_answer %}
+<form class="well" action="" method="post">{% csrf_token %}
+    <legend>Новый ответ</legend>
+    <fieldset>
+        {% for field in form_answer %}
+        <div class="control-group">
+            <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+            <div class="row-fluid">
+            {{ field }}
+            {{ field.errors }}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="Ответить" />
+        </div>
+    </fieldset>
+</form>
+
+<h3>Ответы</h3>
+{% for answer in question.answer_set.all %}
+    <div class="well">
+        <h6>{% short_username question.user %} <small>( {{ answer.created|date:"DATETIME_FORMAT" }} )</small></h6>
+        <p>{{ answer.text }}</p>
     </div>
 {% endfor %}
-</div>
 
-{% include "includes/_paginator.html" %}
+{% endif %} 
 
 {% endblock %}
 

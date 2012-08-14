@@ -189,3 +189,14 @@ class ActAdmin(admin.ModelAdmin):
     list_display = ('order', 'date','id',)
     list_filter = ('user',)
 admin.site.register(Act, ActAdmin)
+
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('text', 'user','id',)
+    list_filter = ('user',)
+admin.site.register(Question, QuestionAdmin)
+
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = ('text', 'user', 'question', 'id',)
+    list_filter = ('user',)
+    raw_id_fields = ['question']
+admin.site.register(Answer, AnswerAdmin)

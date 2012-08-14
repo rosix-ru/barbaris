@@ -168,7 +168,7 @@ def monitor(request):
                             #~ context_instance=RequestContext(request,))
 
 @login_required
-def order_detail(request, pk=None, person_pk=None):
+def order_detail(request, pk=None, person_pk=None, action=None):
     print "EXEC views.order_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
@@ -181,7 +181,7 @@ def order_detail(request, pk=None, person_pk=None):
     else:
         person = Person()
     
-    if not pk or pk in (0, '0'):
+    if not pk or pk in (0, '0') or action == "new":
         order = Order(user=user)
         order.person = person
         order_not_save = True
@@ -616,6 +616,49 @@ def org_detail(request, pk):
     ctx['form_bank'] = form_bank
     
     return render_to_response('org_detail.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def question_detail(request, pk=None, action=None):
+    print "EXEC views.question_detail()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    user = request.user
+    if not pk or pk in ('0', 0) or action == 'new':
+        question = Question(theme="Новая тема вопроса")
+        question.user = user
+        question_not_save = True
+    else:
+        question = get_object_or_404(Question.objects, pk=pk)
+        question_not_save = False
+    
+    def check_question():
+        if question_not_save:
+            question.save()
+    
+    if request.method == 'POST':
+        if 'theme' in request.POST:
+            form_question = forms.QuestionForm(request.POST, instance=question)
+            if form_question.is_valid():
+                question = form_question.save()
+                return redirect('question_detail', question.pk)
+        else:
+            answer = Answer(user=user, question=question)
+            form_answer = forms.AnswerForm(request.POST, instance=answer)
+            if form_answer.is_valid():
+                form_answer.save()
+    
+    form_question = forms.QuestionForm(instance=question)
+    if not question_not_save:
+        form_answer = forms.AnswerForm()
+    else:
+        form_answer = None
+    
+    ctx['question'] = question
+    ctx['form_question'] = form_question
+    ctx['form_answer'] = form_answer
+    
+    return render_to_response('question_detail.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required

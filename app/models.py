@@ -953,8 +953,10 @@ class Question(models.Model):
     user = models.ForeignKey(
             User,
             verbose_name="пользователь")
+    theme = models.CharField(
+            max_length=100,
+            verbose_name = u"тема вопроса")
     text = models.TextField(
-            blank=True,
             verbose_name = u"текст вопроса")
     
     def __unicode__(self):
@@ -977,8 +979,7 @@ class Answer(models.Model):
             User,
             verbose_name="пользователь")
     text = models.TextField(
-            blank=True,
-            verbose_name = u"текст вопроса")
+            verbose_name = u"текст ответа")
     
     def __unicode__(self):
         return self.text
