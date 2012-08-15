@@ -955,7 +955,7 @@ class Payment(models.Model):
     
     def save(self, **kwargs):
         if not self.summa:
-            self.summa = self.invoice.debet
+            self.summa = str(self.invoice.debet)
         
         if self.is_paid:
             if self.summa >= self.invoice.debet:
