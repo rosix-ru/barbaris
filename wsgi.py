@@ -15,8 +15,6 @@ framework.
 """
 import os, sys
 
-import os, sys
-
 # Set name directory of environ
 ENV = 'env-django1.4'
 
