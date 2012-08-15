@@ -143,10 +143,16 @@ function loadModal() {
     );
 }
 
+function updateMonitor() {
+    $('#monitor').load('/monitor/update/');
+}
+
 /* Execute something after load page */
 $(document).ready(function($) {
     runMiniClock();
     setDateTimePickerOptions();
+    
+    setInterval("updateMonitor()", 15000);
     
     $("#persons input.search").keyup(function() {
         goSearchPerson($(this));

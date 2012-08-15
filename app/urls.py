@@ -119,6 +119,7 @@ ORG_DETAIL = { "model" : Org, "template_name" : "org_detail.html" }
 
 urlpatterns = patterns('project.app.views',
     url(r'^$',                          'monitor',              name='monitor'),
+    url(r'^monitor/update/$',           'monitor_update',       name='monitor_update'),
     url(r'^analyze/$',                  'analyze',              name='analyze'),
     
     url(r'^persons/$',    'object_list',      name='person_list',     kwargs = PERSON_LIST),

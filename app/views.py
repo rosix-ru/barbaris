@@ -61,52 +61,16 @@ import forms
 
 @login_required
 def monitor(request):
-    print "EXEC views.monitor()" # DEBUG
-    #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
-    session = request.session
-    user = request.user
-    session['user_id'] = user.pk
-    
-    now = datetime.datetime.now()
-    ctx['current_month'] = _date(now, 'F')
-    ctx['next_month'] = _date(datetime.datetime(now.year, now.month +1, 1), 'F')
-    
-    categories = Category.objects.all()
-    hotel = categories.get(title="Hotel")
-    ctx['hotel_services'] = hotel.service_set.filter(is_rooms=True)
-    sauna = categories.get(title="Sauna")
-    
-    rooms = Room.objects.all()
-    ctx['rooms'] = rooms
-    sps = Specification.objects.all()
-    
-    # Занятые комнаты: освободились на текущий момент,
-    # занимаются позднее чем завтра.
-    sps_rooms = sps.filter(room__isnull=False,
-            end__gt=now,
-            start__lt=now.date() + datetime.timedelta(1)
-            )
-    room_ids = [ x.room.pk for x in sps_rooms ]
-    ctx['sps_rooms_nonfree'] = sps_rooms
-    ctx['rooms_free'] = rooms.exclude(pk__in=room_ids)
-    
-    # Бронирование комнат
-    sps_room_reserv = sps.filter(room__isnull=False,
-            reservation__isnull=False,
-            end__gt=now,
-            start__gte=now.date()
-            )
-    # На сегодня
-    ctx['sps_rooms_reserv_today'] = sps_room_reserv.filter(
-            start__lt=now.date() + datetime.timedelta(1)
-            )
-    # На завтра
-    ctx['sps_rooms_reserv_tomorrow'] = sps_room_reserv.filter(
-            start__range=(now.date(), now.date() + datetime.timedelta(2))
-            )
-    
+    ctx['object_list'] = Room.objects.all()
     return render_to_response('monitor.html', ctx,
+                            context_instance=RequestContext(request,))
+
+@login_required
+def monitor_update(request):
+    ctx = {'DEBUG': settings.DEBUG}
+    ctx['object_list'] = Room.objects.all()
+    return render_to_response('includes/_monitor.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required

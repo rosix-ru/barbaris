@@ -46,57 +46,9 @@
 {% block subnav %}{% endblock %}
 
 {% block content %}
-
 <ul id="monitor" class="thumbnails">
-{% for room in rooms|dictsort:'num' %}
-    <li class="span4">
-        <div class="thumbnail">
-            <div class="row-fluid">
-                <div class="span3">
-                <a href="#" class="span12 btn
-                {% if room.is_free %} btn-success
-                {% else %}
-                    {% if room.is_free_tomorrow %} btn-danger
-                    {% else %} btn-inverse
-                    {% endif %}
-                {% endif %}
-                "><h1><span>{{ room.num }}</span></h1></a>
-                <label class="align-center">{{ room.service.title }}</label>
-                </div>
-                <label href="#" class="span9 label label-info" style="min-height: 86px;">
-                {% if room.order %}
-                    {% room_occupied room %}
-                    <a href="{% url order_detail room.order.pk %}"><i class="icon-edit"></i></a>
-                    <br>
-                    {{ room.order.person|default:"КЛИЕНТ НЕ УСТАНОВЛЕН!!!" }}
-                    <br>
-                    {{ room.order.person.org|default:"Частное лицо." }}
-                    <br>
-                    {{ room.order.comment|default:"Комментарий отсутствует." }}
-                    <br>
-                    Сумма заказа: {{ room.order.summa }}
-                    <br>
-                    К оплате: {% if room.order.invoice %}{{ room.order.invoice.debet }}{% else %}{{ room.order.summa }}{% endif %}
-                {% else %}
-                    {% room_occupied room %}
-                    <br>
-                {% endif %}
-                </label>
-            </div>
-<!--
-            <div class="caption">
-                {% if room.order %}
-                <p><a href="{% url order_detail room.order.pk %}">{{ room.order.person|default:"..." }}</a></p>
-                {% else %}
-                <p>...</p>
-                {% endif %}
-            </div>
--->
-        </div>
-    </li>
-{% endfor %}
+    {% include "includes/_monitor.html" %}
 </ul>
-
 {% endblock %}
 
 

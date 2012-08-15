@@ -70,9 +70,12 @@
     {% endfor %}
     </ul>
 </li>
+{% subnav_filter request 'order_list' %}
+
 <li>
     <a href="{% url order_new %}" title="Новый заказ"><i class="icon-plus"></i></a>
 </li>
+<li></li>
 
 {% endblock %}
 

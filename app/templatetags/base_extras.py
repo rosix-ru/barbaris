@@ -39,6 +39,7 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from datetime import date
+from django.template.defaultfilters import date as _date
 
 register = template.Library()
 
@@ -79,6 +80,16 @@ def COPYRIGHT_YEARS():
 def navactive(request, urls):
     if request.path in ( reverse(url) for url in urls.split() ):
         return "active"
+    return ""
+
+@register.simple_tag
+def subnav_filter(request, url):
+    if request.get_full_path() != reverse(url):
+        return """
+<li>
+    <a href="%s" title="Cбросить фильтр"><i class="icon-filter"></i></a>
+</li>
+""" % reverse(url)
     return ""
 
 @register.simple_tag
@@ -204,8 +215,8 @@ def room_occupied(room):
     except:
         return u''
     if room.is_free:
-        return u'Заказ на %s' % sp.start.strftime("%d.%m.%y %H:%M")
-    return u'Освобождается %s' % sp.end.strftime("%d.%m.%y %H:%M")
+        return u'Заказ на %s' % _date(sp.start, "DATETIME_FORMAT")
+    return u'До %s' % _date(sp.end, "DATETIME_FORMAT")
 
 @register.simple_tag
 def room_reserved(room):
