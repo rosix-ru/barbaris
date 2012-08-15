@@ -15,17 +15,29 @@ framework.
 """
 import os, sys
 
-# Set environ at your home directory
-# Example: ENV = 'env/django1.4' ==>> '/home/user/env/django1.4'
+import os, sys
+
+# Set name directory of environ
 ENV = 'env-django1.4'
 
-if ENV:
-    home = os.path.expanduser('~')
-    python = 'python%s.%s' % ( sys.version_info.major,  sys.version_info.minor)
-    environ = os.path.join(home, ENV)
-    packages = os.path.join(environ, 'lib', python, 'site-packages')
-    sys.path.insert(0, packages)
+def getenv():
+    if ENV:
+        thispath = os.path.dirname(__file__)
+        while thispath:
+            if thispath == '/' and not os.path.exists(os.path.join(thispath, ENV)):
+                return ''
+            if os.path.exists(os.path.join(thispath, ENV)):
+                return os.path.join(thispath, ENV)
+            else:
+                thispath = os.path.dirname(thispath)
+    else:
+        return ''
 
+env = getenv()
+if env:
+    python = 'python%s.%s' % ( str(sys.version_info[0]),  str(sys.version_info[1]) )
+    packages = os.path.join(env, 'lib', python, 'site-packages')
+    sys.path.insert(0, packages)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 
