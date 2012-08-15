@@ -713,7 +713,10 @@ def search(queryset, search_fields, query):
         try:
             print queryset.query
         except:
-            print unicode(queryset.query)
+            try:
+                print unicode(queryset.query)
+            except:
+                pass
         
     return queryset
 
