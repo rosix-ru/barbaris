@@ -770,7 +770,7 @@ class Specification(models.Model):
                 return False
             self.start = self.start or roundTime()
             delta = self.end - self.start
-            count = int(round(delta.total_seconds() / ds))
+            count = int(round((delta.seconds + delta.days*60*60*24) / ds))
             if not count:
                 return False
             self.count = count

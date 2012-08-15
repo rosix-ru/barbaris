@@ -25,15 +25,16 @@ def getenv():
         thispath = os.path.dirname(__file__)
         while thispath:
             if thispath == '/' and not os.path.exists(os.path.join(thispath, ENV)):
-                return ''
+                return None
             if os.path.exists(os.path.join(thispath, ENV)):
                 return os.path.join(thispath, ENV)
             else:
                 thispath = os.path.dirname(thispath)
     else:
-        return ''
+        return None
 
 env = getenv()
+
 if env:
     python = 'python%s.%s' % ( str(sys.version_info[0]),  str(sys.version_info[1]) )
     packages = os.path.join(env, 'lib', python, 'site-packages')
