@@ -148,8 +148,8 @@ urlpatterns = patterns('project.app.views',
     url(r'^order/delete/$',            'order_delete',         name='order_delete'),
     url(r'^order/accept/$',            'order_accept',         name='order_accept'),
     
-    url(r'^print/(?P<pk>\d+)/$',        'document_print',       name='invoice_print',   kwargs = INVOICE_PRINT),
-    url(r'^print/(?P<pk>\d+)/$',        'document_print',       name='act_print',       kwargs = ACT_PRINT),
+    url(r'^print/invoice/(?P<pk>\d+)/$',    'document_print',       name='invoice_print',   kwargs = INVOICE_PRINT),
+    url(r'^print/act/(?P<pk>\d+)/$',        'document_print',       name='act_print',       kwargs = ACT_PRINT),
     
     url(r'^question/(?P<pk>\d+)/$',     'question_detail',      name='question_detail', ),
     url(r'^question/new/$',             'question_detail',      name='question_new',            kwargs = {'action': 'new'}),

@@ -381,6 +381,17 @@
         }
     },
     {
+        "pk": 15,
+        "model": "app.service",
+        "fields": {
+            "category": 1,
+            "is_rooms": true,
+            "is_reserved": true,
+            "is_on_time": true,
+            "title": "\u041f\u043e\u043b\u0443\u043b\u044e\u043a\u0441 +"
+        }
+    },
+    {
         "pk": 3,
         "model": "app.service",
         "fields": {
@@ -436,19 +447,11 @@
         }
     },
     {
-        "pk": 18,
+        "pk": 17,
         "model": "app.room",
         "fields": {
-            "num": 18,
+            "num": 17,
             "service": 12
-        }
-    },
-    {
-        "pk": 1,
-        "model": "app.room",
-        "fields": {
-            "num": 1,
-            "service": 1
         }
     },
     {
@@ -456,6 +459,14 @@
         "model": "app.room",
         "fields": {
             "num": 3,
+            "service": 1
+        }
+    },
+    {
+        "pk": 9,
+        "model": "app.room",
+        "fields": {
+            "num": 9,
             "service": 1
         }
     },
@@ -524,14 +535,6 @@
         }
     },
     {
-        "pk": 9,
-        "model": "app.room",
-        "fields": {
-            "num": 9,
-            "service": 2
-        }
-    },
-    {
         "pk": 10,
         "model": "app.room",
         "fields": {
@@ -556,6 +559,14 @@
         }
     },
     {
+        "pk": 1,
+        "model": "app.room",
+        "fields": {
+            "num": 1,
+            "service": 15
+        }
+    },
+    {
         "pk": 11,
         "model": "app.room",
         "fields": {
@@ -569,14 +580,6 @@
         "fields": {
             "num": 13,
             "service": 10
-        }
-    },
-    {
-        "pk": 17,
-        "model": "app.room",
-        "fields": {
-            "num": 17,
-            "service": 11
         }
     },
     {
@@ -806,7 +809,62 @@
         "fields": {
             "expired_days": 0,
             "percent": "0.1",
-            "title": "\u041e\u0431\u044b\u0447\u043d\u043e\u0435"
+            "title": "\u041e\u0431\u044b\u0447\u043d\u043e\u0435 10%"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "app.doctemplate",
+        "fields": {
+            "is_default": false,
+            "text": "",
+            "document": "act",
+            "fname": "printforms/shrink_act_org.html",
+            "title": "\u0421\u0436\u0430\u0442\u044b\u0439 \u0430\u043a\u0442 \u043d\u0430 \u043e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044e"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "app.doctemplate",
+        "fields": {
+            "is_default": false,
+            "text": "",
+            "document": "act",
+            "fname": "printforms/shrink_act_person.html",
+            "title": "\u0421\u0436\u0430\u0442\u044b\u0439 \u0430\u043a\u0442 \u043d\u0430 \u0444\u0438\u0437.\u043b\u0438\u0446\u043e"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "app.doctemplate",
+        "fields": {
+            "is_default": false,
+            "text": "",
+            "document": "invoice",
+            "fname": "printforms/shrink_invoice_org.html",
+            "title": "\u0421\u0436\u0430\u0442\u044b\u0439 \u0441\u0447\u0451\u0442 \u043d\u0430 \u043e\u0433\u0440\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044e"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "app.doctemplate",
+        "fields": {
+            "is_default": false,
+            "text": "",
+            "document": "invoice",
+            "fname": "printforms/shrink_invoice_person.html",
+            "title": "\u0421\u0436\u0430\u0442\u044b\u0439 \u0441\u0447\u0451\u0442 \u043d\u0430 \u0444\u0438\u0437.\u043b\u0438\u0446\u043e"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "app.doctemplate",
+        "fields": {
+            "is_default": false,
+            "text": "",
+            "document": "act",
+            "fname": "printforms/standart_act_org.html",
+            "title": "\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0439 \u0430\u043a\u0442 \u043d\u0430 \u043e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044e"
         }
     },
     {
@@ -816,8 +874,19 @@
             "is_default": true,
             "text": "",
             "document": "act",
-            "fname": "printforms/act_std.html",
+            "fname": "printforms/standart_act_person.html",
             "title": "\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0439 \u0430\u043a\u0442 \u043d\u0430 \u0444\u0438\u0437.\u043b\u0438\u0446\u043e"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "app.doctemplate",
+        "fields": {
+            "is_default": false,
+            "text": "",
+            "document": "invoice",
+            "fname": "printforms/standart_invoice_org.html",
+            "title": "\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0439 \u0441\u0447\u0451\u0442 \u043d\u0430 \u043e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u044e"
         }
     },
     {
@@ -827,8 +896,29 @@
             "is_default": true,
             "text": "",
             "document": "invoice",
-            "fname": "printforms/invoice_std.html",
+            "fname": "printforms/standart_invoice_person.html",
             "title": "\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0439 \u0441\u0447\u0451\u0442 \u043d\u0430 \u0444\u0438\u0437.\u043b\u0438\u0446\u043e"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "app.question",
+        "fields": {
+            "text": "\u041a\u0430\u043a\u043e\u0439 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043a\u043e\u0440\u0440\u0435\u043a\u0442\u043d\u0435\u0435 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0441 \u0434\u0430\u043d\u043d\u044b\u043c \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u043c?",
+            "theme": "\u0411\u0440\u0430\u0443\u0437\u0435\u0440",
+            "user": 1,
+            "created": "2012-08-14T15:06:07.930"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "app.answer",
+        "fields": {
+            "text": "\u041d\u0430 \u0434\u0430\u043d\u043d\u044b\u0439 \u043c\u043e\u043c\u0435\u043d\u0442 \u0442\u0440\u043e\u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u044b 2 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0430:\r\nMozilla Firefox 14  \u0438 Google Chrome 18 - \u043f\u0440\u0435\u043a\u0440\u0430\u0441\u043d\u043e \u0440\u0430\u0431\u043e\u0442\u0430\u044e\u0442 \u0441 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u043c, \u043d\u043e \u043d\u0435\u043a\u043e\u0440\u0440\u0435\u043a\u0442\u043d\u043e \u0432\u044b\u0432\u043e\u0434\u044f\u0442 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442 \u043d\u0430 \u043f\u0435\u0447\u0430\u0442\u044c (\u0441\u0435\u0439\u0447\u0430\u0441 \u0444\u0443\u043d\u043a\u0446\u0438\u044f \u043f\u0435\u0447\u0430\u0442\u0438 \u043d\u0430 \u0434\u043e\u0440\u0430\u0431\u043e\u0442\u043a\u0435).\r\n\u041e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u044b \u043c\u043e\u0433\u0443\u0442 \u043d\u0435 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0442\u044c \u0441\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0435 \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0438 \u0438 \u0431\u0443\u0434\u0443\u0442 \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c\u0441\u044f \u0432 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u044e\u044e \u043e\u0447\u0435\u0440\u0435\u0434\u044c.",
+            "updated": "2012-08-16T19:20:38.442",
+            "question": 1,
+            "user": 1,
+            "created": "2012-08-14T15:29:52.347"
         }
     }
 ]

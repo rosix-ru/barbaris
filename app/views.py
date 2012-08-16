@@ -650,8 +650,8 @@ def document_print(request, pk, model, document):
         temp = get_object_or_404(DocTemplate, document=document, is_default=True)
     
     ctx['document'] = doc
-    ctx['seller'] = Org.sellers.all()[0]
-    ctx['static_url'] = settings.STATIC_URL
+    ctx['supplier'] = Org.sellers.all()[0]
+    ctx['STATIC_URL'] = settings.STATIC_URL
     ctx['template_list'] = DocTemplate.objects.filter(document=document)
     if temp.fname:
         t = get_template(temp.fname)

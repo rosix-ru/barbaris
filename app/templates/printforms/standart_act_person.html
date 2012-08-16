@@ -1,0 +1,106 @@
+{% extends "printforms/_standart.html" %}{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+
+-->{% endcomment %}
+
+{% load pytils_numeral %}
+
+{% block print_table_thead %}
+<tr>
+    <th class="span1 align-center">№</th>
+    <th class="span6 align-center">наименование работ, услуг</th>
+    <th class="span1 align-center">кол-во</th>
+    <th class="span1 align-center">ед.</th>
+    <th class="span1 align-center">цена</th>
+    <th class="span2 align-center">сумма</th>
+</tr>
+{% endblock %}
+
+{% block print_table_tbody %}
+    {% for spec in document.order.specification_set.all %}
+        {% if spec.reservation %}
+            <tr>
+                <td rowspan="2" class="align-center">{{ forloop.counter }}</td>
+                <td class="align-left">{{ spec.price.service.title }}</td>
+                <td class="align-center">{{ spec.count }}</td>
+                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
+                <td class="align-right">{{ spec.price.price }}</td>
+                <td class="align-right">{{ spec.summa_clean }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="align-left">Бронирование услуги</td>
+                <td class="align-right">{{ spec.markup }}</td>
+                <td class="align-right">{{ spec.markup }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="align-center">{{ forloop.counter }}</td>
+                <td class="align-left">{{ spec.price.service.title }}</td>
+                <td class="align-center">{{ spec.count }}</td>
+                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
+                <td class="align-right">{{ spec.price.price }}</td>
+                <td class="align-right">{{ spec.summa_clean }}</td>
+            </tr>
+        {% endif %}
+        
+    {% endfor %}
+{% endblock %}
+
+{% block print_table_tfoot %}
+    <tr>
+        <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
+        <td class="span2 align-right"><strong>{{ document.order.summa }}</strong></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
+        <td class="span2 align-right"><strong>-</strong></td>
+    </tr>
+{% endblock %}
+
+{% block print_table_legend %}
+<div>Всего оказано услуг: {{ document.order.specification_set.count }}, на сумму {{ document.order.summa }} руб.</div>
+<div><strong>{{ document.order.summa|rubles }}</strong></div>
+<hr>
+{% endblock %}
+
+{% block print_text %}
+<p>Вышеперечисленные услуги выполнены полностью и в срок. 
+Заказчик претензий по объему, качеству и срокам оказания 
+услуг не имеет.
+</p>
+<hr>
+{% endblock %}

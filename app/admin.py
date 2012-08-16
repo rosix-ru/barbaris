@@ -171,8 +171,8 @@ class SpecificationAdmin(admin.ModelAdmin):
 admin.site.register(Specification,SpecificationAdmin)
 
 class DocTemplateAdmin(admin.ModelAdmin):
-    list_display = ('title', 'document','id',)
-    list_filter = ('document',)
+    list_display = ('title', 'document', 'is_default','id',)
+    list_filter = ('document', 'is_default')
 admin.site.register(DocTemplate, DocTemplateAdmin)
 
 class InvoiceAdmin(admin.ModelAdmin):

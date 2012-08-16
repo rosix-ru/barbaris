@@ -1,4 +1,4 @@
-{% comment %}<!--
+{% extends "printforms/_standart.html" %}{% comment %}<!--
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -39,41 +39,20 @@
 
 {% load pytils_numeral %}
 
-<div class="align-right"><img src="{{ static_url }}img/logo.png"></div>
+{% block print_client_header %}{{ document.order.org }}{% endblock %}
 
-<hr class="soften">
+{% block print_table_thead %}
+<tr>
+    <th class="span1 align-center">№</th>
+    <th class="span6 align-center">наименование работ, услуг</th>
+    <th class="span1 align-center">кол-во</th>
+    <th class="span1 align-center">ед.</th>
+    <th class="span1 align-center">цена</th>
+    <th class="span2 align-center">сумма</th>
+</tr>
+{% endblock %}
 
-<h2>{{ document.document }} №{{ document.id }} от {{ document.date }}</h2>
-
-<hr>
-
-<div class="row-fluid">
-  <div class="span12">
-    <div class="row-fluid">
-      <div class="span2 align-right">Исполнитель:</div>
-      <div class="span10"><strong>{{ seller.detail.get_string_requsites }}</strong></div>
-    </div>
-    <div class="row-fluid"><div class="span12"></div></div>
-    <div class="row-fluid">
-      <div class="span2 align-right">Заказчик:</div>
-      <div class="span10"><strong>{{ document.order.person }}</strong></div>
-    </div>
-    <div class="row-fluid"><div class="span12"></div></div>
-  </div>
-</div>
-
-<table class="table table-condensed table-bordered">
-    <thead>
-        <tr>
-            <th class="span1 align-center">№</th>
-            <th class="span6 align-center">наименование работ, услуг</th>
-            <th class="span1 align-center">кол-во</th>
-            <th class="span1 align-center">ед.</th>
-            <th class="span1 align-center">цена</th>
-            <th class="span2 align-center">сумма</th>
-        </tr>
-    </thead>
-    <tbody>
+{% block print_table_tbody %}
     {% for spec in document.order.specification_set.all %}
         {% if spec.reservation %}
             <tr>
@@ -84,13 +63,11 @@
                 <td class="align-right">{{ spec.price.price }}</td>
                 <td class="align-right">{{ spec.summa_clean }}</td>
             </tr>
-         
             <tr>
                 <td colspan="3" class="align-left">Бронирование услуги</td>
                 <td class="align-right">{{ spec.markup }}</td>
                 <td class="align-right">{{ spec.markup }}</td>
             </tr>
-        
         {% else %}
             <tr>
                 <td class="align-center">{{ forloop.counter }}</td>
@@ -103,40 +80,21 @@
         {% endif %}
         
     {% endfor %}
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
-            <td class="span2 align-right"><strong>{{ document.order.summa }}</strong></td>
-        </tr>
-        <tr>
-            <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
-            <td class="span2 align-right"><strong>-</strong></td>
-        </tr>
-    </tfoot>
-</table>
+{% endblock %}
 
-<div>Всего оказано услуг: {{ document.order.specification_set.count }}, на сумму {{ document.order.summa }} руб.</div>
+{% block print_table_tfoot %}
+    <tr>
+        <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
+        <td class="span2 align-right"><strong>{{ document.order.summa }}</strong></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
+        <td class="span2 align-right"><strong>-</strong></td>
+    </tr>
+{% endblock %}
+
+{% block print_table_legend %}
 <div><strong>{{ document.order.summa|rubles }}</strong></div>
-
 <hr>
-<p>Вышеперечисленные услуги выполнены полностью и в срок. 
-Заказчик претензий по объему, качеству и срокам оказания 
-услуг не имеет.
-</p>
-
-<hr>
-
-<div class="row-fluid">
-  <div class="span12">
-    <div class="row-fluid">
-      <div class="span1 align-left">Исполнитель:</div>
-      <div class="span5 align-right signature">Бекетов С.В.</div>
-      <div class="span1 align-left">Заказчик:</div>
-      <div class="span5 align-right signature">{{ payer.get_short_fio }}</div>
-    </div>
-  </div>
-</div>
-
-
+{% endblock %}
 
