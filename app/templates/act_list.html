@@ -43,6 +43,7 @@
 
 {% block subnav_content %}
 {% include "includes/_subnav_date_filter.html" %}
+{% subnav_filter request 'act_list' %}
 {% endblock %}
 
 {% block content %}
