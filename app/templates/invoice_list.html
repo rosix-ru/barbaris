@@ -95,6 +95,9 @@
                     <i class="icon-trash" title="Удалить"></i>
                 </a>
             {% endif %}
+                <a href="#" data-toggle="_modal_invoice_change_{{ invoice.id }}">
+                    <i class="icon-edit" title="Изменить"></i>
+                </a>
                 <a href="{% url order_detail invoice.order.id %}">
                     <i class="icon-file" title="Перейти к заказу"></i>
                 </a>
