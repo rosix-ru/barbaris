@@ -42,10 +42,7 @@
 
 {% block title %}{{ block.super }} - {{ document.document }} №{{ document.id }} от {{ document.date }}{% endblock %}
 
-{% block extrastyle %}{{ block.super }}
-    <link rel="stylesheet" media="print" type="text/css" href="{{ STATIC_URL }}css/print.css"/>
-{% endblock %}
-
+{% block responsive_style %}{% endblock %}
 
 {% block page_name %}{% endblock %}
 

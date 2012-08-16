@@ -43,11 +43,12 @@
     <title>{% block title %}{% filter force_escape %}{% PROJECT_NAME %}{% endfilter %}{% endblock %}</title>
     <link rel="icon" href="{{ STATIC_URL }}img/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico"  type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale={% block initial-scale %}1.0{% endblock %}">
     <meta name="description" content="">
     <meta name="author" content="{% filter force_escape %}{% AUTHORS %}{% endfilter %}">
 
-<!-- START: styles -->
+<!-- START: block style -->
+    {% block style %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
     <style type="text/css">
         body {
@@ -63,7 +64,7 @@
             padding: 9px 0;
         }
     </style>
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css">
+    {% block responsive_style %}<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css">{% endblock %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/flick/jquery-ui.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-timepicker-addon.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/docs.css">
@@ -74,7 +75,8 @@
     <!--[if lt IE 9]>
       <script src="{{ STATIC_URL }}css/html5.js"></script>
     <![endif]-->
-
+    {% endblock %}
+<!-- END: block style -->
 <!-- START: block extrastyle -->
     {% block extrastyle %}{% endblock %}
 <!-- END: block extrastyle -->
