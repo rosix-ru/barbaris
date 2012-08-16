@@ -85,7 +85,7 @@
                             <h3>Ответы</h3>
                         {% for answer in question.answer_set.all %}
                             <div class="well">
-                                <h6>{% short_username question.user %} <small>( {{ answer.created|date:"DATETIME_FORMAT" }} )</small></h6>
+                                <h6>{% short_username answer.user %} <small>( {{ answer.created|date:"DATETIME_FORMAT" }} )</small></h6>
                                 <p>{{ answer.text }}</p>
                             </div>
                         {% endfor %}
