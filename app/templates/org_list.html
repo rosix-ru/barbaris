@@ -46,6 +46,7 @@
 <li>
     <a href="{% url org_detail 0 %}" title="Добавить организацию"><i class="icon-plus"></i></a>
 </li>
+{% subnav_filter request 'org_list' %}
 {% endblock %}
 
 {% block content %}
