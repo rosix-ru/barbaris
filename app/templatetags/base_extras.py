@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,7 +35,7 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
-
+"""
 from django import template
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -206,10 +207,14 @@ def integer_plus(digit1, digit2=1):
     return digit1 + digit2
 
 @register.simple_tag
-def room_occupied(room):
+def room_occupied(room, order=None):
     today = date.today()
-    sps = room.specification_set.filter(end__gt=today).order_by('end')
-    sps = sps.filter(order__state__in=settings.SELECT_WORK_ORDERS)
+    sps = room.specification_set.all()
+    if order:
+        sps = sps.filter(order=order)
+    else:
+        sps = sps.filter(end__gt=today).order_by('end')
+        sps = sps.filter(order__state__in=settings.SELECT_WORK_ORDERS)
     try:
         sp = sps[0]
     except:
@@ -217,6 +222,28 @@ def room_occupied(room):
     if room.is_free:
         return u'Заказ на %s' % _date(sp.start, "DATETIME_FORMAT")
     return u'До %s' % _date(sp.end, "DATETIME_FORMAT")
+
+def get_sp_room(room, order):
+    sps = room.specification_set.all()
+    sps = sps.filter(order=order)
+    try:
+        return sps[0]
+    except:
+        return None
+    
+@register.simple_tag
+def room_start(room, order):
+    sp = get_sp_room(room, order)
+    if not sp:
+        return u''
+    return u'%s' % _date(sp.start, "d.m.y H:i")
+
+@register.simple_tag
+def room_end(room, order):
+    sp = get_sp_room(room, order)
+    if not sp:
+        return u''
+    return u'%s' % _date(sp.end, "d.m.y H:i")
 
 @register.simple_tag
 def room_reserved(room):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,7 +35,7 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
-
+"""
 from django.db import models, connection, transaction
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -484,12 +485,23 @@ class Room(models.Model):
     def order(self):
         now = datetime.datetime.now()
         sps = Specification.objects.filter(room=self,
+            order__state__in=settings.SELECT_WORK_ORDERS,
             end__gt=now,
             start__lt=now.date() + datetime.timedelta(1)
             ).order_by('start')
         if sps:
             return sps[0].order
         return None
+    
+    @property
+    def orders(self):
+        now = datetime.datetime.now()
+        sps = Specification.objects.filter(room=self,
+            order__state__in=settings.SELECT_WORK_ORDERS, 
+            end__gte=now)
+        list_id = [ x['order'] for x in sps.values('order')]
+        orders = Order.objects.filter(id__in=list_id)
+        return orders
 
 class Price(models.Model):
     """ Цены на услуги """

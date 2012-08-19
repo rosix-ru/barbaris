@@ -144,7 +144,9 @@ function loadModal() {
 }
 
 function updateMonitor() {
-    $('#monitor').load('/monitor/update/');
+    $('#monitor').load('/monitor/update/', function() {
+        $("a[data-toggle^=_modal_]").click(loadModal); }
+    );
 }
 
 /* Execute something after load page */

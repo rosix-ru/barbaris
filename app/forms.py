@@ -103,6 +103,10 @@ class PersonDocumentForm(forms.ModelForm):
             'document_date': forms.TextInput(attrs={'data-toggle': 'datepicker'}),
         }
 
+class RoomForm(forms.ModelForm):
+    class Meta:
+        model = models.Room
+
 class OrderForm(forms.ModelForm):
     class Meta:
         model = models.Order
