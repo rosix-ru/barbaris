@@ -59,7 +59,7 @@
             {% for order in object.orders %}
                 <tr id="order_{{ order.id }}">
                     <td><span>{{ order.id }}</span></td>
-                    <td><span>{{ order.person.title }}</span></td>
+                    <td><span>{{ order.person }}</span></td>
                     <td><span>{{ order.person.org.title }}</span></td>
                     <td><span class="pull-right">{% room_start object order %}</span></td>
                     <td><span class="pull-right">{% room_end object order %}</span></td>
