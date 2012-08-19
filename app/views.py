@@ -572,6 +572,35 @@ def analyze(request):
     print "EXEC views.analyze()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
+    acts = Act.objects.all()
+    invoices = Invoice.objects.all()
+    orders = Order.objects.all()
+    
+    start = request.GET.get('start', '')
+    if start:
+        start = datetime.datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
+        acts = acts.filter(date__gte=start).filter(date__isnull=False)
+        invoices = invoices.filter(date__gte=start).filter(date__isnull=False)
+        orders = orders.filter(start__gte=start).filter(start__isnull=False, end__isnull=False)
+        
+    end = request.GET.get('end', '')
+    if end:
+        end = datetime.datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
+        acts = acts.filter(date__lte=end).filter(date__isnull=False)
+        invoices = invoices.filter(date__lte=end).filter(date__isnull=False)
+        orders = orders.filter(end__lte=end).filter(start__isnull=False, end__isnull=False)
+    
+    ctx['start'] = start
+    ctx['end'] = end
+    
+    ctx['acts'] = acts
+    ctx['invoices'] = invoices
+    ctx['invoices_summ'] = sum([ x.summa for x in invoices ])
+    
+    ctx['orders'] = orders
+    ctx['accept_orders'] = orders.filter(state=settings.STATE_ORDER_ACCEPT)
+    ctx['close_orders'] = orders.filter(state=settings.STATE_ORDER_CLOSE)
+    ctx['cancel_orders'] = orders.filter(state=settings.STATE_ORDER_CANCEL)
     return render_to_response('analyze.html', ctx,
                             context_instance=RequestContext(request,))
 

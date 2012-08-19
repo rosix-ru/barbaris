@@ -126,6 +126,13 @@ class AvanceInvoiceManager(models.Manager):
             state=settings.STATE_INVOICE_AVANCE
         )
 
+class CashInvoiceManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(CashInvoiceManager, self).get_query_set().filter(
+            state__in=settings.SELECT_CASH_INVOICES
+        )
+
 class SellerOrgManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):

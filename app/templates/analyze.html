@@ -37,16 +37,79 @@
 
 -->{% endcomment %}
 
-{% load i18n %}
+{% load i18n base_extras %}
 
 {% block page_name %}Анализ{% endblock %}
 
+{% block search %}{% endblock %}
+{% block subnav_content %}
+<li>
+    <form id="form-start" class="form-search" action="" method="get">
+        <fieldset>
+            <div class="control-group">
+                <div class="controls">
+                    <div class="input-append">
+                        <input id="filter_start" value="{{ start|date:"Y-m-d H:i:s" }}" name="start" type="text" class="input-medium" placeholder="Начальная дата" data-toggle="datetimepicker"/>
+                        <input id="filter_end" value="{{ end|date:"Y-m-d H:i:s" }}" name="end" type="text" class="input-medium" placeholder="Конечная дата"  data-toggle="datetimepicker"/>
+                        <button id="search-submit" type="submit" class="btn">&rang;</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</li>
+{% subnav_filter request 'analyze' %}
+
+{% endblock %}
+
 {% block content %}
-    <div align=center>
-        <p>
-            {% trans "Internal error of the server." %}
-        </p>
-    </div>
+<legend>Заказы</legend>
+<table id="table-analyze-orders" class="table table-condensed">
+    <tbody>
+        <tr>
+            <td><span>Всего</span></td>
+            <td><span>{{ orders.count }}</span></td>
+        </tr>
+        <tr>
+            <td><span>В статусе "Принят"</span></td>
+            <td><span>{{ accept_orders.count }}</span></td>
+        </tr>
+        <tr>
+            <td><span>В статусе "Закрыт"</span></td>
+            <td><span>{{ close_orders.count }}</span></td>
+        </tr>
+        <tr>
+            <td><span>В статусе "Отменён"</span></td>
+            <td><span>{{ cancel_orders.count }}</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<legend>Счета</legend>
+<table id="table-analyze-orders" class="table table-condensed">
+    <tbody>
+        <tr>
+            <td><span>Всего</span></td>
+            <td><span>{{ invoices.count }}</span></td>
+            <td><span>На сумму: {{ invoices_summ }}</span></td>
+        </tr>
+        <tr>
+            <td><span>Оплаченных полностью</span></td>
+            <td><span>{{ payment_invoices.count }}</span></td>
+            <td><span>На сумму: {{ payment_invoices_summ }}</span></td>
+        </tr>
+        <tr>
+            <td><span>Оплаченных частично</span></td>
+            <td><span>{{ avance_invoices.count }}</span></td>
+            <td><span>На сумму: {{ avance_invoices_summ }}</span></td>
+        </tr>
+        <tr>
+            <td><span>Неоплаченных</span></td>
+            <td><span>{{ notpay_invoices.count }}</span></td>
+            <td><span>На сумму: {{ notpay_invoices_summ }}</span></td>
+        </tr>
+    </tbody>
+</table>
 {% endblock %}
 
 

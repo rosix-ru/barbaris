@@ -598,6 +598,12 @@ class Order(models.Model):
             blank=True,
             verbose_name="комментарий")
     
+    start = models.DateTimeField(
+            null=True, blank=True,
+            verbose_name = u"начало")
+    end = models.DateTimeField(
+            null=True, blank=True,
+            verbose_name = u"окончание")
     
     objects  = models.Manager()
     creates  = managers.CreateOrderManager()
@@ -810,12 +816,30 @@ class Specification(models.Model):
                         print u'ошибка изменения спецификации'
                         return False
         
-        # Заказ помечается как принятый, при любых изменениях
+        super(Specification, self).save(**kwargs)
+        
+        # Заказ помечается как принятый, при любых изменениях 
+        # после первичного принятия
         if not self.order.state_create:
             self.order.state = settings.STATE_ORDER_ACCEPT
+            # Устанавливаем начало и конец действия заказа по 
+            # минимальному значению начала спецификаций
+            # и по максимальному их конца
+            sps = self.order.specification_set.all()
+            try:
+                sp = sps.filter(start__isnull=False).order_by('start')[0]
+                start = sp.start
+            except:
+                start = None
+            try:
+                sp = sps.filter(end__isnull=False).order_by('-end')[0]
+                end = sp.end
+            except:
+                end = None
+            self.order.start = start or self.order.updated
+            self.order.end = end or self.order.updated
+            
             self.order.save()
-        
-        super(Specification, self).save(**kwargs)
     
     def delete(self, **kwargs):
         print 'delete'
@@ -883,6 +907,10 @@ class Invoice(models.Model):
             blank=True,
             verbose_name = u"комментарий")
     
+    objects = models.Manager()
+    payments = managers.PaymentInvoiceManager()
+    avances = managers.AvanceInvoiceManager()
+    cashes = managers.CashInvoiceManager()
     
     def __unicode__(self):
         return unicode(self.order)

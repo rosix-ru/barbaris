@@ -101,7 +101,7 @@
         <tr id="order_{{ order.id }}">
             <td><span>{{ order.id }}</span></td>
             <td><span class="{% if not order.person %}badge badge-important{% endif %}">{{ order.person|default:"Персона обязательна!" }}</span></td>
-            <td><span>{{ order.person.org }}</span></td>
+            <td><span>{{ order.person.org|default:'' }}</span></td>
             <td><span>{{ order.updated|date:'d.m.y' }}</span></td>
             <td><span>{{ order.comment }}</span></td>
             <td><span class="pull-right">{{ order.summa }}</span></td>
