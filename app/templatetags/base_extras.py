@@ -213,8 +213,8 @@ def room_occupied(room, order=None):
     if order:
         sps = sps.filter(order=order)
     else:
-        sps = sps.filter(end__gt=today).order_by('end')
         sps = sps.filter(order__state__in=settings.SELECT_WORK_ORDERS)
+        sps = sps.filter(end__gte=today).order_by('end')
     try:
         sp = sps[0]
     except:
