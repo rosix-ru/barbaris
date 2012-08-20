@@ -56,7 +56,7 @@
                 </div>
                 <label href="#" class="span9 label label-info" style="min-height: 88px;">
                 {% if room.order %}
-                    {% room_occupied room order %}
+                    {% room_occupied room room.order %}
                     <a href="{% url order_detail room.order.pk %}"><i class="icon-edit"></i></a>
                     <br>
                     {{ room.order.person|default:"КЛИЕНТ НЕ УСТАНОВЛЕН!!!" }}
@@ -69,7 +69,7 @@
                     <br>
                     К оплате: {% if room.order.invoice %}{{ room.order.invoice.debet }}{% else %}{{ room.order.summa }}{% endif %}
                 {% else %}
-                    {% room_occupied room order %}
+                    {% room_occupied room room.order %}
                     <br>
                 {% endif %}
                 </label>
