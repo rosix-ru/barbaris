@@ -219,9 +219,9 @@ def room_occupied(room, order=None):
         sp = sps[0]
     except:
         return u''
-    return u'Заказ №%s с %s по %s' % (sp.order.id,
-            _date(sp.start, "d.m.y H:i"), 
-            _date(sp.start, "d.m.y H:i"))
+    return u'№%s с %s по %s' % (sp.order.id,
+            _date(sp.start, "d F H:i"), 
+            _date(sp.start, "d F H:i"))
 
 def get_sp_room(room, order):
     sps = room.specification_set.all()
