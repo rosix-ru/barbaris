@@ -39,7 +39,7 @@
 from django import template
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from datetime import date
+import datetime
 from django.template.defaultfilters import date as _date
 
 register = template.Library()
@@ -67,11 +67,11 @@ def COPYRIGHT():
 
 @register.simple_tag
 def COPYRIGHT_YEARS():
-    end = date.today().year
+    end = datetime.date.today().year
     try:
         start =  settings.COPYRIGHT_YEAR
     except:
-        start = date.today().year
+        start = datetime.date.today().year
     if start != end:
         return "%s-%s" % (start, end)
     else:
@@ -208,20 +208,20 @@ def integer_plus(digit1, digit2=1):
 
 @register.simple_tag
 def room_occupied(room, order=None):
-    today = date.today()
+    now = datetime.datetime.now()
     sps = room.specification_set.all()
     if order:
         sps = sps.filter(order=order)
     else:
         sps = sps.filter(order__state__in=settings.SELECT_WORK_ORDERS)
-        sps = sps.filter(end__gte=today).order_by('end')
+        sps = sps.filter(end__gte=now).order_by('end')
     try:
         sp = sps[0]
     except:
         return u''
-    if room.is_free:
-        return u'Заказ на %s' % _date(sp.start, "DATETIME_FORMAT")
-    return u'До %s' % _date(sp.end, "DATETIME_FORMAT")
+    return u'Заказ №%s с %s по %s' % (sp.order.id,
+            _date(sp.start, "d.m.y H:i"), 
+            _date(sp.start, "d.m.y H:i"))
 
 def get_sp_room(room, order):
     sps = room.specification_set.all()
