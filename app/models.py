@@ -244,7 +244,8 @@ class PersonDetail(models.Model):
     
     DOCUMENT_CHOICES = (
         (u'паспорт',u'паспорт'),
-        (u'водительское',u'водительское удостоверение')
+        (u'военный билет',u'военный билет'),
+        (u'водительское',u'водительское удостоверение'),
     )
     is_active = models.BooleanField(
             default=True,
@@ -407,7 +408,7 @@ class Service(models.Model):
             verbose_name = u"продажи по времени")
     
     def __unicode__(self):
-        return '%s: %s' % (unicode(self.category), self.title)
+        return self.title
         
     class Meta:
         ordering = ['title']
@@ -445,64 +446,75 @@ class Room(models.Model):
         verbose_name_plural = u"номера"
     
     @property
-    def price(self):
-        return self.service.price
+    def prices(self):
+        return self.service.prices
     
-    @property
-    def is_free(self):
-        now = datetime.datetime.now()
-        sps = Specification.workeds.filter(room=self,
-            end__gt=now,
-            start__lt=now.date() + datetime.timedelta(1)
-            )
-        if sps:
-            return False
-        return True
-    
-    @property
-    def is_free_tomorrow(self):
-        now = datetime.datetime.now() + datetime.timedelta(1)
-        sps = Specification.workeds.filter(room=self,
-            end__gt=now,
-            start__lt=now.date() + datetime.timedelta(1)
-            )
-        if sps:
-            return False
-        return True
-    
-    @property
-    def is_nonfree_tomorrow(self):
-        now = datetime.datetime.now() + datetime.timedelta(1)
-        sps = Specification.workeds.filter(room=self,
-            end__gt=now,
-            start__lt=now.date() + datetime.timedelta(1)
-            )
-        if sps:
-            return True
-        return False
-    
-    @property
-    def order(self):
-        now = datetime.datetime.now()
+    def orders(self, lookups=None):
         sps = Specification.objects.filter(room=self,
-            order__state__in=settings.SELECT_WORK_ORDERS,
-            end__gt=now,
-            start__lt=now.date() + datetime.timedelta(1)
-            ).order_by('start')
-        if sps:
-            return sps[0].order
-        return None
-    
-    @property
-    def orders(self):
-        now = datetime.datetime.now()
-        sps = Specification.objects.filter(room=self,
-            order__state__in=settings.SELECT_WORK_ORDERS, 
-            end__gte=now)
+            order__state__in=settings.SELECT_WORK_ORDERS)
+        for key, val in lookups.items():
+            sps = sps.filter(models.Q(**{key: val}))
         list_id = [ x['order'] for x in sps.values('order')]
         orders = Order.objects.filter(id__in=list_id)
         return orders
-
+        
+    @property
+    def current_order(self):
+        now = datetime.datetime.now()
+        orders = self.orders({'start__lte':now, 'end__gt':now})
+        if orders:
+            return orders[0]
+        return None
+    
+    @property
+    def next_orders(self):
+        now = datetime.datetime.now()
+        orders = self.orders({'start__gt':now, 'end__gt':now})
+        #~ current = self.current_order
+        #~ if current:
+            #~ orders = orders.exclude(pk=current.pk)
+        return orders
+    
+    @property
+    def prew_orders(self):
+        now = datetime.datetime.now()
+        orders = self.orders({'end__lt':now})
+        return orders
+    
+    @property
+    def state(self):
+        """ Получение статуса номера """
+        now = datetime.datetime.now()
+        day = now.date() + datetime.timedelta(days=1)
+        current_order = self.current_order
+        next_orders = self.next_orders
+        released_order = self.orders({'start__lte':now, 'end__gte':now.date(), 'end__lt':day})
+        
+        # Занят сейчас, но освобождается сегодня и:
+        if released_order:
+            # нет заказов на будущее.
+            if not next_orders:
+                return settings.STATE_ROOM_RELEASED_FREE
+            # есть заказы на будущее.
+            else:
+                return settings.STATE_ROOM_RELEASED_NONFREE
+        # Занят сейчас, но освобождается не сегодня и:
+        elif current_order:
+            # нет заказов на будущее.
+            if not next_orders:
+                return settings.STATE_ROOM_NONRELEASED_FREE
+            # есть заказы на будущее.
+            else:
+                return settings.STATE_ROOM_NONRELEASED_NONFREE
+        # Не занят сейчас и нет заказов на будущее
+        elif not current_order:
+            if not next_orders:
+                return settings.STATE_ROOM_FREE
+            else:
+                return settings.STATE_ROOM_NONFREE
+        else:
+            assert current_order, "Ошибка в расчёте app.models.Room.state()"
+    
 class Price(models.Model):
     """ Цены на услуги """
     created = models.DateTimeField(auto_now_add=True)
@@ -580,23 +592,21 @@ class Order(models.Model):
     
     user = models.ForeignKey(
             User,
-            verbose_name="пользователь")
+            verbose_name=u"пользователь")
     state = models.IntegerField(
             choices=settings.STATE_ORDER_CHOICES,
             default=1,
-            verbose_name="состояние")
-    person = models.ForeignKey(
+            verbose_name=u"состояние")
+    persons = models.ManyToManyField(
             Person,
             null=True, blank=True,
-            verbose_name="клиент")
-    other_persons = models.ManyToManyField(
-            Person,
-            null=True, blank=True,
-            related_name = 'order_other_set',
-            verbose_name = u"другие клиенты")
+            verbose_name=u"персоны")
+    is_divdoc = models.BooleanField(
+            default=False,
+            verbose_name = u"разделять документы на персон")
     comment = models.TextField(
             blank=True,
-            verbose_name="комментарий")
+            verbose_name=u"комментарий")
     
     start = models.DateTimeField(
             null=True, blank=True,
@@ -613,10 +623,13 @@ class Order(models.Model):
     workeds  = managers.WorkOrderManager()
     
     def __unicode__(self):
-        return unicode(self.person)
+        return u'Заказ №%s от %sг.' % (
+            self.id,
+            self.created.strftime("%d.%m.%Y")
+        )
     
     class Meta:
-        ordering = ['-updated', 'person']
+        ordering = ['-id']
         verbose_name = u"заказ"
         verbose_name_plural = u"заказы"
         get_latest_by = 'updated'
@@ -626,19 +639,26 @@ class Order(models.Model):
         return sum([ x.summa for x in self.specification_set.all() ])
     
     @property
-    def invoice(self):
-        try:
-            return self.invoice_set.all()[0]
-        except:
-            return None
+    def summa_for_person(self):
+        if not self.is_divdoc:
+            return self.summa
+        return self.summa / self.persons.count()
+    @property
+    def payment(self):
+        payments = Payment.objects.filter(invoice__order=self)
+        return sum([ x.summa for x in payments.filter(is_paid=True) ])
+    @property
+    def debet(self):
+        return float(self.summa) - float(self.payment)
     
     @property
-    def act(self):
-        try:
-            return self.act_set.all()[0]
-        except:
-            return None
+    def invoices(self):
+        return self.invoice_set.all()
     
+    @property
+    def acts(self):
+        return self.act_set.all()
+
     @property
     def state_create(self):
         return self.state == settings.STATE_ORDER_CREATE
@@ -661,17 +681,17 @@ class Specification(models.Model):
     
     order = models.ForeignKey(
             Order,
-            verbose_name="заказ")
+            verbose_name=u"заказ")
     price = models.ForeignKey(
             Price,
-            verbose_name="услуга")
+            verbose_name=u"услуга")
     room = models.ForeignKey(
             Room,
             null=True, blank=True,
-            verbose_name="номер")
+            verbose_name=u"номер")
     count = models.IntegerField(
             null=True, blank=True,
-            verbose_name="количество")
+            verbose_name=u"количество")
     start = models.DateTimeField(
             null=True, blank=True,
             verbose_name = u"начало")
@@ -681,7 +701,7 @@ class Specification(models.Model):
     reservation = models.ForeignKey(
             Reservation,
             null=True, blank=True,
-            verbose_name="бронирование")
+            verbose_name=u"бронирование")
     
     objects  = models.Manager()
     workeds  = managers.WorkSpecificationManager()
@@ -701,17 +721,44 @@ class Specification(models.Model):
             markup = 0
         return markup
     
+    def markup_for_person(self):
+        if not self.order.is_divdoc:
+            return self.markup()
+        return round((self.markup() /  self.order.persons.count()), 2)
+    
+    @property
+    def get_price_for_person(self):
+        if not self.order.is_divdoc:
+            return round(self.price.price, 2)
+        return round((self.price.price /  self.order.persons.count()), 2)
+    
     @property
     def summa(self):
         return round((self.price.price*self.count)+self.markup(), 2)
+    @property
+    def summa_for_person(self):
+        if not self.order.is_divdoc:
+            return self.summa
+        return round((self.summa /  self.order.persons.count()), 2)
     
     @property
     def summa_clean(self):
         return round((self.price.price*self.count), 2)
+    @property
+    def summa_clean_for_person(self):
+        if not self.order.is_divdoc:
+            return self.summa_clean
+        return round((self.summa_clean /  self.order.persons.count()), 2)
     
     @property
     def summa_markup(self):
         return round(self.markup(), 2)
+    
+    @property
+    def summa_markup_for_person(self):
+        if not self.order.is_divdoc:
+            return self.summa_markup
+        return round((self.summa_markup / self.order.persons.count()), 2)
     
     def save(self, **kwargs):
         """ Если есть делитель и услуга предоставляется по времени:
@@ -795,7 +842,6 @@ class Specification(models.Model):
             return True
         
         if self.price.divider and self.price.service.is_on_time:
-            print 1
             if self.id:
                 old = Specification.objects.get(id=self.id)
                 change_count = bool(self.count != old.count)
@@ -843,24 +889,20 @@ class Specification(models.Model):
     
     def delete(self, **kwargs):
         print 'delete'
-        # Всегда заказ помечается как принятый
+        # Заказ помечается как принятый, при любых изменениях 
+        # после первичного принятия
         self.order.state = settings.STATE_ORDER_ACCEPT
         self.order.save()
-        print self.order.state
         super(Specification, self).delete(**kwargs)
     
 class DocTemplate(models.Model):
     """ Шаблоны актов и счетов """
-    DOCUMENT_CHOICES = (
-        ('act', u'Акт'),
-        ('invoice', u'Счёт'),
-    )
     title = models.CharField(
             max_length=100,
             verbose_name = u"название")
     document = models.CharField(
             max_length=16,
-            choices=DOCUMENT_CHOICES,
+            choices=settings.DOCUMENT_CHOICES,
             verbose_name = u"вид документа")
     is_default = models.BooleanField(
             default=True,
@@ -881,6 +923,12 @@ class DocTemplate(models.Model):
         verbose_name = u"шаблон документа"
         verbose_name_plural = u"шаблоны документов"
     
+    def save(self, **kwargs):
+        if self.is_default:
+            docs = DocTemplate.objects.filter(document=self.document, is_default=True)
+            docs.update(is_default=False)
+        super(DocTemplate, self).save(**kwargs)
+
 class Invoice(models.Model):
     """ Счёт на оплату """
     created = models.DateTimeField(auto_now_add=True)
@@ -888,7 +936,7 @@ class Invoice(models.Model):
     
     user = models.ForeignKey(
             User,
-            verbose_name="пользователь")
+            verbose_name=u"пользователь")
     state = models.IntegerField(
             choices=settings.STATE_INVOICE_CHOICES,
             default=1,
@@ -896,13 +944,18 @@ class Invoice(models.Model):
     order = models.ForeignKey(
             Order,
             verbose_name = u"заказ")
+    person = models.ForeignKey(
+            Person,
+            null=True, blank=True,
+            verbose_name=u"клиент")
     date = models.DateField(
             null=True, blank=True,
             verbose_name = u"дата документа")
-    #~ summa = models.DecimalField(
-            #~ max_digits=10, decimal_places=2,
-            #~ default=0.0,
-            #~ verbose_name = u"сумма")
+    summa = models.DecimalField(
+            max_digits=10, decimal_places=2,
+            default=0.0,
+            verbose_name = u"сумма",
+            help_text=u'Установите 0 для автоматического расчёта.')
     comment = models.TextField(
             blank=True,
             verbose_name = u"комментарий")
@@ -913,7 +966,11 @@ class Invoice(models.Model):
     cashes = managers.CashInvoiceManager()
     
     def __unicode__(self):
-        return unicode(self.order)
+        return u'Счёт №%s от %s %s' % (
+            unicode(self.id),
+            self.date.strftime("%d.%m.%Y"),
+            unicode(self.person),
+            )
     
     class Meta:
         ordering = ['user', '-created',]
@@ -922,13 +979,20 @@ class Invoice(models.Model):
     
     def save(self, **kwargs):
         if not self.summa:
-            self.summa = self.order.summa
+            if self.order.is_divdoc:
+                self.summa = self.order.summa_for_person
+            else:
+                self.summa = self.order.summa
         
-        if self.state == settings.STATE_INVOICE_PAYMENT:
+        if self.state_payment and self.order.debet >= 0:
             self.order.state = settings.STATE_ORDER_CLOSE
             self.order.save()
         
         super(Invoice, self).save(**kwargs)
+    
+    @property
+    def summa_float(self):
+        return float(self.summa)
     
     @property
     def document(self):
@@ -948,9 +1012,9 @@ class Invoice(models.Model):
     def state_avance(self):
         return self.state == settings.STATE_INVOICE_AVANCE
     
-    @property
-    def summa(self):
-        return self.order.summa
+    #~ @property
+    #~ def summa(self):
+        #~ return self.order.summa
     @property
     def payment(self):
         return sum([ x.summa for x in self.payment_set.filter(is_paid=True) ])
@@ -965,7 +1029,7 @@ class Payment(models.Model):
     
     user = models.ForeignKey(
             User,
-            verbose_name="пользователь")
+            verbose_name=u"пользователь")
     payment = models.IntegerField(
             choices=settings.PAYMENT_INVOICE_CHOICES,
             default=1,
@@ -986,7 +1050,11 @@ class Payment(models.Model):
         )
     
     def __unicode__(self):
-        return unicode(self.invoice)
+        return u'Оплата №%s по счёту №%s от %s' % (
+            unicode(self.id),
+            unicode(self.invoice.id),
+            self.invoice.date.strftime("%d.%m.%Y"),
+            )
     
     class Meta:
         ordering = ['user', '-created',]
@@ -1019,10 +1087,18 @@ class Act(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
             User,
-            verbose_name="пользователь")
+            verbose_name=u"пользователь")
     order = models.ForeignKey(
             Order,
             verbose_name = u"заказ")
+    invoice = models.ForeignKey(
+            Invoice,
+            null=True, blank=True,
+            verbose_name=u"счёт")
+    person = models.ForeignKey(
+            Person,
+            null=True, blank=True,
+            verbose_name=u"клиент")
     date = models.DateField(
             null=True, blank=True,
             verbose_name = u"дата документа")
@@ -1031,7 +1107,10 @@ class Act(models.Model):
             verbose_name = u"комментарий")
     
     def __unicode__(self):
-        return unicode(self.order)
+        return u'Акт №%s от %s' % (
+            unicode(self.id),
+            self.date.strftime("%d.%m.%Y"),
+            )
     
     class Meta:
         ordering = ['user', '-created']
@@ -1051,7 +1130,7 @@ class Question(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
             User,
-            verbose_name="пользователь")
+            verbose_name=u"пользователь")
     theme = models.CharField(
             max_length=100,
             verbose_name = u"тема вопроса")
@@ -1073,10 +1152,10 @@ class Answer(models.Model):
     
     question = models.ForeignKey(
             Question,
-            verbose_name="вопрос")
+            verbose_name=u"вопрос")
     user = models.ForeignKey(
             User,
-            verbose_name="пользователь")
+            verbose_name=u"пользователь")
     text = models.TextField(
             verbose_name = u"текст ответа")
     

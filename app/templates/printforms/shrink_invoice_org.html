@@ -39,7 +39,7 @@
 
 {% load pytils_numeral %}
 
-{% block print_client_header %}{{ document.order.person.org.detail.get_string_requsites }}{% endblock %}
+{% block print_client_header %}{{ document.person.org.detail.get_string_requsites }}{% endblock %}
 
 {% block print_table_thead %}
     <tr>
@@ -58,15 +58,15 @@
         <td class="span6 align-left">Гостиничный сервис</td>
         <td class="span1 align-center">1</td>
         <td class="span1 align-center"></td>
-        <td class="span1 align-right">{{ document.order.summa }}</td>
-        <td class="span2 align-right">{{ document.order.summa }}</td>
+        <td class="span1 align-right">{{ document.summa }}</td>
+        <td class="span2 align-right">{{ document.summa }}</td>
     </tr>
 {% endblock %}
 
 {% block print_table_tfoot %}
     <tr>
         <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
-        <td class="span2 align-right"><strong>{{ document.order.summa }}</strong></td>
+        <td class="span2 align-right"><strong>{{ document.summa }}</strong></td>
     </tr>
     <tr>
         <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
@@ -75,5 +75,5 @@
 {% endblock %}
 
 {% block print_table_legend %}
-<div><strong>{{ document.order.summa|rubles }}</strong></div>
+<div><strong>{{ document.summa|rubles }}</strong></div>
 {% endblock %}

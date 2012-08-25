@@ -54,10 +54,17 @@
     <a href="#categories">Прайс-лист</a>
 </li>
 <li>
-    <a href="#persons">Клиент(ы)</a>
+    <a href="#persons">Клиенты</a>
 </li>
-
+<li>
+    <a href="#" data-toggle="_modal_order_divdoc_{{ order.id }}_" class="label{% if order.is_divdoc %} label-warning{% endif %}">Автоделитель</a>
+</li>
 {% if order.id %}
+    {% if order.state_accept %}
+        <li>
+            <a href="#" data-toggle="_modal_order_cancel_{{ order.id }}_" class="label label-warning">Отменить</a>
+        </li>        
+    {% endif %}
     {% if order.state_create %}
         <li>
             <a href="#" data-toggle="_modal_order_delete_{{ order.id }}_" class="label label-important">Удалить</a>
@@ -65,6 +72,7 @@
         <li>
             <a href="#" data-toggle="_modal_order_accept_{{ order.id }}_" class="label label-success">Принять</a>
         </li>
+        
     {% endif %}
 {% endif %}
 {% endblock %}
@@ -76,7 +84,7 @@
     <div class="input-append">
         <h3 class="span2">Комментарий</h3>
         <input type="text" value="{{ order.comment }}" class="input-xxlarge" name="order_comment" id="id_order_comment">
-        <input type="submit" class="btn btn-primary" value="Сохранить" />
+        <input type="submit" class="btn" value="Сохранить" />
     </div>
 </form>
 
@@ -156,36 +164,23 @@
 {% endfor %}
 </div>
 
-<legend>Клиент(ы)</legend>
+<legend>Клиенты</legend>
 <div id="persons" class="row-fluid">
     <div class="well span6">
-        <legend>Оплачивает заказ{% if not order.person %} <span class="badge badge-important">Требуется установить!</span>{% endif %}</legend>
-        <input name="person" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
+        <legend>Поиск персон</legend>
+        <input name="persons" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
         <form action="" method="post" class="form">{% csrf_token %}
             <fieldset></fieldset>
         </form>
-        {% if order.person.id %}
-        <h6>
-            {{ order.person }}
-            <a target="_blank" href="{% url person_detail order.person.id %}" title="Редактировать карточку клиента">
-                <i class="icon-edit"></i>
-            </a>
-            <small>{{ order.person.detail.birth_day|default:"" }}</small>
-        </h6>
-        {% endif %}
     </div>
-    <div class="well span6">
-        <legend>Участвуют в заказе</legend>
-        <input name="other_persons" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
-        <form action="" method="post" class="form">{% csrf_token %}
-            <fieldset></fieldset>
-        </form>
 {% if order.id %}
-    {% if order.other_persons.all %}
+    {% if order.persons.all %}
+    <div class="well span6">
+        <legend>Список персон в заказе</legend>
         <form action="" method="post" class="form">{% csrf_token %}
             <fieldset>
                 <div class="controls ">
-                {% for person in order.other_persons.all %}
+                {% for person in order.persons.all %}
                     <label class="checkbox">
                         <input type="checkbox" name="deletePerson" value="{{ person.id }}">
                         <h6>
@@ -199,14 +194,13 @@
                 {% endfor %}
                 </div>
                 <div class="form-actions">
-                    <input type="hidden" name="delete_other_persons" value="true" />
                     <input type="submit" class="btn btn-danger" value="Удалить" />
                 </div>
             </fieldset>
         </form>
+    </div>
     {% endif %}
 {% endif %}
-    </div>
 </div>
 
 {% endblock %}

@@ -82,8 +82,8 @@
     {% for invoice in paginator.object_list %}
         <tr id="invoice_{{ invoice.id }}">
             <td><span>{{ invoice.id }}</span></td>
-            <td><span>{{ invoice.order.person }}</span></td>
-            <td><span>{{ invoice.order.person.org }}</span></td>
+            <td><span>{{ invoice.person }}</span></td>
+            <td><span>{{ invoice.person.org|default:'' }}</span></td>
             <td><span>{{ invoice.date|date:'d.m.y' }}</span></td>
             <td><span>{{ invoice.comment }}</span></td>
             <td><span class="pull-right">{{ invoice.summa }}</span></td>
@@ -91,14 +91,6 @@
             <td><span>{{ invoice.get_state_display }}</span></td>
             <td><span>{% short_username invoice.user %}</span></td>
             <td><span class="pull-right">
-            {% if not invoice.payment %}
-                <a href="#" data-toggle="_modal_invoice_delete_{{ invoice.id }}_">
-                    <i class="icon-trash" title="Удалить"></i>
-                </a>
-            {% endif %}
-                <a href="#" data-toggle="_modal_invoice_change_{{ invoice.id }}">
-                    <i class="icon-edit" title="Изменить"></i>
-                </a>
                 <a href="{% url order_detail invoice.order.id %}">
                     <i class="icon-file" title="Перейти к заказу"></i>
                 </a>

@@ -66,17 +66,15 @@
             <tr>
                 <td>{{ person }}</td>
                 <td>{{ person.org|default:"" }}</td>
-                <td class="input-large">{{ person.phones }}</td>
-                <td class="input-mini">
+                <td>{{ person.phones }}</td>
+                <td><span class="pull-right">
                     <a href="{% url person_detail person.id %}">
                         <i class="icon-edit" title="Редактировать карточку клиента"></i>
                     </a>
                     <a href="{% url person_orders person.id %}">
                         <i class="icon-list" title="Список заказов клиента"></i>
                     </a>
-                    <a href="{% url person_new_order person.id %}">
-                        <i class="icon-plus" title="Новый заказ для этого клиента"></i>
-                    </a>
+                    </span>
                 </td>
             </tr>
         {% endfor %}

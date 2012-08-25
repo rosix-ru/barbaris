@@ -37,33 +37,43 @@
 
 -->{% endcomment %}
 {% load i18n base_extras %}
-
-
-{% if not order.act %}
-    <div class="span10">
-        <h3>Акт выполненных работ</h3>
-    </div>
+<div class="row-fluid">
+    <div class="span10"><h3>Акты выполненных работ</h3></div>
     <div class="span2">
         <form class="form-horizontal" action="" method="post">{% csrf_token %}
             <fieldset class="pull-right">
                 <input type="hidden" name='act_add' value="" />
-                <button type="submit" class="btn btn-primary">Создать акт</button>
+                <button type="submit" class="btn">Создать акт</button>
              </fieldset>
         </form>
     </div>
-{% else %}
+</div>
+<hr>
+{% for act in order.acts %}
+<div class="row-fluid">
     <div class="span10">
-        <h3>Акт выполненных работ №{{ order.act.id }} от {{ order.act.date|date:"DATE_FORMAT"}}
-            <a href="#" data-toggle="_modal_act_change_{{ order.act.id }}_">
-                <i class="icon-edit" title="Изменить"></i>
-            </a>
-            <a href="{% url act_print order.act.id %}" target="_blank">
-                <i class="icon-print" title="Печать"></i>
-            </a>
-            </small>
-        </h3>
-    {% if order.act.comment %}
-        <p>{{ order.act.comment }}</p>
+        <h5>Акт выполненных работ №{{ act.id }} от {{ act.date|date:"DATE_FORMAT"}}
+            <small>{{ act.person|default:"Установите персону!" }}</small>
+        </h5>
+    {% if act.comment %}
+        <p>{{ act.comment }}</p>
     {% endif %}
     </div>
-{% endif %}
+    
+    {% if not order.state_close %}
+        <div class="span2">
+            <div class="pull-right">
+                <a href="#" data-toggle="_modal_act_delete_{{ act.id }}_" class="btn btn-mini">
+                    <i class="icon-trash" title="Удалить"></i>
+                </a>
+                <a href="#" data-toggle="_modal_act_change_{{ act.id }}_" class="btn btn-mini">
+                    <i class="icon-edit" title="Изменить"></i>
+                </a>
+                <a href="{% url act_print act.id %}" target="_blank" class="btn btn-mini">
+                    <i class="icon-print" title="Печать"></i>
+                </a>
+             </div>
+        </div>
+    {% endif %}
+</div>
+{% endfor %}

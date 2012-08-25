@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,7 +35,7 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
-
+"""
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import models
@@ -70,7 +71,6 @@ class OrgDocumentForm(forms.ModelForm):
         widgets = {
             'document_date': forms.TextInput(attrs={'data-toggle': 'datepicker'}),
         }
-
 
 class PersonForm(forms.ModelForm):
     class Meta:

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,7 +35,7 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
-
+"""
 # Django settings for this project.
 
 from django.utils.translation import ugettext_lazy as _
@@ -241,13 +242,6 @@ PAYMENT_INVOICE_CHOICES = (
         (PAYMENT_INVOICE_CARD,     u'Карта банка'),
     )
 
-ATTRIBUTE_WEDDING    = 1
-ATTRIBUTE_SPORTSMANS = 2
-ATTRIBUTE_CHOICES = (
-        (ATTRIBUTE_WEDDING, u'Свадьба'),
-        (ATTRIBUTE_SPORTSMANS, u'Спортсмены'),
-    )
-
 DIVIDER_DAY   = 1
 DIVIDER_HOUR  = 2
 DIVIDER_MONTH = 3
@@ -264,6 +258,27 @@ CATEGORY_CHOICES = (
         (u'Parking',u'Автостоянка'),
     )
 
+DOCUMENT_CHOICES = (
+        ('act', u'Акт'),
+        ('invoice', u'Счёт'),
+        ('form3g', u'Форма 3Г'),
+    )
+
+STATE_ROOM_FREE                 = u'Свободен сейчас и в дальнейшем.'
+STATE_ROOM_NONFREE              = u'Свободен сейчас, но заказан в дальнейшем.'
+STATE_ROOM_RELEASED_FREE        = u'Освобождается сегодня, свободен в дальнейшем.'
+STATE_ROOM_RELEASED_NONFREE     = u'Освобождается сегодня, но заказан в дальнейшем.'
+STATE_ROOM_NONRELEASED_FREE     = u'Занят, нет дальнейших заказов.'
+STATE_ROOM_NONRELEASED_NONFREE  = u'Занят, есть дальнейшие заказы.'
+
+BUTTON_CLASSES_STATE_ROOM = {
+    STATE_ROOM_FREE: 'btn btn-success',
+    STATE_ROOM_NONFREE: 'btn',
+    STATE_ROOM_RELEASED_FREE: 'btn btn-info',
+    STATE_ROOM_RELEASED_NONFREE: 'btn btn-warning',
+    STATE_ROOM_NONRELEASED_FREE: 'btn btn-primary',
+    STATE_ROOM_NONRELEASED_NONFREE: 'btn btn-danger',
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

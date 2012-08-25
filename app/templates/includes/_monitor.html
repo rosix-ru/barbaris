@@ -44,30 +44,21 @@
         <div class="thumbnail">
             <div class="row-fluid">
                 <div class="span3">
-                <a href="#" data-toggle="_modal_room_info_{{ room.id }}_" class="span12 btn
-                {% if room.is_free %} btn-success
-                {% else %}
-                    {% if room.is_free_tomorrow %} btn-danger
-                    {% else %} btn-inverse
-                    {% endif %}
-                {% endif %}
-                "><h1><span>{{ room.num }}</span></h1></a>
+                <a href="#" data-toggle="_modal_room_info_{{ room.id }}_" class="span12 {% room_button_class room %}" rel="tooltip" title="{{ room.state }}"><h1><span>{{ room.num }}</span></h1></a>
                 <label class="align-center"><h6>{{ room.service.title }}</h6></label>
                 </div>
                 <label href="#" class="span9 label label-info" style="min-height: 88px;">
-                {% if room.order %}
-                    {% room_occupied room room.order %}
-                    <a href="{% url order_detail room.order.pk %}"><i class="icon-edit"></i></a>
+                {% if room.current_order %}
+                    {% room_occupied room room.current_order %}
+                    <a href="{% url order_detail room.current_order.pk %}"><i class="icon-edit"></i></a>
                     <br>
-                    {{ room.order.person|default:"КЛИЕНТ НЕ УСТАНОВЛЕН!!!" }}
+                    Клиентов: {{ room.current_order.persons.count|default:"0" }}
                     <br>
-                    {{ room.order.person.org|default:"Частное лицо." }}
+                    {{ room.current_order.comment|default:"Комментарий отсутствует." }}
                     <br>
-                    {{ room.order.comment|default:"Комментарий отсутствует." }}
+                    Сумма заказа: {{ room.current_order.summa }}
                     <br>
-                    Сумма заказа: {{ room.order.summa }}
-                    <br>
-                    К оплате: {% if room.order.invoice %}{{ room.order.invoice.debet }}{% else %}{{ room.order.summa }}{% endif %}
+                    К оплате: {{ room.current_order.debet }}
                 {% else %}
                     {% room_occupied room %}
                     <br>

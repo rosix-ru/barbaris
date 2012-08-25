@@ -47,13 +47,29 @@
     <fieldset>
         <div class="modal-body">
             <div class="control-group">
-            {% for field in form %}
-                <label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+                <label class="control-label" for="id_person">Клиент</label>
                 <div class="controls">
-                    {{ field.errors }}
-                    {{ field }}
+                    <select name="person" id="id_person">
+                    {% for person in object.order.persons.all %} 
+                        <option value="{{ person.id }}"{% if person.id == form.instance.person.id  %} selected="selected"{% endif %}>{{ person }}</option>
+                    {% endfor %}
+                    </select>
                 </div>
-            {% endfor %}
+            
+                <label class="control-label" for="id_date">Дата документа</label>
+                <div class="controls">
+                    <input data-toggle="datepicker" type="text" name="date" value="{{ form.date.value|date:"Y-m-d" }}" id="id_date">
+                </div>
+            
+                <label class="control-label" for="id_summa">Сумма (или 0 для авт. расчёта)</label>
+                <div class="controls">
+                    <input type="text" name="summa" value="{{ form.summa.value }}" id="id_summa">
+                </div>
+            
+                <label class="control-label" for="id_comment">Комментарий</label>
+                <div class="controls">
+                    <textarea id="id_comment" rows="1" cols="80" name="comment">{{ form.comment.value }}</textarea>
+                </div>
             </div>
         </div>
         <div class="modal-footer">

@@ -196,8 +196,9 @@ def get_credit(order, spec=None):
         summa = spec.summa
     else:
         summa = 0
-    if order.invoice and order.invoice.debet < summa:
-        credit = summa - order.invoice.debet
+    debet = sum([x.debet for x in order.invoices])
+    if order.invoices and debet < summa:
+        credit = summa - debet
         return u'<p class="badge badge-important">Переплата: %s</p>' % credit
     
     return ''
@@ -205,6 +206,10 @@ def get_credit(order, spec=None):
 @register.simple_tag
 def integer_plus(digit1, digit2=1):
     return digit1 + digit2
+
+@register.simple_tag
+def room_button_class(room):
+    return settings.BUTTON_CLASSES_STATE_ROOM[room.state]
 
 @register.simple_tag
 def room_occupied(room, order=None):

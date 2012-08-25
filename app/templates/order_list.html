@@ -85,8 +85,7 @@
     <thead>
         <tr>
             <th class=""><span>№</span></th>
-            <th class=""><span>Персона</span></th>
-            <th class=""><span>Организация</span></th>
+            <th class=""><span>Персона</span> <span class="pull-right">Организация</span></th>
             <th class=""><span>Дата</span></th>
             <th class=""><span>Комментарий</span></th>
             <th class="input-mini"><span class="pull-right">Сумма</span></th>
@@ -100,33 +99,37 @@
     {% for order in paginator.object_list %}
         <tr id="order_{{ order.id }}">
             <td><span>{{ order.id }}</span></td>
-            <td><span class="{% if not order.person %}badge badge-important{% endif %}">{{ order.person|default:"Персона обязательна!" }}</span></td>
-            <td><span>{{ order.person.org|default:'' }}</span></td>
+            
+        {% if order.persons.count %}
+            <td>
+                {% for person in order.persons.all %}
+                <p><a href="{% url person_orders person.id %}">
+                    <i class="icon-list" title="Отфильтровать заказы этого клиента"></i>
+                </a>
+                {{ person }}
+                <small class="pull-right">{{ person.org|default:'' }}</small></p>{% endfor %}
+            </td>
+        {% else %}
+            <td><span class="badge badge-important">Установиете клиента!!!</span></td>
+        {% endif %}
             <td><span>{{ order.updated|date:'d.m.y' }}</span></td>
             <td><span>{{ order.comment }}</span></td>
             <td><span class="pull-right">{{ order.summa }}</span></td>
-            <td><span class="pull-right">{{ order.invoice.payment|default:'' }}</span></td>
+            <td><span class="pull-right">{{ order.payment|default:'' }}</span></td>
             <td><span>{{ order.get_state_display }}</span></td>
             <td><span>{% short_username order.user %}</span></td>
             <td><span class="pull-right">
-                <a href="#" data-toggle="_modal_order_preview_{{ order.id }}_" >
-                    <i class="icon-eye-open" title="Быстрый просмотр"></i>
-                </a>
-                <a href="#" data-toggle="_modal_order_dubble_{{ order.id }}_" >
-                    <i class="icon-magnet" title="Дублировать заказ"></i>
-                </a>
-                <a href="{% url order_detail order.id %}">
-                    <i class="icon-edit" title="Изменить заказ"></i>
-                </a>
-            {% if order.person %}
-                <a href="{% url person_orders order.person.id %}">
-                    <i class="icon-list" title="Заказы этого клиента"></i>
-                </a>
-                <a href="{% url person_new_order order.person.id %}">
-                    <i class="icon-plus" title="Новый заказ для этого клиента"></i>
-                </a>
-            {% endif %}
-            </td></span>
+                    <a href="#" data-toggle="_modal_order_preview_{{ order.id }}_" >
+                        <i class="icon-eye-open" title="Быстрый просмотр"></i>
+                    </a>
+                    <a href="#" data-toggle="_modal_order_dubble_{{ order.id }}_" >
+                        <i class="icon-magnet" title="Дублировать заказ"></i>
+                    </a>
+                    <a href="{% url order_detail order.id %}">
+                        <i class="icon-edit" title="Изменить заказ"></i>
+                    </a>
+                </span>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

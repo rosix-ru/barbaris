@@ -39,7 +39,7 @@
 
 {% load pytils_numeral %}
 
-{% block print_client_header %}{{ document.order.person.org.detail.get_string_requsites }}{% endblock %}
+{% block print_client_header %}{{ document.person.org.detail.get_string_requsites }}{% endblock %}
 
 {% block print_table_thead %}
 <tr>
@@ -85,7 +85,7 @@
 {% block print_table_tfoot %}
     <tr>
         <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
-        <td class="span2 align-right"><strong>{{ document.order.summa }}</strong></td>
+        <td class="span2 align-right"><strong>{{ document.invoice.summa }}</strong></td>
     </tr>
     <tr>
         <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
@@ -94,8 +94,8 @@
 {% endblock %}
 
 {% block print_table_legend %}
-<div>Всего оказано услуг: {{ document.order.specification_set.count }}, на сумму {{ document.order.summa }} руб.</div>
-<div><strong>{{ document.order.summa|rubles }}</strong></div>
+<div>Всего оказано услуг: {{ document.order.specification_set.count }}, на сумму {{ document.invoice.summa }} руб.</div>
+<div><strong>{{ document.invoice.summa|rubles }}</strong></div>
 <hr>
 {% endblock %}
 

@@ -58,13 +58,13 @@
                 <td class="align-left">{{ spec.price.service.title }}</td>
                 <td class="align-center">{{ spec.count }}</td>
                 <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
-                <td class="align-right">{{ spec.price.price }}</td>
-                <td class="align-right">{{ spec.summa_clean }}</td>
+                <td class="align-right">{{ spec.get_price_for_person }}</td>
+                <td class="align-right">{{ spec.summa_clean_for_person }}</td>
             </tr>
             <tr>
                 <td colspan="3" class="align-left">Бронирование услуги</td>
-                <td class="align-right">{{ spec.markup }}</td>
-                <td class="align-right">{{ spec.markup }}</td>
+                <td class="align-right">{{ spec.markup_for_person }}</td>
+                <td class="align-right">{{ spec.markup_for_person }}</td>
             </tr>
         {% else %}
             <tr>
@@ -72,8 +72,8 @@
                 <td class="align-left">{{ spec.price.service.title }}</td>
                 <td class="align-center">{{ spec.count }}</td>
                 <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
-                <td class="align-right">{{ spec.price.price }}</td>
-                <td class="align-right">{{ spec.summa_clean }}</td>
+                <td class="align-right">{{ spec.get_price_for_person }}</td>
+                <td class="align-right">{{ spec.summa_clean_for_person }}</td>
             </tr>
         {% endif %}
         
@@ -83,7 +83,7 @@
 {% block print_table_tfoot %}
     <tr>
         <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
-        <td class="span2 align-right"><strong>{{ document.order.summa }}</strong></td>
+        <td class="span2 align-right"><strong>{{ document.order.summa_for_person }}</strong></td>
     </tr>
     <tr>
         <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
@@ -92,6 +92,6 @@
 {% endblock %}
 
 {% block print_table_legend %}
-<div><strong>{{ document.order.summa|rubles }}</strong></div>
+<div><strong>{{ document.order.summa_for_person|rubles }}</strong></div>
 <hr>
 {% endblock %}

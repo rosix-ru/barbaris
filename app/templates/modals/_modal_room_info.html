@@ -50,18 +50,45 @@
                 <tr>
                     <th class=""><span>Заказ</span></th>
                     <th class=""><span>Персона</span></th>
-                    <th class=""><span>Организация</span></th>
                     <th class="input-small"><span class="pull-right">Заезд</span></th>
                     <th class="input-small"><span class="pull-right">Выезд</span></th>
                     <th class=""><span class="pull-right"></span></th>
                 </tr>
             </thead>
             <tbody>
-            {% for order in object.orders %}
+            {% if object.current_order %}
+                <tr id="order_{{ object.current_order.id }}">
+                    <td><span>{{ object.current_order.id }}</span></td>
+                    {% if object.current_order.persons.count %}
+                        <td>
+                            {% for person in object.current_order.persons.all %}
+                            <p>{{ person }}</p>
+                            {% endfor %}
+                        </td>
+                    {% else %}
+                        <td><span class="badge badge-important">Установиете клиента!!!</span></td>
+                    {% endif %}
+                    <td><span class="pull-right">{% room_start object object.current_order %}</span></td>
+                    <td><span class="pull-right">{% room_end object object.current_order %}</span></td>
+                    <td><span class="pull-right">
+                        <a href="{% url order_detail object.current_order.id %}">
+                            <i class="icon-edit" title="Изменение заказа"></i>
+                        </a>
+                    </span></td>
+                </tr>
+            {% endif %}
+            {% for order in object.next_orders %}
                 <tr id="order_{{ order.id }}">
                     <td><span>{{ order.id }}</span></td>
-                    <td><span>{{ order.person }}</span></td>
-                    <td><span>{{ order.person.org.title }}</span></td>
+                    {% if order.persons.count %}
+                        <td>
+                            {% for person in order.persons.all %}
+                            <p>{{ person }}</p>
+                            {% endfor %}
+                        </td>
+                    {% else %}
+                        <td><span class="badge badge-important">Установиете клиента!!!</span></td>
+                    {% endif %}
                     <td><span class="pull-right">{% room_start object order %}</span></td>
                     <td><span class="pull-right">{% room_end object order %}</span></td>
                     <td><span class="pull-right">

@@ -66,27 +66,28 @@ PRICE_PRINT = { 'model': Price, 'template_name': "price_list.html", 'document': 
 ORDER_LIST = { 'model': Order, 'template_name': "order_list.html", 
         'search_fields': [
             'id',
-            'person__last_name', 
-            'person__first_name',
-            'person__middle_name',
-            'person__org__title',
+            'persons__last_name', 
+            'persons__first_name',
+            'persons__middle_name',
+            'persons__org__title',
             ],
         'date_field': 'updated', 'use_stats': True,
+        'use_distinct': True,
         }
 
 ORDER_LIST_PERSON = ORDER_LIST.copy()
-ORDER_LIST_PERSON.update({ 'foreign_field': "person__id", })
+ORDER_LIST_PERSON.update({ 'foreign_field': "persons__id", })
 ORDER_LIST_ORG = ORDER_LIST.copy()
-ORDER_LIST_ORG.update({ 'foreign_field': "person__org__id", })
+ORDER_LIST_ORG.update({ 'foreign_field': "persons__org__id", })
 
 
 INVOICE_LIST = { 'model': Invoice, 'template_name': "invoice_list.html", 
         'search_fields': [
             'id',
-            'order__person__last_name', 
-            'order__person__first_name',
-            'order__person__middle_name',
-            'order__person__org__title',
+            'order__persons__last_name', 
+            'order__persons__first_name',
+            'order__persons__middle_name',
+            'order__persons__org__title',
             ],
         'date_field': 'date', 'use_stats': True,
         }
@@ -95,10 +96,10 @@ INVOICE_PRINT = { 'model': Invoice, 'document': 'invoice', }
 ACT_LIST = { 'model': Act, 'template_name': "act_list.html", 
         'search_fields': [
             'id',
-            'order__person__last_name', 
-            'order__person__first_name',
-            'order__person__middle_name',
-            'order__person__org__title',
+            'order__persons__last_name', 
+            'order__persons__first_name',
+            'order__persons__middle_name',
+            'order__persons__org__title',
             ],
         'date_field': 'date',
         }
@@ -136,8 +137,8 @@ urlpatterns = patterns('project.app.views',
     
     
     url(r'^person/(?P<pk>\d+)/$',           'person_detail',    name='person_detail'),
-    url(r'^person/(?P<person_pk>\d+)/order/new/$', 
-                                            'order_detail',     name='person_new_order',    kwargs = {'action': 'new'}),
+    #~ url(r'^person/(?P<person_pk>\d+)/order/new/$', 
+                                            #~ 'order_detail',     name='person_new_order',    kwargs = {'action': 'new'}),
     url(r'^person/search/$',                'person_search',    name='person_search'),
     
     url(r'^org/(?P<pk>\d+)/$',              'org_detail',       name='org_detail'),
@@ -147,6 +148,7 @@ urlpatterns = patterns('project.app.views',
     url(r'^order/dubble/$',            'order_dubble',         name='order_dubble'),
     url(r'^order/delete/$',            'order_delete',         name='order_delete'),
     url(r'^order/accept/$',            'order_accept',         name='order_accept'),
+    url(r'^order/cancel/$',            'order_cancel',         name='order_cancel'),
     
     url(r'^print/invoice/(?P<pk>\d+)/$',    'document_print',       name='invoice_print',   kwargs = INVOICE_PRINT),
     url(r'^print/act/(?P<pk>\d+)/$',        'document_print',       name='act_print',       kwargs = ACT_PRINT),

@@ -63,6 +63,7 @@ import forms
 def monitor(request):
     ctx = {'DEBUG': settings.DEBUG}
     ctx['object_list'] = Room.objects.all()
+    ctx['settings'] = settings
     return render_to_response('monitor.html', ctx,
                             context_instance=RequestContext(request,))
 
@@ -70,11 +71,13 @@ def monitor(request):
 def monitor_update(request):
     ctx = {'DEBUG': settings.DEBUG}
     ctx['object_list'] = Room.objects.all()
+    ctx['settings'] = settings
     return render_to_response('includes/_monitor.html', ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
-def order_detail(request, pk=None, person_pk=None, action=None):
+#~ def order_detail(request, pk=None, person_pk=None, action=None):
+def order_detail(request, pk=None, action=None):
     print "EXEC views.order_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
@@ -82,14 +85,13 @@ def order_detail(request, pk=None, person_pk=None, action=None):
     user = request.user
     session['user_id'] = user.pk
     
-    if person_pk:
-        person = get_object_or_404(Person.objects, pk=person_pk)
-    else:
-        person = Person()
+    #~ if person_pk:
+        #~ person = get_object_or_404(Person.objects, pk=person_pk)
+    #~ else:
+        #~ person = None
     
     if not pk or pk in (0, '0') or action == "new":
         order = Order(user=user)
-        order.person = person
         order_not_save = True
     else:
         order = get_object_or_404(Order, pk=pk)
@@ -97,18 +99,17 @@ def order_detail(request, pk=None, person_pk=None, action=None):
     
     def check_order():
         if order_not_save:
+            #~ if person and person.pk:
+                #~ order.persons.add(person.pk)
             order.save()
         return order
     
     if request.method == 'POST':
-        if 'select_person' in request.POST:
-            order.person = get_object_or_404(Person, pk=request.POST.get("selectPerson", None))
-            order.save()
-        elif 'select_other_persons' in request.POST:
-            [ order.other_persons.add(int(x)) for x in request.POST.getlist("selectPerson", [])]
+        if 'selectPerson' in request.POST:
+            [ order.persons.add(int(x)) for x in request.POST.getlist("selectPerson", [])]
             order.save()
         elif 'deletePerson' in request.POST:
-            [ order.other_persons.remove(int(x)) for x in request.POST.getlist("deletePerson", [])]
+            [ order.persons.remove(int(x)) for x in request.POST.getlist("deletePerson", [])]
             order.save()
         
         elif 'order_comment' in request.POST:
@@ -146,9 +147,11 @@ def order_detail(request, pk=None, person_pk=None, action=None):
         
         # Payment
         elif 'payment_add' in request.POST:
-            payment = Payment( user=user, invoice=order.invoice, )
+            invoice = Invoice.objects.get(pk=request.POST.get('id',0))
+            payment = Payment( user=user, invoice=invoice, )
             payment.save()
         elif 'payment_change' in request.POST:
+            
             payment = Payment.objects.get(pk=request.POST.get('id',0))
             form_payment = forms.PaymentForm(request.POST, instance=payment)
             if form_payment.is_valid():
@@ -170,24 +173,34 @@ def order_detail(request, pk=None, person_pk=None, action=None):
             act = Act.objects.get(pk=request.POST.get('id',0))
             act.delete()
         
+        # DivDoc
+        elif 'divdoc' in request.POST:
+            divdoc = request.POST.get('divdoc', 0)
+            if divdoc:
+                order.is_divdoc = True
+                order.invoice_set.all().update(summa=order.summa / order.persons.count())
+            else:
+                order.is_divdoc = False
+            order.save()
         
         if order.pk:
             return redirect("order_detail", order.pk)
     
     form_spec = forms.SpecificationForm()
-    form_person = forms.PersonForm(instance=order.person)
+    form_person = forms.PersonForm()
     form_invoice = forms.InvoiceForm()
+    #~ form_invoice.fields['person'].queryset = order.persons.all()
     form_act = forms.ActForm()
+    #~ form_act.fields['person'].queryset = order.persons.all()
     
     ctx['order'] = order
     ctx['settings'] = settings
-    ctx['person'] = order.person
     ctx['categories'] = Category.objects.all()
     ctx['reservations'] = Reservation.objects.all()
     ctx['form_spec'] = form_spec
-    ctx['form_person'] = form_person
-    ctx['form_invoice'] = form_invoice
-    ctx['form_act'] = form_act
+    #~ ctx['form_person'] = form_person
+    #~ ctx['form_invoice'] = form_invoice
+    #~ ctx['form_act'] = form_act
     
     if order_not_save:
         return render_to_response('order_new.html', ctx,
@@ -206,6 +219,20 @@ def order_accept(request):
         order.save()
         
         return redirect('order_detail', order.pk)
+    
+    return http.HttpResponseBadRequest()
+
+@login_required
+def order_cancel(request):
+    print "EXEC views.order_cancel()" # DEBUG
+    #~ print request # DEBUG
+    
+    if 'order_cancel' in request.POST:
+        order = get_object_or_404(Order.objects, pk=request.POST.get('id', 0))
+        order.state = settings.STATE_ORDER_CANCEL
+        order.save()
+        
+        return redirect('order_list')
     
     return http.HttpResponseBadRequest()
 
@@ -408,16 +435,6 @@ def person_search(request):
     persons = Person.objects.all()
     
     query = request.GET.get('query', '')
-    destination = request.GET.get('destination', 'default')
-    
-    hidden_names = {'default':'select_person', 
-            'person':'select_person', 
-            'other_persons':'select_other_persons' 
-        }
-    ctx['hidden_name'] = hidden_names[destination]
-    
-    input_types = {'default':'radio', 'person':'radio', 'other_persons':'checkbox' }
-    ctx['input_type'] = input_types[destination]
     
     if query:
         fields = ('last_name', 'first_name', 'middle_name', 'org__title')
@@ -429,8 +446,8 @@ def person_search(request):
     {% if persons %}
         <div class="controls">
         {% for person in persons %}
-            <label class="{{ input_type }}">
-                <input type="{{ input_type }}" name="selectPerson" value="{{ person.id }}">
+            <label class="checkbox">
+                <input type="checkbox" name="selectPerson" value="{{ person.id }}">
                 <h6>
                     {{ person }}
                     <small>{{ person.detail.birth_day|default:"" }}</small>
@@ -439,8 +456,7 @@ def person_search(request):
         {% endfor %}
         </div>
         <div class="form-actions">
-            <input type="hidden" name="{{ hidden_name }}" value="true" />
-            <input type="submit" class="btn btn-primary" value="Установить" />
+            <input type="submit" class="btn btn-primary" value="Добавить" />
         </div>
     {% else %}
         <h3>Персоны с такими данными не найдены</h3>
@@ -606,7 +622,8 @@ def analyze(request):
 
 @login_required
 def object_list(request, model, template_name, search_fields=[],
-    date_field="", use_stats=False, foreign_field="", foreign_key=""
+    date_field="", use_stats=False, foreign_field="", foreign_key="",
+    use_distinct=False,
     ):
     print "EXEC views.object_list(...)" # DEBUG
     #~ print request # DEBUG
@@ -642,6 +659,9 @@ def object_list(request, model, template_name, search_fields=[],
         state = request.GET.get("state", "")
         if state:
             qs = qs.filter(state=state)
+    
+    if use_distinct:
+            qs = qs.distinct()
     
     if 'q' in request.GET:
         qs = search(qs,search_fields, request.GET.get('q', ""))

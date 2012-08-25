@@ -37,58 +37,22 @@
 
 -->{% endcomment %}
 
-{% load pytils_numeral %}
+{% load i18n base_extras %}
 
-{% block print_logo %}
-    <div class="align-right"><img src="{{ STATIC_URL }}img/logo.png"></div>
-    <hr class="soften">
-{% endblock %}
-
-{% block print_title %}
-<h2>{{ document.document }} №{{ document.id }} от {{ document.date|date:"DATE_FORMAT" }}</h2>
-<hr>
-{% endblock %}
-
-{% block print_header_requisites %}
-<div class="row-fluid">
-  <div class="span12">
-    <div class="row-fluid">
-      <div class="span2 align-right">Исполнитель:</div>
-      <div class="span10"><strong>{% block print_supplier_header %}{{ supplier.detail.get_string_requsites }}{% endblock %}</strong></div>
-    </div>
-    <div class="row-fluid"><div class="span12"></div></div>
-    <div class="row-fluid">
-      <div class="span2 align-right">Заказчик:</div>
-      <div class="span10"><strong>{% block print_client_header %}{{ document.person }}{% endblock %}</strong></div>
-    </div>
-    <div class="row-fluid"><div class="span12"></div></div>
-  </div>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>Заказ №{{ object.id }} от {{ object.updated|date:"DATE_FORMAT"}}</h3>
 </div>
-{% endblock %}
-
-{% block print_table %}
-<table class="table table-condensed table-bordered">
-    <thead>{% block print_table_thead %}{% endblock %}</thead>
-    <tbody>{% block print_table_tbody %}{% endblock %}</tbody>
-    <tfoot>{% block print_table_tfoot %}{% endblock %}</tfoot>
-</table>
-{% endblock %}
-
-{% block print_table_legend %}{% endblock %}
-
-{% block print_text %}{% endblock %}
-
-{% block print_footer_requisites %}
-<div class="row-fluid">
-  <div class="span12">
-    <div class="row-fluid">
-      <div class="span1 align-left">Исполнитель:</div>
-      <div class="span5 align-right signature">{% block print_supplier_footer %}{{ supplier.owner }}{% endblock %}</div>
-      <div class="span1 align-left">Заказчик:</div>
-      <div class="span5 align-right signature">{% block print_client_footer %}{{ document.person }}{% endblock %}</div>
-    </div>
-  </div>
+<div class="modal-body">
+    <h4>Вы действительно желаете отменить этот заказ?</h4>
 </div>
-{% endblock %}
-
-
+<form class="well form-horizontal" action="{% url order_cancel %}" method="post">{% csrf_token %}
+    <fieldset>
+        <div class="modal-footer">
+            <input type="hidden" name='order_cancel' value="{{ object.id }}" />
+            <input type="hidden" name='id' value="{{ object.id }}" />
+            <a href="#" class="btn" data-dismiss="modal">Нет</a>
+            <input type="submit" class="btn btn-primary" value="Да" />
+        </div>
+     </fieldset>
+</form>

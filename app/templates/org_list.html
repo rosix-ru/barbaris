@@ -67,14 +67,15 @@
             <tr>
                 <td>{{ org }}</td>
                 <td>{{ org.detail.fulltitle }}</td>
-                <td class="input-small">{{ org.detail.inn }}</td>
-                <td class="input-mini">
+                <td>{{ org.detail.inn }}</td>
+                <td><span class="pull-right">
                     <a href="{% url org_detail org.id %}">
                         <i class="icon-edit" title="Редактировать карточку организации"></i>
                     </a>
                     <a href="{% url org_orders org.id %}">
                         <i class="icon-list" title="Список заказов организации"></i>
                     </a>
+                    </span>
                 </td>
             </tr>
         {% endfor %}

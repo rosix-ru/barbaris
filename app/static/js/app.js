@@ -144,8 +144,11 @@ function loadModal() {
 }
 
 function updateMonitor() {
+    $('a[rel=tooltip]').tooltip('hide');
     $('#monitor').load('/monitor/update/', function() {
-        $("a[data-toggle^=_modal_]").click(loadModal); }
+        $("a[data-toggle^=_modal_]").click(loadModal);
+        $('a[rel=tooltip]').tooltip();
+    }
     );
 }
 
@@ -165,4 +168,5 @@ $(document).ready(function($) {
     testLog(path)
     if (path) $('div.navbar a[href^="/' + path + '/"]').parents().addClass('active');
     else $('div.navbar a[href="/"]').parents().addClass('active');
+    $('a[rel=tooltip]').tooltip();
 })

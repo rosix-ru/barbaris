@@ -64,15 +64,12 @@
     {% for act in paginator.object_list %}
         <tr id="act_{{ act.id }}">
             <td><span>{{ act.id }}</span></td>
-            <td><span>{{ act.order.person }}</span></td>
-            <td><span>{{ act.order.person.org }}</span></td>
+            <td><span>{{ act.person }}</span></td>
+            <td><span>{{ act.person.org|default:'' }}</span></td>
             <td><span>{{ act.date|date:'d.m.y' }}</span></td>
             <td><span>{{ act.comment }}</span></td>
             <td><span>{% short_username act.user %}</span></td>
             <td><span class="pull-right">
-                <a href="#" data-toggle="_modal_act_change_{{ act.id }}">
-                    <i class="icon-edit" title="Изменить"></i>
-                </a>
                 <a href="{% url order_detail act.order.id %}">
                     <i class="icon-file" title="Перейти к заказу"></i>
                 </a>
