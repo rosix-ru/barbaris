@@ -63,53 +63,80 @@
 {% endblock %}
 
 {% block content %}
-<legend>Заказы</legend>
-<table id="table-analyze-orders" class="table table-condensed">
+<table id="table-analyze" class="table table-condensed">
+    <thead>
+        <tr>
+            <th class=""><span class="">Позиция</span></th>
+            <th class="input-mini"><span class="pull-right">Кол-во</span></th>
+            <th class="input-small"><span class="pull-right">Сумма</span></th>
+            <th class="input-small"><span class="pull-right">Оплачено</span></th>
+            <th class="input-small"><span class="pull-right">К оплате</span></th>
+        </tr>
+    </thead>
     <tbody>
+        <tr><th colspan="5"><div align="center">Заказы</div></th></tr>
         <tr>
             <td><span>Всего</span></td>
-            <td><span>{{ orders.count }}</span></td>
+            <td><span class="pull-right">{{ orders.count }}</span></td>
+            <td><span class="pull-right">{{ orders_summ }}</span></td>
+            <td><span class="pull-right">{{ orders_payment }}</span></td>
+            <td><span class="pull-right">{{ orders_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>В статусе "Принят"</span></td>
-            <td><span>{{ accept_orders.count }}</span></td>
+            <td><span>Принятых</span></td>
+            <td><span class="pull-right">{{ accept_orders.count }}</span></td>
+            <td><span class="pull-right">{{ accept_orders_summ }}</span></td>
+            <td><span class="pull-right">{{ accept_orders_payment }}</span></td>
+            <td><span class="pull-right">{{ accept_orders_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>В статусе "Закрыт"</span></td>
-            <td><span>{{ close_orders.count }}</span></td>
+            <td><span>Закрытых</span></td>
+            <td><span class="pull-right">{{ close_orders.count }}</span></td>
+            <td><span class="pull-right">{{ close_orders_summ }}</span></td>
+            <td><span class="pull-right">{{ close_orders_payment }}</span></td>
+            <td><span class="pull-right">{{ close_orders_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>В статусе "Отменён"</span></td>
-            <td><span>{{ cancel_orders.count }}</span></td>
+            <td><span>Отменённых</span></td>
+            <td><span class="pull-right">{{ cancel_orders.count }}</span></td>
+            <td><span class="pull-right">{{ cancel_orders_summ }}</span></td>
+            <td><span class="pull-right">{{ cancel_orders_payment }}</span></td>
+            <td><span class="pull-right">{{ cancel_orders_debet }}</span></td>
         </tr>
-    </tbody>
-</table>
-
-<legend>Счета</legend>
-<table id="table-analyze-orders" class="table table-condensed">
-    <tbody>
+        
+        <tr><th colspan="5"><div align="center">Счета</div></th></tr>
         <tr>
             <td><span>Всего</span></td>
-            <td><span>{{ invoices.count }}</span></td>
-            <td><span>На сумму: {{ invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ invoices.count }}</span></td>
+            <td><span class="pull-right">{{ invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ invoices_payment }}</span></td>
+            <td><span class="pull-right">{{ invoices_debet }}</span></td>
         </tr>
         <tr>
             <td><span>Оплаченных полностью</span></td>
-            <td><span>{{ payment_invoices.count }}</span></td>
-            <td><span>На сумму: {{ payment_invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ payment_invoices.count }}</span></td>
+            <td><span class="pull-right">{{ payment_invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ payment_invoices_payment }}</span></td>
+            <td><span class="pull-right">{{ payment_invoices_debet }}</span></td>
         </tr>
         <tr>
             <td><span>Оплаченных частично</span></td>
-            <td><span>{{ avance_invoices.count }}</span></td>
-            <td><span>На сумму: {{ avance_invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ avance_invoices.count }}</span></td>
+            <td><span class="pull-right">{{ avance_invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ avance_invoices_payment }}</span></td>
+            <td><span class="pull-right">{{ avance_invoices_debet }}</span></td>
         </tr>
         <tr>
             <td><span>Неоплаченных</span></td>
-            <td><span>{{ notpay_invoices.count }}</span></td>
-            <td><span>На сумму: {{ notpay_invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ notpay_invoices.count }}</span></td>
+            <td><span class="pull-right">{{ notpay_invoices_summ }}</span></td>
+            <td><span class="pull-right">{{ notpay_invoices_payment }}</span></td>
+            <td><span class="pull-right">{{ notpay_invoices_debet }}</span></td>
         </tr>
+        
     </tbody>
 </table>
+
 {% endblock %}
 
 

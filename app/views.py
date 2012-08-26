@@ -610,13 +610,41 @@ def analyze(request):
     ctx['end'] = end
     
     ctx['acts'] = acts
-    ctx['invoices'] = invoices
-    ctx['invoices_summ'] = sum([ x.summa for x in invoices ])
     
-    ctx['orders'] = orders
-    ctx['accept_orders'] = orders.filter(state=settings.STATE_ORDER_ACCEPT)
-    ctx['close_orders'] = orders.filter(state=settings.STATE_ORDER_CLOSE)
-    ctx['cancel_orders'] = orders.filter(state=settings.STATE_ORDER_CANCEL)
+    ctx['invoices']                 = invoices
+    ctx['invoices_summ']            = sum([ x.order.summa for x in invoices ])
+    ctx['invoices_payment']         = sum([ x.order.payment for x in invoices ])
+    ctx['invoices_debet']           = sum([ x.order.debet for x in invoices ])
+    ctx['payment_invoices']         = invoices.filter(state=settings.STATE_INVOICE_PAYMENT)
+    ctx['payment_invoices_summ']    = sum([ x.order.summa for x in ctx['payment_invoices'] ])
+    ctx['payment_invoices_payment'] = sum([ x.order.payment for x in ctx['payment_invoices'] ])
+    ctx['payment_invoices_debet']   = sum([ x.order.debet for x in ctx['payment_invoices'] ])
+    ctx['avance_invoices']          = invoices.filter(state=settings.STATE_INVOICE_AVANCE)
+    ctx['avance_invoices_summ']     = sum([ x.order.summa for x in ctx['avance_invoices'] ])
+    ctx['avance_invoices_payment']  = sum([ x.order.payment for x in ctx['avance_invoices'] ])
+    ctx['avance_invoices_debet']    = sum([ x.order.debet for x in ctx['avance_invoices'] ])
+    ctx['notpay_invoices']          = invoices.filter(state=settings.STATE_INVOICE_CREATE)
+    ctx['notpay_invoices_summ']     = sum([ x.order.summa for x in ctx['notpay_invoices'] ])
+    ctx['notpay_invoices_payment']  = sum([ x.order.payment for x in ctx['notpay_invoices'] ])
+    ctx['notpay_invoices_debet']    = sum([ x.order.debet for x in ctx['notpay_invoices'] ])
+    
+    ctx['orders']                   = orders
+    ctx['orders_summ']              = sum([ x.summa for x in ctx['orders'] ])
+    ctx['orders_payment']           = sum([ x.payment for x in ctx['orders'] ])
+    ctx['orders_debet']             = sum([ x.debet for x in ctx['orders'] ])
+    ctx['accept_orders']            = orders.filter(state=settings.STATE_ORDER_ACCEPT)
+    ctx['accept_orders_summ']       = sum([ x.summa for x in ctx['accept_orders'] ])
+    ctx['accept_orders_payment']    = sum([ x.payment for x in ctx['accept_orders'] ])
+    ctx['accept_orders_debet']      = sum([ x.debet for x in ctx['accept_orders'] ])
+    ctx['close_orders']             = orders.filter(state=settings.STATE_ORDER_CLOSE)
+    ctx['close_orders_summ']        = sum([ x.summa for x in ctx['close_orders'] ])
+    ctx['close_orders_payment']     = sum([ x.payment for x in ctx['close_orders'] ])
+    ctx['close_orders_debet']       = sum([ x.debet for x in ctx['close_orders'] ])
+    ctx['cancel_orders']            = orders.filter(state=settings.STATE_ORDER_CANCEL)
+    ctx['cancel_orders_summ']       = sum([ x.summa for x in ctx['cancel_orders'] ])
+    ctx['cancel_orders_payment']    = sum([ x.payment for x in ctx['cancel_orders'] ])
+    ctx['cancel_orders_debet']      = sum([ x.debet for x in ctx['cancel_orders'] ])
+    
     return render_to_response('analyze.html', ctx,
                             context_instance=RequestContext(request,))
 

@@ -58,7 +58,7 @@
                 <td class="align-left">{{ spec.price.service.title }}</td>
                 <td class="align-center">{{ spec.count }}</td>
                 <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
-                <td class="align-right">{{ spec.get_price_for_person }}</td>
+                <td class="align-right">{{ spec.price_for_person }}</td>
                 <td class="align-right">{{ spec.summa_clean_for_person }}</td>
             </tr>
             <tr>
@@ -72,7 +72,7 @@
                 <td class="align-left">{{ spec.price.service.title }}</td>
                 <td class="align-center">{{ spec.count }}</td>
                 <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
-                <td class="align-right">{{ spec.get_price_for_person }}</td>
+                <td class="align-right">{{ spec.price_for_person }}</td>
                 <td class="align-right">{{ spec.summa_clean_for_person }}</td>
             </tr>
         {% endif %}

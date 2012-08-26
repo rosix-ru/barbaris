@@ -727,7 +727,7 @@ class Specification(models.Model):
         return round((self.markup() /  self.order.persons.count()), 2)
     
     @property
-    def get_price_for_person(self):
+    def price_for_person(self):
         if not self.order.is_divdoc:
             return round(self.price.price, 2)
         return round((self.price.price /  self.order.persons.count()), 2)
