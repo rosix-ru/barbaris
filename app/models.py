@@ -996,7 +996,7 @@ class Invoice(models.Model):
     
     @property
     def document(self):
-        return u'Счёт на оплату'
+        return u'Счёт'
     
     @property
     def document_type(self):

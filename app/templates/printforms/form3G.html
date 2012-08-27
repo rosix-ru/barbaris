@@ -39,26 +39,80 @@
 
 {% load pytils_numeral %}
 
+{% block print_logo %}
+<div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8 align-center">
+        {{ supplier.detail.fulltitle }}
+        <br>Адрес: {{ supplier.detail.address }}
+        <br>
+        ИНН {{ supplier.detail.inn }}
+        ОГРНИП {{ supplier.detail.ogrn }}
+        <br>{{ supplier.detail.document_type }}
+        серия {{ supplier.detail.document_series }}
+        №{{ supplier.detail.document_number }} от {{ supplier.detail.document_date }} 
+    </div>
+    <div class="span2"></div>
+</div>
+<h1 class="align-center">{{ supplier.title|upper }}</h1>
+{% endblock %}
+
+{% block print_title %}
+<h3 class="align-center">{{ document.document }} №{{ document.id }} от {{ document.date|date:"DATE_FORMAT" }}</h3>
+<hr>
+{% endblock %}
+
+{% block print_header_requisites %}
+<div class="row-fluid">
+  <div class="span12">
+    <div class="row-fluid">
+      <div class="span2 align-right">Гость:</div>
+      <div class="span10"><strong>{{ document.person }}</strong></div>
+    </div>
+    <div class="row-fluid"><div class="span12"></div></div>
+  </div>
+</div>
+{% endblock %}
+
 {% block print_table_thead %}
-    <tr>
-        <th class="span1 align-center">№</th>
-        <th class="span6 align-center">наименование работ, услуг</th>
-        <th class="span1 align-center">кол-во</th>
-        <th class="span1 align-center">ед.</th>
-        <th class="span1 align-center">цена</th>
-        <th class="span2 align-center">сумма</th>
-    </tr>
-{% endblock %} 
+<tr>
+    <th class="span1 align-center">№</th>
+    <th class="span6 align-center">наименование работ, услуг</th>
+    <th class="span1 align-center">кол-во</th>
+    <th class="span1 align-center">ед.</th>
+    <th class="span1 align-center">цена</th>
+    <th class="span2 align-center">сумма</th>
+</tr>
+{% endblock %}
 
 {% block print_table_tbody %}
-    <tr>
-        <td class="span1 align-center">1</td>
-        <td class="span6 align-left">Гостиничный сервис</td>
-        <td class="span1 align-center">1</td>
-        <td class="span1 align-center"></td>
-        <td class="span1 align-right">{{ document.order.summa_for_person }}</td>
-        <td class="span2 align-right">{{ document.order.summa_for_person }}</td>
-    </tr>
+    {% for spec in document.order.specification_set.all %}
+        {% if spec.reservation %}
+            <tr>
+                <td rowspan="2" class="align-center">{{ forloop.counter }}</td>
+                <td class="align-left">{{ spec.price.service.title }}</td>
+                <td class="align-center">{{ spec.count }}</td>
+                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
+                <td class="align-right">{{ spec.price_for_person }}</td>
+                <td class="align-right">{{ spec.summa_clean_for_person }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="align-left">Бронирование услуги</td>
+                <td class="align-right">{{ spec.markup_for_person }}</td>
+                <td class="align-right">{{ spec.markup_for_person }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="align-center">{{ forloop.counter }}</td>
+                <td class="align-left">{{ spec.price.service.title }}</td>
+                <td class="align-center">{{ spec.count }}</td>
+                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
+                <td class="align-right">{{ spec.price_for_person }}</td>
+                <td class="align-right">{{ spec.summa_clean_for_person }}</td>
+            </tr>
+        {% endif %}
+        
+    {% endfor %}
 {% endblock %}
 
 {% block print_table_tfoot %}
@@ -73,15 +127,8 @@
 {% endblock %}
 
 {% block print_table_legend %}
-<div>Всего оказано услуг 1, на сумму {{ document.order.summa_for_person }} руб.</div>
 <div><strong>{{ document.order.summa_for_person|rubles }}</strong></div>
 <hr>
 {% endblock %}
 
-{% block print_text %}
-<p>Вышеперечисленные услуги выполнены полностью и в срок. 
-Заказчик претензий по объему, качеству и срокам оказания 
-услуг не имеет.
-</p>
-<hr>
-{% endblock %}
+

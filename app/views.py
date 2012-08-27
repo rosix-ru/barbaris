@@ -261,7 +261,7 @@ def order_new_person(request, pk):
     #~ print request # DEBUG
     
     if pk in ('0', 0):
-        person = Person(last_name="Новый клиент")
+        person = Person(last_name=u"Новый клиент")
         person.save()
         #~ return redirect('order_new', person.pk)
     else:
@@ -365,7 +365,7 @@ def person_detail(request, pk):
     ctx = {'DEBUG': settings.DEBUG}
     
     if pk in ('0', 0):
-        person = Person(last_name="Новый клиент")
+        person = Person(last_name=u"Новый клиент")
         detail = PersonDetail(person=person)
         person_not_save = True
     else:
@@ -442,7 +442,7 @@ def person_search(request):
     
     ctx['persons'] = persons[: 10]
     
-    t = Template("""
+    t = Template(u"""
     {% if persons %}
         <div class="controls">
         {% for person in persons %}
@@ -475,7 +475,7 @@ def org_detail(request, pk):
     ctx = {'DEBUG': settings.DEBUG}
     
     if pk in ('0', 0):
-        org = Org(title="Новая организация")
+        org = Org(title=u"Новая организация")
         detail = OrgDetail(org=org)
         org_not_save = True
     else:
@@ -547,7 +547,7 @@ def question_detail(request, pk=None, action=None):
     ctx = {'DEBUG': settings.DEBUG}
     user = request.user
     if not pk or pk in ('0', 0) or action == 'new':
-        question = Question(theme="Новая тема вопроса")
+        question = Question(theme=u"Новая тема вопроса")
         question.user = user
         question_not_save = True
     else:
