@@ -980,9 +980,9 @@ class Invoice(models.Model):
     def save(self, **kwargs):
         if not self.summa:
             if self.order.is_divdoc:
-                self.summa = self.order.summa_for_person
+                self.summa = str(self.order.summa_for_person)
             else:
-                self.summa = self.order.summa
+                self.summa = str(self.order.summa)
         
         if self.state_payment and self.order.debet >= 0:
             self.order.state = settings.STATE_ORDER_CLOSE
