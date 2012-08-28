@@ -261,7 +261,8 @@ CATEGORY_CHOICES = (
 DOCUMENT_CHOICES = (
         ('act', u'Акт'),
         ('invoice', u'Счёт'),
-        ('form3g', u'Форма 3Г'),
+        ('person', u'Карточка персоны'),
+        ('org', u'Карточка организации'),
     )
 
 STATE_ROOM_FREE                 = u'Свободен сейчас и в дальнейшем.'
@@ -279,6 +280,10 @@ BUTTON_CLASSES_STATE_ROOM = {
     STATE_ROOM_NONRELEASED_FREE: 'btn btn-primary',
     STATE_ROOM_NONRELEASED_NONFREE: 'btn btn-danger',
 }
+
+ESTIMATED_TIME = True
+ESTIMATED_TIME_HOUR = 12
+ESTIMATED_TIME_MINUTE = 0
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

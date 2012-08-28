@@ -59,15 +59,21 @@
 
 {% block print_title %}
 <h3 class="align-center">{{ document.document }} №{{ document.id }} от {{ document.date|date:"DATE_FORMAT" }}</h3>
-<hr>
 {% endblock %}
 
 {% block print_header_requisites %}
 <div class="row-fluid">
   <div class="span12">
     <div class="row-fluid">
-      <div class="span2 align-right">Гость:</div>
-      <div class="span10"><strong>{{ document.person }}</strong></div>
+      <div class="span12"><h3><small>Гость: </small>{{ document.person }}</h3></div>
+    </div>
+<!--
+    <div class="row-fluid"><div class="span12"></div></div>
+-->
+    <div class="row-fluid">
+      <div class="span2"><h3><small>№ комнаты: </small>{{ document.order.numbers }}</h3></div>
+      <div class="span4"><h3><small>Заезд: </small>{{ document.order.start }}</h3></div>
+      <div class="span4"><h3><small>Количество человек: _____</div>
     </div>
     <div class="row-fluid"><div class="span12"></div></div>
   </div>
@@ -76,59 +82,79 @@
 
 {% block print_table_thead %}
 <tr>
-    <th class="span1 align-center">№</th>
-    <th class="span6 align-center">наименование работ, услуг</th>
-    <th class="span1 align-center">кол-во</th>
-    <th class="span1 align-center">ед.</th>
-    <th class="span1 align-center">цена</th>
-    <th class="span2 align-center">сумма</th>
+    <th class="span1 align-center">№ п/п</th>
+    <th class="span6 align-center">Виды платежей</th>
+    <th class="span1 align-center">Единица</th>
+    <th class="span1 align-center">Кол-во</th>
+    <th class="span1 align-center">Цена, руб.</th>
+    <th class="span2 align-center">Сумма, руб.</th>
 </tr>
 {% endblock %}
 
 {% block print_table_tbody %}
-    {% for spec in document.order.specification_set.all %}
-        {% if spec.reservation %}
-            <tr>
-                <td rowspan="2" class="align-center">{{ forloop.counter }}</td>
-                <td class="align-left">{{ spec.price.service.title }}</td>
-                <td class="align-center">{{ spec.count }}</td>
-                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
-                <td class="align-right">{{ spec.price_for_person }}</td>
-                <td class="align-right">{{ spec.summa_clean_for_person }}</td>
-            </tr>
-            <tr>
-                <td colspan="3" class="align-left">Бронирование услуги</td>
-                <td class="align-right">{{ spec.markup_for_person }}</td>
-                <td class="align-right">{{ spec.markup_for_person }}</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td class="align-center">{{ forloop.counter }}</td>
-                <td class="align-left">{{ spec.price.service.title }}</td>
-                <td class="align-center">{{ spec.count }}</td>
-                <td class="align-center">{{ spec.price.get_divider_display|default:'шт.' }}</td>
-                <td class="align-right">{{ spec.price_for_person }}</td>
-                <td class="align-right">{{ spec.summa_clean_for_person }}</td>
-            </tr>
-        {% endif %}
-        
-    {% endfor %}
+    <tr>
+        <td rowspan="3" class="span1 align-center">1</td>
+        <td class="span6 align-left">Проживание в гостинице</td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-right"></td>
+        <td class="span2 align-right"></td>
+    </tr>
+    <tr>
+        <td class="span6 align-left">с {{ document.order.start }}</td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-right"></td>
+        <td class="span2 align-right"></td>
+    </tr>
+    <tr>
+        <td class="span6 align-left">по {{ document.order.end }}</td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-right">{{ document.order.summa_for_person }}</td>
+        <td class="span2 align-right">{{ document.order.summa_for_person }}</td>
+    </tr>
+    <tr>
+        <td rowspan="2" class="span1 align-center">2</td>
+        <td class="span6 align-left">Дополнительно</td>
+        <td class="span1 align-center">к/с</td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-right"></td>
+        <td class="span2 align-right"></td>
+    </tr>
+    <tr>
+        <td class="span6 align-left"></td>
+        <td class="span1 align-center">к/с</td>
+        <td class="span1 align-center"></td>
+        <td class="span1 align-right"></td>
+        <td class="span2 align-right"></td>
+    </tr>
 {% endblock %}
 
 {% block print_table_tfoot %}
     <tr>
-        <td colspan="5" class="span10 align-right"><strong>итого:</strong></td>
+        <td></td>
+        <td colspan="4" class="span6 align-right"><strong>ИТОГО стоимость услуги:</strong></td>
         <td class="span2 align-right"><strong>{{ document.order.summa_for_person }}</strong></td>
-    </tr>
-    <tr>
-        <td colspan="5" class="span10 align-right"><strong>Без налога (НДС)</strong></td>
-        <td class="span2 align-right"><strong>-</strong></td>
     </tr>
 {% endblock %}
 
 {% block print_table_legend %}
-<div><strong>{{ document.order.summa_for_person|rubles }}</strong></div>
+<div>Итого получено по счёту: <strong>{{ document.order.summa_for_person|rubles }}</strong></div>
+<hr>
+<div>Дата осуществления расчёта: <strong>{{ document.date }}</strong></div>
 <hr>
 {% endblock %}
 
+{% block print_footer_requisites %}
+<div class="row-fluid">
+  <div class="span12">
+    <div class="row-fluid">
+      <div class="span3 align-left"><strong>Дежурный администратор:</strong></div>
+      <div class="span7 signature">{{ document.user.get_full_name }}</div>
+      <div class="span2 align-center">М.П.</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
 

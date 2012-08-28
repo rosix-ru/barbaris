@@ -675,6 +675,12 @@ class Order(models.Model):
     def save(self, **kwargs):
         super(Order, self).save(**kwargs)
     
+    @property
+    def numbers(self):
+        sps = self.specification_set.filter(room__isnull=False)
+        print sps
+        return u', '.join([str(x.room.num) for x in sps])
+    
 class Specification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -811,8 +817,21 @@ class Specification(models.Model):
             #~ print 'def set_interval()' # DEBUG
             if not self.count or not self.price.divider:
                 return False
-            self.start = self.start or roundTime()
+            if self.start:
+                start = self.start.replace(second=0)
+            else:
+                start = None
+            self.start = start or roundTime()
             self.end = get_end(self.start, self.count)
+            
+            # Установка расчётного времени на вторые и более сутки
+            # для номеров
+            if self.room and self.count > 1 and settings.ESTIMATED_TIME \
+            and self.price.divider == settings.DIVIDER_DAY:
+                self.end = self.end.replace(
+                    hour=settings.ESTIMATED_TIME_HOUR,
+                    minute=settings.ESTIMATED_TIME_MINUTE)
+            
             return True
         
         def get_divider_sec():

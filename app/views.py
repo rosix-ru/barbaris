@@ -106,13 +106,16 @@ def order_detail(request, pk=None, action=None):
     
     if request.method == 'POST':
         if 'selectPerson' in request.POST:
+            check_order()
             [ order.persons.add(int(x)) for x in request.POST.getlist("selectPerson", [])]
             order.save()
         elif 'deletePerson' in request.POST:
+            check_order()
             [ order.persons.remove(int(x)) for x in request.POST.getlist("deletePerson", [])]
             order.save()
         
         elif 'order_comment' in request.POST:
+            check_order()
             order.comment = request.POST.get('order_comment', '')
             order.save()
         
@@ -151,7 +154,6 @@ def order_detail(request, pk=None, action=None):
             payment = Payment( user=user, invoice=invoice, )
             payment.save()
         elif 'payment_change' in request.POST:
-            
             payment = Payment.objects.get(pk=request.POST.get('id',0))
             form_payment = forms.PaymentForm(request.POST, instance=payment)
             if form_payment.is_valid():

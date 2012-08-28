@@ -48,12 +48,14 @@ PERSON_LIST = { 'model': Person, 'template_name': "person_list.html",
             'org__title',
             ]
         }
+PERSON_PRINT = { 'model': Person, 'document': 'person', }
 
 ORG_LIST = { 'model': Org, 'template_name': "org_list.html", 
         'search_fields': [
             'title',
             ]
         }
+ORG_PRINT = { 'model': Org, 'document': 'org', }
 
 PRICE_LIST = { 'model': Category, 'template_name': "price_list.html", 
         'search_fields': [
@@ -152,6 +154,8 @@ urlpatterns = patterns('project.app.views',
     
     url(r'^print/invoice/(?P<pk>\d+)/$',    'document_print',       name='invoice_print',   kwargs = INVOICE_PRINT),
     url(r'^print/act/(?P<pk>\d+)/$',        'document_print',       name='act_print',       kwargs = ACT_PRINT),
+    url(r'^print/person/(?P<pk>\d+)/$',     'document_print',       name='person_print',    kwargs = PERSON_PRINT),
+    url(r'^print/org/(?P<pk>\d+)/$',        'document_print',       name='org_print',       kwargs = ORG_PRINT),
     
     url(r'^question/(?P<pk>\d+)/$',     'question_detail',      name='question_detail', ),
     url(r'^question/new/$',             'question_detail',      name='question_new',            kwargs = {'action': 'new'}),

@@ -69,6 +69,9 @@
                 <td>{{ org.detail.fulltitle }}</td>
                 <td>{{ org.detail.inn }}</td>
                 <td><span class="pull-right">
+                    <a href="{% url org_print org.id %}" target="_blank">
+                        <i class="icon-print" title="Печать"></i>
+                    </a>
                     <a href="{% url org_detail org.id %}">
                         <i class="icon-edit" title="Редактировать карточку организации"></i>
                     </a>

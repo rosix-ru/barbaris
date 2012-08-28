@@ -68,6 +68,9 @@
                 <td>{{ person.org|default:"" }}</td>
                 <td>{{ person.phones }}</td>
                 <td><span class="pull-right">
+                    <a href="{% url person_print person.id %}" target="_blank">
+                        <i class="icon-print" title="Печать"></i>
+                    </a>
                     <a href="{% url person_detail person.id %}">
                         <i class="icon-edit" title="Редактировать карточку клиента"></i>
                     </a>

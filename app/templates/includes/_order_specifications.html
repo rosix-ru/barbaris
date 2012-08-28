@@ -41,6 +41,7 @@
     <thead>
         <tr>
             <th class=""><span>Услуга</span></th>
+            <th class="input-mini"><span class="pull-right">Номер</span></th>
             <th class="input-mini"><span class="pull-right">Цена</span></th>
             <th class="input-mini"><span class="pull-right">Кол-во</span></th>
             <th class="input-mini"><span class="pull-right">Бронь</span></th>
@@ -54,6 +55,7 @@
     {% for sp in order.specification_set.all %}
         <tr id="specification_{{ sp.id }}">
             <td><span>{{ sp.price.service.title }}</span></td>
+            <td><span class="pull-right">{{ sp.room.num|default:'' }}</span></td>
             <td><span class="pull-right">{{ sp.price.price }}</span></td>
             <td><span class="pull-right">{{ sp.count }}</span></td>
             <td><span class="pull-right">{{ sp.summa_markup|default:'' }}</span></td>
