@@ -673,6 +673,23 @@ class Order(models.Model):
         return self.state == settings.STATE_ORDER_CANCEL
     
     def save(self, **kwargs):
+        # Устанавливаем начало и конец действия заказа по 
+        # минимальному значению начала спецификаций
+        # и по максимальному их конца
+        sps = self.specification_set.all()
+        try:
+            sp = sps.filter(start__isnull=False).order_by('start')[0]
+            start = sp.start
+        except:
+            start = None
+        try:
+            sp = sps.filter(end__isnull=False).order_by('-end')[0]
+            end = sp.end
+        except:
+            end = None
+        self.start = start or self.updated
+        self.end = end or self.updated
+        
         super(Order, self).save(**kwargs)
     
     @property
@@ -887,23 +904,6 @@ class Specification(models.Model):
         # после первичного принятия
         if not self.order.state_create:
             self.order.state = settings.STATE_ORDER_ACCEPT
-            # Устанавливаем начало и конец действия заказа по 
-            # минимальному значению начала спецификаций
-            # и по максимальному их конца
-            sps = self.order.specification_set.all()
-            try:
-                sp = sps.filter(start__isnull=False).order_by('start')[0]
-                start = sp.start
-            except:
-                start = None
-            try:
-                sp = sps.filter(end__isnull=False).order_by('-end')[0]
-                end = sp.end
-            except:
-                end = None
-            self.order.start = start or self.order.updated
-            self.order.end = end or self.order.updated
-            
             self.order.save()
     
     def delete(self, **kwargs):
