@@ -622,21 +622,21 @@ def analyze(request):
     ctx['acts'] = acts
     
     ctx['invoices']                 = invoices
-    ctx['invoices_summ']            = sum([ x.order.summa for x in invoices ])
-    ctx['invoices_payment']         = sum([ x.order.payment for x in invoices ])
-    ctx['invoices_debet']           = sum([ x.order.debet for x in invoices ])
+    ctx['invoices_summ']            = sum([ x.summa for x in invoices ])
+    ctx['invoices_payment']         = sum([ x.payment for x in invoices ])
+    ctx['invoices_debet']           = sum([ x.debet for x in invoices ])
     ctx['payment_invoices']         = invoices.filter(state=settings.STATE_INVOICE_PAYMENT)
-    ctx['payment_invoices_summ']    = sum([ x.order.summa for x in ctx['payment_invoices'] ])
-    ctx['payment_invoices_payment'] = sum([ x.order.payment for x in ctx['payment_invoices'] ])
-    ctx['payment_invoices_debet']   = sum([ x.order.debet for x in ctx['payment_invoices'] ])
+    ctx['payment_invoices_summ']    = sum([ x.summa for x in ctx['payment_invoices'] ])
+    ctx['payment_invoices_payment'] = sum([ x.payment for x in ctx['payment_invoices'] ])
+    ctx['payment_invoices_debet']   = sum([ x.debet for x in ctx['payment_invoices'] ])
     ctx['avance_invoices']          = invoices.filter(state=settings.STATE_INVOICE_AVANCE)
-    ctx['avance_invoices_summ']     = sum([ x.order.summa for x in ctx['avance_invoices'] ])
-    ctx['avance_invoices_payment']  = sum([ x.order.payment for x in ctx['avance_invoices'] ])
-    ctx['avance_invoices_debet']    = sum([ x.order.debet for x in ctx['avance_invoices'] ])
+    ctx['avance_invoices_summ']     = sum([ x.summa for x in ctx['avance_invoices'] ])
+    ctx['avance_invoices_payment']  = sum([ x.payment for x in ctx['avance_invoices'] ])
+    ctx['avance_invoices_debet']    = sum([ x.debet for x in ctx['avance_invoices'] ])
     ctx['notpay_invoices']          = invoices.filter(state=settings.STATE_INVOICE_CREATE)
-    ctx['notpay_invoices_summ']     = sum([ x.order.summa for x in ctx['notpay_invoices'] ])
-    ctx['notpay_invoices_payment']  = sum([ x.order.payment for x in ctx['notpay_invoices'] ])
-    ctx['notpay_invoices_debet']    = sum([ x.order.debet for x in ctx['notpay_invoices'] ])
+    ctx['notpay_invoices_summ']     = sum([ x.summa for x in ctx['notpay_invoices'] ])
+    ctx['notpay_invoices_payment']  = sum([ x.payment for x in ctx['notpay_invoices'] ])
+    ctx['notpay_invoices_debet']    = sum([ x.debet for x in ctx['notpay_invoices'] ])
     
     ctx['orders']                   = orders
     ctx['orders_summ']              = sum([ x.summa for x in ctx['orders'] ])
