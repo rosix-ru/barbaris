@@ -678,8 +678,8 @@ class Order(models.Model):
     @property
     def numbers(self):
         sps = self.specification_set.filter(room__isnull=False)
-        print sps
-        return u', '.join([str(x.room.num) for x in sps])
+        L = [str(x.room.num) for x in sps]
+        return u', '.join(set(L))
     
 class Specification(models.Model):
     created = models.DateTimeField(auto_now_add=True)

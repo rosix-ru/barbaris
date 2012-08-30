@@ -178,9 +178,10 @@ def order_detail(request, pk=None, action=None):
         # DivDoc
         elif 'divdoc' in request.POST:
             divdoc = request.POST.get('divdoc', 0)
+            order = check_order()
             if divdoc:
                 order.is_divdoc = True
-                order.invoice_set.all().update(summa=order.summa / order.persons.count())
+                order.invoice_set.all().update(summa=str(order.summa / order.persons.count()))
             else:
                 order.is_divdoc = False
             order.save()
