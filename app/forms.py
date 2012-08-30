@@ -113,6 +113,8 @@ class OrderForm(forms.ModelForm):
         exclude = ('created','updated', 'state', 'user')
 
 class SpecificationForm(forms.ModelForm):
+    #~ start = forms.DateTimeField(localize=True)
+    #~ end = forms.DateTimeField(localize=True)
     class Meta:
         model = models.Specification
         exclude = ('created','updated', 'order' )
@@ -122,6 +124,8 @@ class SpecificationForm(forms.ModelForm):
         }
 
 class InvoiceForm(forms.ModelForm):
+    summa = forms.DecimalField(localize=True)
+    #~ date = forms.DateField(localize=True)
     class Meta:
         model = models.Invoice
         exclude = ('created', 'order', 'user', 'state' )
@@ -131,6 +135,7 @@ class InvoiceForm(forms.ModelForm):
         }
 
 class PaymentForm(forms.ModelForm):
+    summa = forms.DecimalField(localize=True, label=u'Сумма')
     class Meta:
         model = models.Payment
         exclude = ('created', 'updated', 'user', 'invoice' )
@@ -139,6 +144,7 @@ class PaymentForm(forms.ModelForm):
         }
 
 class ActForm(forms.ModelForm):
+    date = forms.DateField(localize=True)
     class Meta:
         model = models.Act
         exclude = ('created', 'order', 'user', 'state' )
