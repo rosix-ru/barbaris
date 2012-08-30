@@ -1,0 +1,131 @@
+{% comment %}<!--
+###############################################################################
+# Copyright 2012 Grigoriy Kramarenko.
+###############################################################################
+# This file is part of Barbaris.
+#
+#    Barbaris is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Barbaris is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Barbaris.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Этот файл — часть Barbaris.
+#
+#   Barbaris - свободная программа: вы можете перераспространять ее и/или
+#   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+#   в каком она была опубликована Фондом свободного программного обеспечения;
+#   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+#   версии.
+#
+#   Barbaris распространяется в надежде, что она будет полезной,
+#   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+#   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+#   общественной лицензии GNU.
+#
+#   Вы должны были получить копию Стандартной общественной лицензии GNU
+#   вместе с этой программой. Если это не так, см.
+#   <http://www.gnu.org/licenses/>.
+###############################################################################
+
+-->{% endcomment %}
+
+{% load pytils_numeral %}
+
+{% block extrastyle %}
+<style type="text/css">
+    div.document {
+        font-size: 14pt;
+    }
+</style>
+{% endblock %} 
+
+<div class="row-fluid">
+    <div class="span2">А</div>
+    <div class="span8 align-center">АНКЕТА</div>
+    <div class="span2 align-right">форма №5</div>
+</div>
+<h1 class="align-center">{{ supplier.title|upper }}</h1>
+<h5 class="align-center">{{ supplier.detail.address }}</h5>
+<div class="align-right">комната ____</div>
+
+<div class="signature">1. Фамилия <strong>{{ document.person.last_name }}</strong></div>
+<br>
+<div class="signature">2. Имя <strong>{{ document.person.first_name }}</strong></div>
+<br>
+<div class="signature">3. Отчество <strong>{{ document.person.middle_name }}</strong></div>
+<br>
+<div class="row-fluid signature">
+    <div class="span6">4. Дата роджения <strong>{{ document.person.detail.birth_day|default:'' }}</strong></div>
+    <div class="span6">5. Пол <strong>{{ document.person.get_sex_display  }}</strong></div>
+</div>
+<br>
+<br>
+<div class="signature">6. Место рождения: страна <strong>{{ document.person.detail.birth_country }}</strong></div>
+<br>
+<div class="signature">регион <strong>{{ document.person.detail.birth_region }}</strong></div>
+<br>
+<div class="signature">район <strong>{{ document.person.detail.birth_area }}</strong></div>
+<br>
+<div class="signature">город <strong>{{ document.person.detail.birth_sity }}</strong></div>
+<br>
+<div class="signature">населённый пункт <strong>{{ document.person.detail.birth_settlement }}</strong></div>
+<br>
+<br>
+
+<div class="signature">7. Гражданство <strong>{{ document.person.residence_sitizenship }}</strong></div>
+<br>
+
+<div class="signature">8. Документ, удостоверяющий личность: вид <strong>{{ document.person.detail.document_type }}</strong></div>
+<br>
+<div class="row-fluid signature">
+    <div class="span3">серия <strong>{{ document.person.detail.document_series }}</strong></div>
+    <div class="span3">номер <strong>{{ document.person.detail.document_number }}</strong></div>
+    <div class="span6">выдан <strong>{{ document.person.detail.document_date }}</strong></div>
+</div>
+<br>
+<div class="row-fluid signature">
+    <div class="span10">орган, выдавший документ <strong>{{ document.person.detail.document_organ }}</strong></div>
+    <div class="span2">код <strong>{{ document.person.detail.document_code }}</strong></div>
+</div>
+<br>
+<br>
+
+<div class="signature">9. Место жительства: страна <strong>{{ document.person.detail.residence_country }}</strong></div>
+<br>
+<div class="signature">регион <strong>{{ document.person.detail.residence_region }}</strong></div>
+<br>
+<div class="signature">район <strong>{{ document.person.detail.residence_area }}</strong></div>
+<br>
+<div class="signature">город <strong>{{ document.person.detail.residence_sity }}</strong></div>
+<br>
+<div class="signature">населённый пункт <strong>{{ document.person.detail.residence_settlement }}</strong></div>
+<br>
+<div class="row-fluid signature">
+    <div class="span6">ул. <strong>{{ document.person.detail.residence_street }}</strong></div>
+    <div class="span2">дом <strong>{{ document.person.detail.residence_house }}</strong></div>
+    <div class="span1">корп. <strong>{{ document.person.detail.residence_case }}</strong></div>
+    <div class="span3">квартира <strong>{{ document.person.detail.residence_apartment }}</strong></div>
+</div>
+<br>
+<br>
+
+<div class="row-fluid signature">
+    <div class="span6">10. Прибыл <strong>{{ document.order.start|date:"DATE_FORMAT" }}</strong></div>
+    <div class="span6">Выбыл <strong>{{ document.order.end|date:"DATE_FORMAT" }}</strong></div>
+</div>
+<br>
+<br>
+
+<div class="row-fluid signature">
+    <div class="span9">11. Зарегистрировал <strong>{{ document.user.get_full_name }}</strong></div>
+    <div class="span3">Подпись</div>
+</div>
+<br>

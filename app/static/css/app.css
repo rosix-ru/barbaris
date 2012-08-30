@@ -45,7 +45,7 @@ table th.align-center, table td.align-center, table th.align-right,
 table td.align-right, table th.align-left, table td.align-left { vertical-align: middle; }
 
 
-div.signature { border-bottom: 1px solid; }
+div.signature, span.signature { border-bottom: 1px solid; }
 .document {
     background-color: #F5F5F5;
     border: 1px solid rgba(0, 0, 0, 0.05);

@@ -51,7 +51,7 @@ from django.core.cache import cache
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.template.defaultfilters import date as _date
 import operator
 import datetime
@@ -594,6 +594,12 @@ def analyze(request):
     invoices = Invoice.objects.all()
     orders = Order.objects.all()
     
+    user = request.GET.get('user', '')
+    if user:
+        acts = acts.filter(user__pk=user)
+        invoices = invoices.filter(user__pk=user)
+        orders = orders.filter(user__pk=user)
+    
     start = request.GET.get('start', '')
     if start:
         start = datetime.datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
@@ -608,6 +614,7 @@ def analyze(request):
         invoices = invoices.filter(date__lte=end).filter(date__isnull=False)
         orders = orders.filter(end__lte=end).filter(start__isnull=False, end__isnull=False)
     
+    ctx['user_list'] = User.objects.filter(groups__name__in=settings.SELECT_WORK_GROUPS)
     ctx['start'] = start
     ctx['end'] = end
     

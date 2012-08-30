@@ -58,6 +58,16 @@
         </fieldset>
     </form>
 </li>
+<li class="dropdown {% subnavactive request 'user' %}">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Пользователь <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+    {% for user in user_list %}
+        <li class="{% subnavactive request 'user' user.id %}">
+            <a href="{% addGET request 'user' user.id %}">{{ user }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</li>
 {% subnav_filter request 'analyze' %}
 
 {% endblock %}

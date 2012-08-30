@@ -202,11 +202,18 @@ INSTALLED_APPS = (
     'project.auth_fix',
     'project.app',
     'pytils',
+    #~ 'webodt',
     #~ 'cachebot',
     #~ 'memcache_status',
 )
 
 # Settings for applications:
+
+#~ WEBODT_TMP_DIR = abspath('..', 'tmp-webodt')
+#~ if not os.path.exists(WEBODT_TMP_DIR):
+    #~ os.makedirs(WEBODT_TMP_DIR)
+#~ 
+#~ WEBODT_TEMPLATE_PATH = abspath('templates', 'webodt')
 
 START_YEAR = 2011
 
@@ -284,6 +291,13 @@ BUTTON_CLASSES_STATE_ROOM = {
 ESTIMATED_TIME = True
 ESTIMATED_TIME_HOUR = 12
 ESTIMATED_TIME_MINUTE = 0
+
+GROUP_ADMINS = u'Администраторы'
+GROUP_MANAGERS = u'Менеджеры'
+GROUP_OPERATORS = u'Операторы'
+SELECT_WORK_GROUPS = (
+    GROUP_MANAGERS, GROUP_OPERATORS,
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

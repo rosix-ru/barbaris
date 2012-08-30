@@ -84,7 +84,7 @@
                     <input type="hidden" name='id' value="{{ invoice.id }}" />
                     <button type="submit" class="btn btn-mini" title="Добавить оплату этого счёта"><i class="icon-plus"></i></button>
                     {% endif %}
-                        <a href="{% url invoice_print invoice.id %}" target="_blank" class="btn btn-mini">
+                        <a href="{% url invoice_print invoice.id %}" class="btn btn-mini">
                             <i class="icon-print" title="Печать"></i>
                         </a>
                 </fieldset>

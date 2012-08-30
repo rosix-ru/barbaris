@@ -185,7 +185,7 @@
                         <input type="checkbox" name="deletePerson" value="{{ person.id }}">
                         <h6>
                             {{ person }}
-                            <a target="_blank" href="{% url person_detail person.id %}" title="Редактировать карточку клиента">
+                            <a href="{% url person_detail person.id %}" title="Редактировать карточку клиента">
                                 <i class="icon-edit"></i>
                             </a>
                             <small>{{ person.detail.birth_day|default:"" }}</small>
