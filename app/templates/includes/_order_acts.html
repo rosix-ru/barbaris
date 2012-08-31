@@ -40,14 +40,25 @@
 <div class="row-fluid">
     <div class="span10"><h3>Акты выполненных работ</h3></div>
     <div class="span2">
+        {% if not order.state_close %}
+        {% if order.act_set.count < order.persons.count %}
         <form class="form-horizontal" action="" method="post">{% csrf_token %}
             <fieldset class="pull-right">
                 <input type="hidden" name='act_add' value="" />
                 <button type="submit" class="btn">Создать акт</button>
              </fieldset>
         </form>
+        {% endif %}
+        {% endif %}
     </div>
 </div>
+
+{% if not order.persons.count %}
+<h6>
+    Отсутствуют персоны. Добавление акта невозможно!
+</h6>
+{% endif %}
+
 <hr>
 {% for act in order.acts %}
 <div class="row-fluid">

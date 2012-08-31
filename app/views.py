@@ -137,7 +137,16 @@ def order_detail(request, pk=None, action=None):
         
         # Invoice
         elif 'invoice_add' in request.POST:
-            invoice = Invoice( user=user, order=check_order(), date=datetime.date.today() )
+            order = check_order()
+            invoice = Invoice( user=user, order=order, date=datetime.date.today() )
+            if order.persons.count:
+                invoices = order.invoice_set.all()
+                inv_pers_list = [ x.person for x in invoices if x.person ]
+                persons = order.persons.all()
+                for person in persons:
+                    if person not in inv_pers_list:
+                        invoice.person = person
+                        break
             invoice.save()
         elif 'invoice_change' in request.POST:
             invoice = Invoice.objects.get(pk=request.POST.get('id',0))
@@ -164,7 +173,20 @@ def order_detail(request, pk=None, action=None):
         
         # Акт
         elif 'act_add' in request.POST:
-            act = Act( user=user, order=check_order(), date=datetime.date.today() )
+            order = check_order()
+            act = Act( user=user, order=order, date=datetime.date.today() )
+            if order.persons.count:
+                acts = order.act_set.all()
+                act_pers_list = [ x.person for x in acts if x.person ]
+                persons = order.persons.all()
+                for person in persons:
+                    if person not in act_pers_list:
+                        act.person = person
+                        try:
+                            act.invoice = act.order.invoice_set.get(person=person)
+                        except:
+                            act.invoice = None
+                        break
             act.save()
         elif 'act_change' in request.POST:
             act = Act.objects.get(pk=request.POST.get('id',0))
