@@ -690,6 +690,10 @@ class Order(models.Model):
         self.start = start or self.updated
         self.end = end or self.updated
         
+        # Закрытие заказа
+        if self.state_accept and self.debet <= 0 and self.specification_set.count():
+            self.state = settings.STATE_ORDER_CLOSE
+        
         super(Order, self).save(**kwargs)
     
     @property
@@ -1003,9 +1007,9 @@ class Invoice(models.Model):
             else:
                 self.summa = str(self.order.summa)
         
-        if self.state_payment and self.order.debet >= 0:
-            self.order.state = settings.STATE_ORDER_CLOSE
-            self.order.save()
+        #~ if self.state_payment and self.order.debet <= 0:
+            #~ self.order.state = settings.STATE_ORDER_CLOSE
+            #~ self.order.save()
         
         super(Invoice, self).save(**kwargs)
     
@@ -1084,6 +1088,8 @@ class Payment(models.Model):
         if not self.summa:
             self.summa = str(self.invoice.debet)
         
+        super(Payment, self).save(**kwargs)
+        
         if self.is_paid:
             if self.summa >= self.invoice.debet:
                 self.invoice.state = settings.STATE_INVOICE_PAYMENT
@@ -1091,7 +1097,6 @@ class Payment(models.Model):
                 self.invoice.state = settings.STATE_INVOICE_AVANCE
             self.invoice.save()
                 
-        super(Payment, self).save(**kwargs)
     
     @property
     def document(self):
