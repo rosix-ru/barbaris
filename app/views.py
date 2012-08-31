@@ -78,7 +78,7 @@ def monitor_update(request):
 @login_required
 #~ def order_detail(request, pk=None, person_pk=None, action=None):
 def order_detail(request, pk=None, action=None):
-    print "EXEC views.order_detail()" # DEBUG
+    #~ print "EXEC views.order_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
@@ -235,7 +235,7 @@ def order_detail(request, pk=None, action=None):
 
 @login_required
 def order_accept(request):
-    print "EXEC views.order_accept()" # DEBUG
+    #~ print "EXEC views.order_accept()" # DEBUG
     #~ print request # DEBUG
     
     if 'order_accept' in request.POST:
@@ -249,7 +249,7 @@ def order_accept(request):
 
 @login_required
 def order_cancel(request):
-    print "EXEC views.order_cancel()" # DEBUG
+    #~ print "EXEC views.order_cancel()" # DEBUG
     #~ print request # DEBUG
     
     if 'order_cancel' in request.POST:
@@ -263,7 +263,7 @@ def order_cancel(request):
 
 @login_required
 def order_dubble(request):
-    print "EXEC views.order_dubble(request)" # DEBUG
+    #~ print "EXEC views.order_dubble(request)" # DEBUG
     
     if 'order_dubble' in request.POST:
         order = get_object_or_404(Order.objects, pk=request.POST.get('id', 0))
@@ -282,7 +282,7 @@ def order_dubble(request):
 
 @login_required
 def order_new_person(request, pk):
-    print "EXEC views.order_new()" # DEBUG
+    #~ print "EXEC views.order_new()" # DEBUG
     #~ print request # DEBUG
     
     if pk in ('0', 0):
@@ -296,7 +296,7 @@ def order_new_person(request, pk):
 
 @login_required
 def order_delete(request):
-    print "EXEC views.order_delete()" # DEBUG
+    #~ print "EXEC views.order_delete()" # DEBUG
     #~ print request # DEBUG
     if 'order_delete' in request.POST:
         order = get_object_or_404(Order.objects, pk=request.POST.get('id', 0))
@@ -309,7 +309,7 @@ def order_delete(request):
 
 @login_required
 def price_list(request):
-    print "EXEC views.price_list()" # DEBUG
+    #~ print "EXEC views.price_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
@@ -322,7 +322,7 @@ def price_list(request):
 
 @login_required
 def client_list(request):
-    print "EXEC views.client_list()" # DEBUG
+    #~ print "EXEC views.client_list()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     session = request.session
@@ -385,7 +385,7 @@ def client_list(request):
 
 @login_required
 def person_detail(request, pk):
-    print "EXEC views.person_detail()" # DEBUG
+    #~ print "EXEC views.person_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     
@@ -454,7 +454,7 @@ def person_detail(request, pk):
 
 @login_required
 def person_search(request):
-    print "EXEC views.org_detail()" # DEBUG
+    #~ print "EXEC views.org_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = { 'DEBUG': settings.DEBUG }
     persons = Person.objects.all()
@@ -495,7 +495,7 @@ def person_search(request):
 
 @login_required
 def org_detail(request, pk):
-    print "EXEC views.org_detail()" # DEBUG
+    #~ print "EXEC views.org_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     
@@ -567,7 +567,7 @@ def org_detail(request, pk):
 
 @login_required
 def question_detail(request, pk=None, action=None):
-    print "EXEC views.question_detail()" # DEBUG
+    #~ print "EXEC views.question_detail()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     user = request.user
@@ -610,7 +610,7 @@ def question_detail(request, pk=None, action=None):
 
 @login_required
 def analyze(request):
-    print "EXEC views.analyze()" # DEBUG
+    #~ print "EXEC views.analyze()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     acts = Act.objects.all()
@@ -685,7 +685,7 @@ def object_list(request, model, template_name, search_fields=[],
     date_field="", use_stats=False, foreign_field="", foreign_key="",
     use_distinct=False,
     ):
-    print "EXEC views.object_list(...)" # DEBUG
+    #~ print "EXEC views.object_list(...)" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     page = 1
@@ -738,7 +738,7 @@ def object_list(request, model, template_name, search_fields=[],
 
 @login_required
 def object_detail(request, model, template_name, pk):
-    print "EXEC views.object_detail(...)" # DEBUG
+    #~ print "EXEC views.object_detail(...)" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     ctx['object'] = get_object_or_404(model.objects, pk=pk)
@@ -747,7 +747,7 @@ def object_detail(request, model, template_name, pk):
 
 @login_required
 def document_print(request, pk, model, document):
-    print "EXEC views.document_print(...)" # DEBUG
+    #~ print "EXEC views.document_print(...)" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     
@@ -773,7 +773,7 @@ def document_print(request, pk, model, document):
 
 @login_required
 def get_modal(request, obj, key, pk):
-    print "EXEC views.get_modal()" # DEBUG
+    #~ print "EXEC views.get_modal()" # DEBUG
     #~ print request # DEBUG
     ctx = {'DEBUG': settings.DEBUG}
     #~ if not request.is_ajax():

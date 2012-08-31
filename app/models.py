@@ -911,7 +911,6 @@ class Specification(models.Model):
             self.order.save()
     
     def delete(self, **kwargs):
-        print 'delete'
         # Заказ помечается как принятый, при любых изменениях 
         # после первичного принятия
         self.order.state = settings.STATE_ORDER_ACCEPT
