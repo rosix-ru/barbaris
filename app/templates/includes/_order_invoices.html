@@ -69,28 +69,24 @@
         {% endif %}
         {% get_credit order %}
     </div>
-    
         <div class="span2">
             <form class="form-horizontal" action="" method="post">{% csrf_token %}
                 <fieldset class="pull-right">
-                    {% if not order.state_close %}
-                        <a href="#" data-toggle="_modal_invoice_delete_{{ invoice.id }}_" class="btn btn-mini">
-                            <i class="icon-trash" title="Удалить"></i>
-                        </a>
-                        <a href="#" data-toggle="_modal_invoice_change_{{ invoice.id }}_" class="btn btn-mini">
-                            <i class="icon-edit" title="Изменить"></i>
-                        </a>
+                    <a href="#" data-toggle="_modal_invoice_delete_{{ invoice.id }}_" class="btn btn-mini">
+                        <i class="icon-trash" title="Удалить"></i>
+                    </a>
+                    <a href="#" data-toggle="_modal_invoice_change_{{ invoice.id }}_" class="btn btn-mini">
+                        <i class="icon-edit" title="Изменить"></i>
+                    </a>
                     <input type="hidden" name='payment_add' value="{{ invoice.id }}" />
                     <input type="hidden" name='id' value="{{ invoice.id }}" />
                     <button type="submit" class="btn btn-mini" title="Добавить оплату этого счёта"><i class="icon-plus"></i></button>
-                    {% endif %}
-                        <a href="{% url invoice_print invoice.id %}" class="btn btn-mini">
-                            <i class="icon-print" title="Печать"></i>
-                        </a>
+                    <a href="{% url invoice_print invoice.id %}" class="btn btn-mini">
+                        <i class="icon-print" title="Печать"></i>
+                    </a>
                 </fieldset>
             </form>
         </div>
-    
 </div>
 
 <table id="table-payments" class="table table-condensed">
