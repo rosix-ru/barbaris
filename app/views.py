@@ -628,14 +628,14 @@ def analyze(request):
         start = datetime.datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
         acts = acts.filter(date__gte=start).filter(date__isnull=False)
         invoices = invoices.filter(date__gte=start).filter(date__isnull=False)
-        orders = orders.filter(start__gte=start).filter(start__isnull=False, end__isnull=False)
+        orders = orders.filter(created__gte=start)
         
     end = request.GET.get('end', '')
     if end:
         end = datetime.datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
         acts = acts.filter(date__lte=end).filter(date__isnull=False)
         invoices = invoices.filter(date__lte=end).filter(date__isnull=False)
-        orders = orders.filter(end__lte=end).filter(start__isnull=False, end__isnull=False)
+        orders = orders.filter(created__lte=end)
     
     ctx['user_list'] = User.objects.filter(groups__name__in=settings.SELECT_WORK_GROUPS)
     ctx['start'] = start
