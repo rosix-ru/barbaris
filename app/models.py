@@ -1088,7 +1088,7 @@ class Payment(models.Model):
         super(Payment, self).save(**kwargs)
         
         if self.is_paid:
-            if self.summa >= self.invoice.debet:
+            if float(self.summa) >= float(self.invoice.debet):
                 self.invoice.state = settings.STATE_INVOICE_PAYMENT
             else:
                 self.invoice.state = settings.STATE_INVOICE_AVANCE
