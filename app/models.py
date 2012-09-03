@@ -1006,11 +1006,9 @@ class Invoice(models.Model):
             else:
                 self.summa = str(self.order.summa)
         
-        #~ if self.state_payment and self.order.debet <= 0:
-            #~ self.order.state = settings.STATE_ORDER_CLOSE
-            #~ self.order.save()
-        
         super(Invoice, self).save(**kwargs)
+        
+        self.order.save()
     
     @property
     def summa_float(self):
@@ -1096,6 +1094,10 @@ class Payment(models.Model):
                 self.invoice.state = settings.STATE_INVOICE_AVANCE
             self.invoice.save()
                 
+    def delete(self, **kwargs):
+        order = self.invoice.order
+        super(Payment, self).delete(**kwargs)
+        order.save()
     
     @property
     def document(self):
