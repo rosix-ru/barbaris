@@ -488,7 +488,7 @@ class Room(models.Model):
         day = now.date() + datetime.timedelta(days=1)
         current_order = self.current_order
         next_orders = self.next_orders
-        released_order = self.orders({'start__lte':now, 'end__gte':now.date(), 'end__lt':day})
+        released_order = self.orders({'start__lte':now, 'end__gte':now, 'end__lt':day})
         
         # Занят сейчас, но освобождается сегодня и:
         if released_order:
