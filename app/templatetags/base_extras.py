@@ -100,16 +100,17 @@ def subnavactive(request, key, val=None):
     if (val in ('', 0)) and (key not in request.GET):
         return "active"
     if key in request.GET:
+        get_val = None
         if isinstance(val, int):
             try:
                 get_val = int(request.GET.get(key))
             except:
-                get_val = None
+                pass
         if isinstance(val, str):
             try:
                 get_val = str(request.GET.get(key))
             except:
-                get_val = None
+                pass
         if get_val == val:
                 return "active"
     return ""
