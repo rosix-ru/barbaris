@@ -106,7 +106,7 @@ def subnavactive(request, key, val=None):
                 get_val = int(request.GET.get(key))
             except:
                 pass
-        if isinstance(val, str):
+        if isinstance(val, (str, unicode)):
             try:
                 get_val = str(request.GET.get(key))
             except:
