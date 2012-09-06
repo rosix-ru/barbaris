@@ -101,7 +101,7 @@ def subnavactive(request, key, val=None):
         return "active"
     if key in request.GET:
         get_val = None
-        if isinstance(val, int):
+        if isinstance(val, (int, long)):
             try:
                 get_val = int(request.GET.get(key))
             except:
