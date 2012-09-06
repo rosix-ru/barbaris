@@ -65,8 +65,8 @@
                     <td><span class="pull-right">{{ sp.count }}</span></td>
                     <td><span class="pull-right">{{ sp.summa_markup|default:'' }}</span></td>
                     <td><span class="pull-right">{{ sp.summa }}</span></td>
-                    <td><span>{{ sp.start|date:'d.m.y H:i' }}</span></td>
-                    <td><span>{{ sp.end|date:'d.m.y H:i' }}</span></td>
+                    <td><span>{{ sp.start|date:'Y-m-d H:i' }}</span></td>
+                    <td><span>{{ sp.end|date:'Y-m-d H:i' }}</span></td>
                     
                 </tr>
             {% endfor %}

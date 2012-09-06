@@ -66,7 +66,7 @@
             <td><span>{{ act.id }}</span></td>
             <td><span>{{ act.person }}</span></td>
             <td><span>{{ act.person.org|default:'' }}</span></td>
-            <td><span>{{ act.date|date:'d.m.y' }}</span></td>
+            <td><span>{{ act.date|date:'Y-m-d' }}</span></td>
             <td><span>{{ act.comment }}</span></td>
             <td><span>{% short_username act.user %}</span></td>
             <td><span class="pull-right">

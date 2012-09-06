@@ -241,14 +241,14 @@ def room_start(room, order):
     sp = get_sp_room(room, order)
     if not sp:
         return u''
-    return u'%s' % _date(sp.start, "d.m.y H:i")
+    return u'%s' % _date(sp.start, "Y-m-d H:i")
 
 @register.simple_tag
 def room_end(room, order):
     sp = get_sp_room(room, order)
     if not sp:
         return u''
-    return u'%s' % _date(sp.end, "d.m.y H:i")
+    return u'%s' % _date(sp.end, "Y-m-d H:i")
 
 @register.simple_tag
 def room_reserved(room):

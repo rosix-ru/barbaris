@@ -112,7 +112,7 @@
         {% else %}
             <td><span class="badge badge-important">Установиете клиента!!!</span></td>
         {% endif %}
-            <td><span>{{ order.updated|date:'d.m.y' }}</span></td>
+            <td><span>{{ order.created|date:'Y-m-d' }}</span></td>
             <td><span>{{ order.comment }}</span></td>
             <td><span class="pull-right">{{ order.summa }}</span></td>
             <td><span class="pull-right">{{ order.payment|default:'' }}</span></td>

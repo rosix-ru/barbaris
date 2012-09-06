@@ -49,8 +49,8 @@
             <div class="control-group">
                 <div class="controls">
                     <div class="input-append">
-                        <input id="filter_start" value="{{ start|date:"Y-m-d H:i:s" }}" name="start" type="text" class="input-medium" placeholder="Начальная дата" data-toggle="datetimepicker"/>
-                        <input id="filter_end" value="{{ end|date:"Y-m-d H:i:s" }}" name="end" type="text" class="input-medium" placeholder="Конечная дата"  data-toggle="datetimepicker"/>
+                        <input id="filter_start" value="{{ start|date:"Y-m-d H:i:s" }}" name="date_start" type="text" class="input-medium" placeholder="Начальная дата" data-toggle="datetimepicker"/>
+                        <input id="filter_end" value="{{ end|date:"Y-m-d H:i:s" }}" name="date_end" type="text" class="input-medium" placeholder="Конечная дата"  data-toggle="datetimepicker"/>
                         <button id="search-submit" type="submit" class="btn">&rang;</button>
                     </div>
                 </div>
@@ -93,21 +93,21 @@
             <td><span class="pull-right">{{ orders_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>Принятых</span></td>
+            <td><span><a href="{% url order_list %}{% addGET request 'state' 2 %}">Принятых</a></span></td>
             <td><span class="pull-right">{{ accept_orders.count }}</span></td>
             <td><span class="pull-right">{{ accept_orders_summ }}</span></td>
             <td><span class="pull-right">{{ accept_orders_payment }}</span></td>
             <td><span class="pull-right">{{ accept_orders_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>Закрытых</span></td>
+            <td><span><a href="{% url order_list %}{% addGET request 'state' 3 %}">Закрытых</a></span></td>
             <td><span class="pull-right">{{ close_orders.count }}</span></td>
             <td><span class="pull-right">{{ close_orders_summ }}</span></td>
             <td><span class="pull-right">{{ close_orders_payment }}</span></td>
             <td><span class="pull-right">{{ close_orders_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>Отменённых</span></td>
+            <td><span><a href="{% url order_list %}{% addGET request 'state' 4 %}">Отменённых</a></span></td>
             <td><span class="pull-right">{{ cancel_orders.count }}</span></td>
             <td><span class="pull-right">{{ cancel_orders_summ }}</span></td>
             <td><span class="pull-right">{{ cancel_orders_payment }}</span></td>
@@ -123,21 +123,21 @@
             <td><span class="pull-right">{{ invoices_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>Оплаченных полностью</span></td>
+            <td><span><a href="{% url invoice_list %}{% addGET request 'state' 3 %}">Оплаченных полностью</a></span></td>
             <td><span class="pull-right">{{ payment_invoices.count }}</span></td>
             <td><span class="pull-right">{{ payment_invoices_summ }}</span></td>
             <td><span class="pull-right">{{ payment_invoices_payment }}</span></td>
             <td><span class="pull-right">{{ payment_invoices_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>Оплаченных частично</span></td>
+            <td><span><a href="{% url invoice_list %}{% addGET request 'state' 2 %}">Оплаченных частично</a></span></td>
             <td><span class="pull-right">{{ avance_invoices.count }}</span></td>
             <td><span class="pull-right">{{ avance_invoices_summ }}</span></td>
             <td><span class="pull-right">{{ avance_invoices_payment }}</span></td>
             <td><span class="pull-right">{{ avance_invoices_debet }}</span></td>
         </tr>
         <tr>
-            <td><span>Неоплаченных</span></td>
+            <td><span><a href="{% url invoice_list %}{% addGET request 'state' 1 %}">Неоплаченных</a></span></td>
             <td><span class="pull-right">{{ notpay_invoices.count }}</span></td>
             <td><span class="pull-right">{{ notpay_invoices_summ }}</span></td>
             <td><span class="pull-right">{{ notpay_invoices_payment }}</span></td>

@@ -37,51 +37,53 @@
 
 -->{% endcomment %}
 {% load i18n base_extras %}
-<div class="row-fluid">
-    <div class="span10"><h3>Акты выполненных работ</h3></div>
-    <div class="span2">
-        {% if order.act_set.count < order.persons.count %}
-        <form class="form-horizontal" action="" method="post">{% csrf_token %}
-            <fieldset class="pull-right">
-                <input type="hidden" name='act_add' value="" />
-                <button type="submit" class="btn">Создать акт</button>
-             </fieldset>
-        </form>
-        {% endif %}
-    </div>
-</div>
 
-{% if not order.persons.count %}
-<h6>
-    Отсутствуют персоны. Добавление акта невозможно!
-</h6>
-{% endif %}
-
-<hr>
-{% for act in order.acts %}
-<div class="row-fluid">
-    <div class="span10">
-        <h5>Акт выполненных работ №{{ act.id }} от {{ act.date|date:"DATE_FORMAT"}}
-            <small>{{ act.person|default:"Установите персону!" }}</small>
-        </h5>
-    {% if act.comment %}
-        <p>{{ act.comment }}</p>
+{% if room %}
+<h6>Список действующих заказов:</h6>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th class=""><span>Заказ</span></th>
+            <th class=""><span>Персона</span></th>
+            <th class="input-small"><span class="pull-right">Заезд</span></th>
+            <th class="input-small"><span class="pull-right">Выезд</span></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if room.current_order %}
+        <tr id="order_{{ room.current_order.id }}">
+            <td><span>{{ room.current_order.id }}</span></td>
+            {% if room.current_order.persons.count %}
+                <td>
+                    {% for person in room.current_order.persons.all %}
+                    <p>{{ person }}</p>
+                    {% endfor %}
+                </td>
+            {% else %}
+                <td><span class="badge badge-important">Установиете клиента!!!</span></td>
+            {% endif %}
+            <td><span class="pull-right">{% room_start room room.current_order %}</span></td>
+            <td><span class="pull-right">{% room_end room room.current_order %}</span></td>
+        </tr>
     {% endif %}
-    </div>
-    <div class="span2">
-        <div class="pull-right">
-        {% if not order.state_close %}
-            <a href="#" data-toggle="_modal_act_delete_{{ act.id }}_" class="btn btn-mini">
-                <i class="icon-trash" title="Удалить"></i>
-            </a>
-            <a href="#" data-toggle="_modal_act_change_{{ act.id }}_" class="btn btn-mini">
-                <i class="icon-edit" title="Изменить"></i>
-            </a>
-        {% endif %}
-            <a href="{% url act_print act.id %}" class="btn btn-mini">
-                <i class="icon-print" title="Печать"></i>
-            </a>
-         </div>
-    </div>
-</div>
-{% endfor %}
+    {% for order in room.next_orders %}
+        <tr id="order_{{ order.id }}">
+            <td><span>{{ order.id }}</span></td>
+            {% if order.persons.count %}
+                <td>
+                    {% for person in order.persons.all %}
+                    <p>{{ person }}</p>
+                    {% endfor %}
+                </td>
+            {% else %}
+                <td><span class="badge badge-important">Установиете клиента!!!</span></td>
+            {% endif %}
+            <td><span class="pull-right">{% room_start room order %}</span></td>
+            <td><span class="pull-right">{% room_end room order %}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+
+{% endif %}

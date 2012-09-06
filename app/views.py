@@ -623,16 +623,16 @@ def analyze(request):
         invoices = invoices.filter(user__pk=user)
         orders = orders.filter(user__pk=user)
     
-    start = request.GET.get('start', '')
+    start = request.GET.get('date_start', '')
     if start:
-        start = datetime.datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
+        start = get_datetime(start)
         acts = acts.filter(date__gte=start).filter(date__isnull=False)
         invoices = invoices.filter(date__gte=start).filter(date__isnull=False)
         orders = orders.filter(created__gte=start)
         
-    end = request.GET.get('end', '')
+    end = request.GET.get('date_end', '')
     if end:
-        end = datetime.datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
+        end = get_datetime(end)
         acts = acts.filter(date__lte=end).filter(date__isnull=False)
         invoices = invoices.filter(date__lte=end).filter(date__isnull=False)
         orders = orders.filter(created__lte=end)
@@ -705,11 +705,11 @@ def object_list(request, model, template_name, search_fields=[],
             if val:
                 qs = qs.filter(Q(**{ date_field + "__" + key: val }))
         
-        date_start = request.GET.get("date_start", "")
+        date_start = get_datetime(request.GET.get("date_start", ""))
         if date_start:
             qs = qs.filter(Q(**{ date_field + "__gte": date_start }))
         
-        date_end = request.GET.get("date_end", "")
+        date_end = get_datetime(request.GET.get("date_end", ""))
         if date_end:
             qs = qs.filter(Q(**{ date_field + "__lte": date_end }))
     
@@ -722,6 +722,10 @@ def object_list(request, model, template_name, search_fields=[],
     
     if use_distinct:
             qs = qs.distinct()
+    
+    if 'user' in request.GET:
+        user_id = request.GET.get('user', "")
+        qs = qs.filter(user__id__exact=user_id)
     
     if 'q' in request.GET:
         qs = search(qs,search_fields, request.GET.get('q', ""))
@@ -770,6 +774,42 @@ def document_print(request, pk, model, document):
     ctx['document_body'] = t.render(Context(ctx))
     return render_to_response('document_print.html', ctx,
                             context_instance=RequestContext(request,))
+
+@login_required
+def sp_info(request):
+    #~ print "EXEC views.get_modal()" # DEBUG
+    #~ print request # DEBUG
+    ctx = {'DEBUG': settings.DEBUG}
+    if not request.is_ajax():
+        return http.HttpResponseBadRequest()
+    print request.POST
+    
+    if 'start' not in request.POST:
+        return http.HttpResponseBadRequest()
+    
+    price_id = request.POST.get('price', '')
+    room_id = request.POST.get('room', '')
+    count = request.POST.get('count', '')
+    start = request.POST.get('start', '')
+    end = request.POST.get('end', '')
+    
+    if price_id:
+        try:
+            price = Price.objects.get(pk__exact=price_id)
+            ctx['service'] = price.service
+        except:
+            pass
+        
+    if room_id:
+        try:
+            ctx['room'] = Room.objects.get(id=room_id)
+        except:
+            return http.HttpResponseBadRequest()
+    else:
+        ctx['room'] = None
+    
+    return render_to_response('includes/_specifications_info.html', ctx,
+                context_instance=RequestContext(request,))
 
 @login_required
 def get_modal(request, obj, key, pk):
@@ -837,3 +877,15 @@ def get_paginator(qs, page=1, on_page=50):
         page_qs = paginator.page(paginator.num_pages)
     #~ print 'get_paginator:',page, 'from', page_qs.paginator.num_pages
     return page_qs
+
+def get_datetime(string):
+    def func(template):
+        return datetime.datetime.strptime(string, template)
+    T = ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d") 
+    for t in T:
+        try:
+            return func(t)
+        except:
+            pass
+    return None
+    

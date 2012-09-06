@@ -73,7 +73,7 @@ ORDER_LIST = { 'model': Order, 'template_name': "order_list.html",
             'persons__middle_name',
             'persons__org__title',
             ],
-        'date_field': 'updated', 'use_stats': True,
+        'date_field': 'created', 'use_stats': True,
         'use_distinct': True,
         }
 
@@ -151,6 +151,7 @@ urlpatterns = patterns('project.app.views',
     url(r'^order/delete/$',            'order_delete',         name='order_delete'),
     url(r'^order/accept/$',            'order_accept',         name='order_accept'),
     url(r'^order/cancel/$',            'order_cancel',         name='order_cancel'),
+    url(r'^specifications/info/$',     'sp_info',              name='sp_info'),
     
     url(r'^print/invoice/(?P<pk>\d+)/$',    'document_print',       name='invoice_print',   kwargs = INVOICE_PRINT),
     url(r'^print/act/(?P<pk>\d+)/$',        'document_print',       name='act_print',       kwargs = ACT_PRINT),

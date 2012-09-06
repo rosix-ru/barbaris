@@ -84,7 +84,7 @@
             <td><span>{{ invoice.id }}</span></td>
             <td><span>{{ invoice.person }}</span></td>
             <td><span>{{ invoice.person.org|default:'' }}</span></td>
-            <td><span>{{ invoice.date|date:'d.m.y' }}</span></td>
+            <td><span>{{ invoice.date|date:'Y-m-d' }}</span></td>
             <td><span>{{ invoice.comment }}</span></td>
             <td><span class="pull-right">{{ invoice.summa }}</span></td>
             <td><span class="pull-right">{{ invoice.payment }}</span></td>

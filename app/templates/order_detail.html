@@ -56,9 +56,11 @@
 <li>
     <a href="#persons">Клиенты</a>
 </li>
+{% if not order.state_close %}
 <li>
     <a href="#" data-toggle="_modal_order_divdoc_{{ order.id }}_" class="label{% if order.is_divdoc %} label-warning{% endif %}">Автоделитель</a>
 </li>
+{% endif %}
 {% if order.id %}
     {% if order.state_accept %}
         <li>

@@ -129,6 +129,27 @@ function goSearchPerson(input_text) {
     return false;
 }
 
+function loadSPInfo() {
+    //alert($(this).attr('data-toggle').replace(new RegExp("_",'g'), '/'));
+    form = $(this);
+    args = {};
+    $(form).find('fieldset select').each(function() {
+        args[$(this).attr('name')] = $(this).attr('value')
+    });
+    $(form).find('fieldset input:text').each(function() {
+        args[$(this).attr('name')] = $(this).val()
+    });
+    testLog(args);
+    div = form.siblings('div.sp-info');
+    div.empty()
+    div.load(
+        '/specifications/info/', args, 
+        function(data) { 
+            div.removeClass('hidden');
+        }
+    );
+}
+
 function loadModal() {
     //alert($(this).attr('data-toggle').replace(new RegExp("_",'g'), '/'));
     a = $(this);
@@ -152,6 +173,7 @@ function updateMonitor() {
     );
 }
 
+
 /* Execute something after load page */
 $(document).ready(function($) {
     runMiniClock();
@@ -169,4 +191,7 @@ $(document).ready(function($) {
     if (path) $('div.navbar a[href^="/' + path + '/"]').parents().addClass('active');
     else $('div.navbar a[href="/"]').parents().addClass('active');
     $('a[rel=tooltip]').tooltip();
+    
+    $('#categories form').change(loadSPInfo);
+    
 })
