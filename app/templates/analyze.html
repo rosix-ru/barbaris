@@ -63,7 +63,7 @@
     <ul class="dropdown-menu">
     {% for user in user_list %}
         <li class="{% subnavactive request 'user' user.id %}">
-            <a href="{% addGET request 'user' user.id %}">{{ user }}</a>
+            <a href="{% addGET request 'user' user.id %}">{% short_username user %}</a>
         </li>
     {% endfor %}
     </ul>
