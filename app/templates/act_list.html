@@ -52,7 +52,7 @@
     <thead>
         <tr>
             <th class=""><span>№</span></th>
-            <th class=""><span>Персона</span></th>
+            <th class=""><span>Клиент</span></th>
             <th class=""><span>Организация</span></th>
             <th class=""><span>Дата</span></th>
             <th class=""><span>Комментарий</span></th>
@@ -64,8 +64,8 @@
     {% for act in paginator.object_list %}
         <tr id="act_{{ act.id }}">
             <td><span>{{ act.id }}</span></td>
-            <td><span>{{ act.person }}</span></td>
-            <td><span>{{ act.person.org|default:'' }}</span></td>
+            <td><span>{{ act.client }}</span></td>
+            <td><span>{{ act.client.org|default:'' }}</span></td>
             <td><span>{{ act.date|date:'Y-m-d' }}</span></td>
             <td><span>{{ act.comment }}</span></td>
             <td><span>{% short_username act.user %}</span></td>

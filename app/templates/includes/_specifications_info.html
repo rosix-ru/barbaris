@@ -44,7 +44,7 @@
     <thead>
         <tr>
             <th class=""><span>Заказ</span></th>
-            <th class=""><span>Персона</span></th>
+            <th class=""><span>Клиент</span></th>
             <th class="input-small"><span class="pull-right">Заезд</span></th>
             <th class="input-small"><span class="pull-right">Выезд</span></th>
         </tr>
@@ -53,10 +53,10 @@
     {% if room.current_order %}
         <tr id="order_{{ room.current_order.id }}">
             <td><span>{{ room.current_order.id }}</span></td>
-            {% if room.current_order.persons.count %}
+            {% if room.current_order.clients.count %}
                 <td>
-                    {% for person in room.current_order.persons.all %}
-                    <p>{{ person }}</p>
+                    {% for client in room.current_order.clients.all %}
+                    <p>{{ client }}</p>
                     {% endfor %}
                 </td>
             {% else %}
@@ -69,10 +69,10 @@
     {% for order in room.next_orders %}
         <tr id="order_{{ order.id }}">
             <td><span>{{ order.id }}</span></td>
-            {% if order.persons.count %}
+            {% if order.clients.count %}
                 <td>
-                    {% for person in order.persons.all %}
-                    <p>{{ person }}</p>
+                    {% for client in order.clients.all %}
+                    <p>{{ client }}</p>
                     {% endfor %}
                 </td>
             {% else %}

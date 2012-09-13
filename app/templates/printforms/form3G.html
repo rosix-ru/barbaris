@@ -43,14 +43,14 @@
 <div class="row-fluid">
     <div class="span2"></div>
     <div class="span8 align-center">
-        {{ supplier.detail.fulltitle }}
-        <br>Адрес: {{ supplier.detail.address }}
+        {{ supplier.fulltitle }}
+        <br>Адрес: {{ supplier.address }}
         <br>
-        ИНН {{ supplier.detail.inn }}
-        ОГРНИП {{ supplier.detail.ogrn }}
-        <br>{{ supplier.detail.document_type }}
-        серия {{ supplier.detail.document_series }}
-        №{{ supplier.detail.document_number }} от {{ supplier.detail.document_date }} 
+        ИНН {{ supplier.inn }}
+        ОГРНИП {{ supplier.ogrn }}
+        <br>{{ supplier.get_document_type_display }}
+        серия {{ supplier.document_series }}
+        №{{ supplier.document_number }} от {{ supplier.document_date }} 
     </div>
     <div class="span2"></div>
 </div>
@@ -65,7 +65,7 @@
 <div class="row-fluid">
   <div class="span12">
     <div class="row-fluid">
-      <div class="span12"><h3><small>Гость: </small>{{ document.person }}</h3></div>
+      <div class="span12"><h3><small>Гость: </small>{{ document.client }}</h3></div>
     </div>
 <!--
     <div class="row-fluid"><div class="span12"></div></div>
@@ -111,8 +111,8 @@
         <td class="span6 align-left">по {{ document.order.end }}</td>
         <td class="span1 align-center"></td>
         <td class="span1 align-center"></td>
-        <td class="span1 align-right">{{ document.order.summa_for_person }}</td>
-        <td class="span2 align-right">{{ document.order.summa_for_person }}</td>
+        <td class="span1 align-right">{{ document.order.summa_for_client }}</td>
+        <td class="span2 align-right">{{ document.order.summa_for_client }}</td>
     </tr>
     <tr>
         <td rowspan="2" class="span1 align-center">2</td>
@@ -135,12 +135,12 @@
     <tr>
         <td></td>
         <td colspan="4" class="span6 align-right"><strong>ИТОГО стоимость услуги:</strong></td>
-        <td class="span2 align-right"><strong>{{ document.order.summa_for_person }}</strong></td>
+        <td class="span2 align-right"><strong>{{ document.order.summa_for_client }}</strong></td>
     </tr>
 {% endblock %}
 
 {% block print_table_legend %}
-<div>Итого получено по счёту: <strong>{{ document.order.summa_for_person|rubles }}</strong></div>
+<div>Итого получено по счёту: <strong>{{ document.order.summa_for_client|rubles }}</strong></div>
 <hr>
 <div>Дата осуществления расчёта: <strong>{{ document.date }}</strong></div>
 <hr>

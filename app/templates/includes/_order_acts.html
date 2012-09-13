@@ -40,7 +40,7 @@
 <div class="row-fluid">
     <div class="span10"><h3>Акты выполненных работ</h3></div>
     <div class="span2">
-        {% if order.act_set.count < order.persons.count %}
+        {% if order.act_set.count < order.clients.count %}
         <form class="form-horizontal" action="" method="post">{% csrf_token %}
             <fieldset class="pull-right">
                 <input type="hidden" name='act_add' value="" />
@@ -51,7 +51,7 @@
     </div>
 </div>
 
-{% if not order.persons.count %}
+{% if not order.clients.count %}
 <h6>
     Отсутствуют персоны. Добавление акта невозможно!
 </h6>
@@ -62,7 +62,7 @@
 <div class="row-fluid">
     <div class="span10">
         <h5>Акт выполненных работ №{{ act.id }} от {{ act.date|date:"DATE_FORMAT"}}
-            <small>{{ act.person|default:"Установите персону!" }}</small>
+            <small>{{ act.client|default:"Установите клиента!" }}</small>
         </h5>
     {% if act.comment %}
         <p>{{ act.comment }}</p>

@@ -44,48 +44,87 @@ import managers
 
 import datetime, calendar
 
-class Org(models.Model):
-    """ Представляет собственную организацию-продавца услуг(seller),
-        либо покупателя.
-    """
-    is_seller = models.BooleanField(
-            default=False,
-            verbose_name = u"продавец")
-    title = models.CharField(
-            max_length=100,
-            verbose_name = u"название")
+CLITYPE_PERSON = 1
+CLITYPE_ORG = 2
+
+class Client(models.Model):
+    """ Клиент, как организация, так и частное лицо """
     
-    objects = models.Manager()
-    sellers = managers.SellerOrgManager()
-    buyers  = managers.BuyerOrgManager()
+    CLITYPE_CHOICES = (
+        (CLITYPE_PERSON,u'персона'),
+        (CLITYPE_ORG,u'организация'),
+    )
+    clitype = models.IntegerField(
+            choices=CLITYPE_CHOICES,
+            #~ blank=True, null=True,
+            verbose_name = u"тип")
     
     def __unicode__(self):
-        return self.title
-        
-    class Meta:
-        ordering = ['title']
-        verbose_name = u"организацию"
-        verbose_name_plural = u"организации"
+        client = self.client
+        if client:
+            return unicode(client)
+        return self.get_clitype_display()
     
-    @property
-    def detail(self):
-        try:
-            return self.orgdetail_set.get(is_active=True)
-        except:
-            return OrgDetail.objects.create(org=self)
+    class Meta:
+        ordering = ['id']
+        verbose_name = u"клиента"
+        verbose_name_plural = u"клиенты"
     
     @models.permalink
     def get_absolute_url(self):
-        return ('org_detail', [str(self.id)])
+        client = self.client
+        if client:
+            if self.clitype == CLITYPE_PERSON:
+                return ('person_detail', [str(client.id)])
+            if self.clitype == CLITYPE_ORG:
+                return ('org_detail', [str(client.id)])
+        else:
+            return ('client_create', [str(self.id)])
     
-class OrgDetail(models.Model):
-    """ Расширенная информация об организации """
-    is_active = models.BooleanField(
-            default=True,
-            verbose_name = u"активная")
-    org = models.ForeignKey(
-            Org,
-            verbose_name = u"организация")
+    @property
+    def client(self):
+        if self.clitype == CLITYPE_PERSON:
+            try:
+                return self.person
+            except:
+                return None
+        
+        if self.clitype == CLITYPE_ORG:
+            try:
+                return self.org
+            except:
+                return None
+        
+        return None
+    
+    @property
+    def detail(self):
+        return self.client
+    
+    def save(self, **kwargs):
+        super(Client, self).save(**kwargs)
+    
+    def add_client(self):
+        if not self.id:
+            self.save()
+        if not self.client:
+            if self.clitype == CLITYPE_PERSON:
+                client = Person(last_name=u'Новый клиент', client=self)
+                client.save()
+            elif self.clitype == CLITYPE_ORG:
+                client = Org(title=u'Новый клиент', client=self)
+                client.save()
+        return self.client
+
+class AbstractOrg(models.Model):
+    """ Абстрактная модель организации """
+    DOCUMENT_CHOICES = (
+        (1,u'свидетельство'),
+        (2,u'лицензия'),
+    )
+    title = models.CharField(
+            max_length=100,
+            verbose_name = u"название")
     fulltitle = models.CharField(
             max_length=255,
             blank=True,
@@ -110,10 +149,28 @@ class OrgDetail(models.Model):
             max_length=100,
             blank=True,
             verbose_name = u"телефоны")
-    # Поля документа организации
-    document_type = models.CharField(
-            max_length=50,
+    
+    # Банковские реквизиты
+    bank_bik = models.CharField(
+            max_length=16,
             blank=True,
+            verbose_name = u"БИК")
+    bank_title = models.CharField(
+            max_length=255,
+            blank=True,
+            verbose_name = u"название банка")
+    bank_set_account = models.CharField(
+            max_length=32,
+            blank=True,
+            verbose_name = u"Р/СЧ")
+    bank_cor_account = models.CharField(
+            max_length=32,
+            blank=True,
+            verbose_name = u"КОР/СЧ")
+    # Поля документа клиента
+    document_type = models.IntegerField(
+            choices=DOCUMENT_CHOICES,
+            blank=True, null=True,
             verbose_name = u"тип")
     document_series = models.CharField(
             max_length=10,
@@ -135,41 +192,12 @@ class OrgDetail(models.Model):
             max_length=16,
             blank=True,
             verbose_name = u"код органа")
-    # Банковские реквизиты
-    bank_bik = models.CharField(
-            max_length=16,
-            blank=True,
-            verbose_name = u"БИК")
-    bank_title = models.CharField(
-            max_length=255,
-            blank=True,
-            verbose_name = u"название банка")
-    bank_set_account = models.CharField(
-            max_length=32,
-            blank=True,
-            verbose_name = u"Р/СЧ")
-    bank_cor_account = models.CharField(
-            max_length=32,
-            blank=True,
-            verbose_name = u"КОР/СЧ")
-    
-    objects = models.Manager()
-    actives = managers.ActiveOrgDetailManager()
     
     def __unicode__(self):
-        return unicode(self.org)
+        return self.title
         
     class Meta:
-        ordering = ['org',]
-        verbose_name = u"карточку организации"
-        verbose_name_plural = u"карточки организаций"
-    
-    def save(self, **kwargs):
-        super(OrgDetail, self).save(**kwargs)
-        
-        qs = OrgDetail.actives.filter(org=self.org)
-        qs = qs.exclude(id=self.id)
-        qs.update(is_active=False)
+        abstract = True
     
     @property
     def get_string_requsites(self):
@@ -178,16 +206,66 @@ class OrgDetail(models.Model):
             u'ИНН '+self.inn,
             self.address,
         ])
+
+class SelfOrg(AbstractOrg):
+    """ Собственная организация-продавец услуг """
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name = u"активная")
+    owner = models.CharField(
+            max_length=255,
+            blank=True,
+            verbose_name = u"владелец")
+    class Meta:
+        ordering = ['title']
+        verbose_name = u"собственную фирму"
+        verbose_name_plural = u"собственные фирмы"
+    
+    def save(self, **kwargs):
+        super(SelfOrg, self).save(**kwargs)
+        
+        qs = SelfOrg.objects.filter(is_active=True)
+        qs = qs.exclude(id=self.id)
+        qs.update(is_active=False)
+
+class Org(AbstractOrg):
+    """ Организация-покупатель услуг """
+    client = models.OneToOneField(Client,
+        limit_choices_to={'clitype': CLITYPE_ORG },
+        verbose_name=u"клиент",
+        blank=True, null=True,
+        )
+    
+    @property
+    def org(self):
+        return self
+    
+    class Meta:
+        ordering = ['title']
+        verbose_name = u"организацию"
+        verbose_name_plural = u"организации"
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('org_detail', [str(self.id)])
+    
+    def save(self, **kwargs):
+        #~ if not self.client:
+            #~ client = Client(clitype=CLITYPE_ORG)
+            #~ client.save()
+            #~ self.client = client
+        super(Org, self).save(**kwargs)
     
 class Person(models.Model):
-    """ Клиент - физическое лицо, либо представитель фирмы, 
-        который может быть представлен существительным во 
-        множественном числе, например: "нефтяники", в 
-        обязательном поле last_name.
-    """
+    """ Физическое лицо, либо представитель фирмы """
     SEX_CHOICES = (
-        (u'муж',u'мужской'),
-        (u'жен',u'женский')
+        (1,u'мужской'),
+        (2,u'женский')
+    )
+    DOCUMENT_CHOICES = (
+        (1,u'паспорт'),
+        (2,u'военный билет'),
+        (3,u'водительское удостоверение'),
     )
     last_name = models.CharField(
             max_length=50,
@@ -204,55 +282,14 @@ class Person(models.Model):
             max_length=50,
             blank=True,
             verbose_name = u"телефоны")
-    sex = models.CharField(
-            max_length=3,
+    sex = models.IntegerField(
             choices=SEX_CHOICES,
-            blank=True,
+            blank=True, null=True,
             verbose_name = u"пол")
     org = models.ForeignKey(
             Org,
             null=True, blank=True,
             verbose_name = u"организация")
-    
-    objects = models.Manager()
-    privates = managers.PrivatePersonManager()
-    
-    def __unicode__(self):
-        fio = u' '.join(
-                [self.last_name, self.first_name, self.middle_name]
-                ).replace("  ", ' ')
-        return fio
-        
-    class Meta:
-        ordering = ['last_name', 'first_name', 'middle_name']
-        verbose_name = u"клиента"
-        verbose_name_plural = u"клиенты"
-    
-    @property
-    def detail(self):
-        try:
-            return self.persondetail_set.get(is_active=True)
-        except:
-            return PersonDetail.objects.create(person=self)
-    
-    @models.permalink
-    def get_absolute_url(self):
-        return ('person_detail', [str(self.id)])
-
-class PersonDetail(models.Model):
-    """ Расширенная информация о клиенте """
-    
-    DOCUMENT_CHOICES = (
-        (u'паспорт',u'паспорт'),
-        (u'военный билет',u'военный билет'),
-        (u'водительское',u'водительское удостоверение'),
-    )
-    is_active = models.BooleanField(
-            default=True,
-            verbose_name = u"активная")
-    person = models.ForeignKey(
-            Person,
-            verbose_name = u"клиент")
     # Поля места рождения
     birth_day = models.DateField(
             null=True, blank=True,
@@ -277,32 +314,7 @@ class PersonDetail(models.Model):
             max_length=32,
             blank=True,
             verbose_name = u"населённый пункт")
-    # Поля документа клиента
-    document_type = models.CharField(
-            max_length=16,
-            choices=DOCUMENT_CHOICES,
-            blank=True,
-            verbose_name = u"тип")
-    document_series = models.CharField(
-            max_length=10,
-            blank=True,
-            verbose_name = u"серия")
-    document_number = models.CharField(
-            max_length=16,
-            blank=True,
-            verbose_name = u"номер")
-    document_date = models.CharField(
-            max_length=16,
-            blank=True,
-            verbose_name = u"дата выдачи")
-    document_organ = models.CharField(
-            max_length=255,
-            blank=True,
-            verbose_name = u"орган выдачи")
-    document_code = models.CharField(
-            max_length=16,
-            blank=True,
-            verbose_name = u"код органа")
+    
     # Поля места жительства
     residence_sitizenship = models.CharField(
             max_length=16,
@@ -344,24 +356,51 @@ class PersonDetail(models.Model):
             max_length=8,
             blank=True,
             verbose_name = u"квартира")
+    # Поля документа клиента
+    document_type = models.IntegerField(
+            choices=DOCUMENT_CHOICES,
+            blank=True, null=True,
+            verbose_name = u"тип")
+    document_series = models.CharField(
+            max_length=10,
+            blank=True,
+            verbose_name = u"серия")
+    document_number = models.CharField(
+            max_length=16,
+            blank=True,
+            verbose_name = u"номер")
+    document_date = models.CharField(
+            max_length=16,
+            blank=True,
+            verbose_name = u"дата выдачи")
+    document_organ = models.CharField(
+            max_length=255,
+            blank=True,
+            verbose_name = u"орган выдачи")
+    document_code = models.CharField(
+            max_length=16,
+            blank=True,
+            verbose_name = u"код органа")
+    
+    client = models.OneToOneField(Client,
+        limit_choices_to={'clitype': CLITYPE_PERSON },
+        verbose_name=u"клиент",
+        blank=True, null=True,
+        )
     
     objects = models.Manager()
-    actives = managers.ActivePersonDetailManager()
+    privates = managers.PrivatePersonManager()
     
     def __unicode__(self):
-        return unicode(self.person)
+        fio = u' '.join(
+                [self.last_name, self.first_name, self.middle_name]
+                ).replace("  ", ' ')
+        return fio
         
     class Meta:
-        ordering = ['person',]
-        verbose_name = u"карточку клиента"
-        verbose_name_plural = u"карточки клиентов"
-    
-    def save(self, **kwargs):
-        super(PersonDetail, self).save(**kwargs)
-        
-        qs = PersonDetail.actives.filter(person=self.person)
-        qs = qs.exclude(id=self.id)
-        qs.update(is_active=False)
+        ordering = ['last_name', 'first_name', 'middle_name']
+        verbose_name = u"персону"
+        verbose_name_plural = u"персоны"
     
     @property
     def residence_address(self):
@@ -372,6 +411,17 @@ class PersonDetail(models.Model):
             self.residence_sity,
             self.residence_settlement,
             ])
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('person_detail', [str(self.id)])
+    
+    def save(self, **kwargs):
+        #~ if not self.client:
+            #~ client = Client(clitype=CLITYPE_PERSON)
+            #~ client.save()
+            #~ self.client = client
+        super(Person, self).save(**kwargs)
     
 class Category(models.Model):
     """ Категория услуги """
@@ -597,8 +647,8 @@ class Order(models.Model):
             choices=settings.STATE_ORDER_CHOICES,
             default=1,
             verbose_name=u"состояние")
-    persons = models.ManyToManyField(
-            Person,
+    clients = models.ManyToManyField(
+            Client,
             null=True, blank=True,
             verbose_name=u"персоны")
     is_divdoc = models.BooleanField(
@@ -639,10 +689,10 @@ class Order(models.Model):
         return sum([ x.summa for x in self.specification_set.all() ])
     
     @property
-    def summa_for_person(self):
+    def summa_for_client(self):
         if not self.is_divdoc:
             return self.summa
-        return self.summa / self.persons.count()
+        return self.summa / self.clients.count()
     @property
     def payment(self):
         payments = Payment.objects.filter(invoice__order=self)
@@ -748,44 +798,44 @@ class Specification(models.Model):
             markup = 0
         return markup
     
-    def markup_for_person(self):
+    def markup_for_client(self):
         if not self.order.is_divdoc:
             return self.markup()
-        return round((self.markup() /  self.order.persons.count()), 2)
+        return round((self.markup() /  self.order.clients.count()), 2)
     
     @property
-    def price_for_person(self):
+    def price_for_client(self):
         if not self.order.is_divdoc:
             return round(self.price.price, 2)
-        return round((self.price.price /  self.order.persons.count()), 2)
+        return round((self.price.price /  self.order.clients.count()), 2)
     
     @property
     def summa(self):
         return round((self.price.price*self.count)+self.markup(), 2)
     @property
-    def summa_for_person(self):
+    def summa_for_client(self):
         if not self.order.is_divdoc:
             return self.summa
-        return round((self.summa /  self.order.persons.count()), 2)
+        return round((self.summa /  self.order.clients.count()), 2)
     
     @property
     def summa_clean(self):
         return round((self.price.price*self.count), 2)
     @property
-    def summa_clean_for_person(self):
+    def summa_clean_for_client(self):
         if not self.order.is_divdoc:
             return self.summa_clean
-        return round((self.summa_clean /  self.order.persons.count()), 2)
+        return round((self.summa_clean /  self.order.clients.count()), 2)
     
     @property
     def summa_markup(self):
         return round(self.markup(), 2)
     
     @property
-    def summa_markup_for_person(self):
+    def summa_markup_for_client(self):
         if not self.order.is_divdoc:
             return self.summa_markup
-        return round((self.summa_markup / self.order.persons.count()), 2)
+        return round((self.summa_markup / self.order.clients.count()), 2)
     
     def save(self, **kwargs):
         """ Если есть делитель и услуга предоставляется по времени:
@@ -966,8 +1016,8 @@ class Invoice(models.Model):
     order = models.ForeignKey(
             Order,
             verbose_name = u"заказ")
-    person = models.ForeignKey(
-            Person,
+    client = models.ForeignKey(
+            Client,
             null=True, blank=True,
             verbose_name=u"клиент")
     date = models.DateField(
@@ -991,7 +1041,7 @@ class Invoice(models.Model):
         return u'Счёт №%s от %s %s' % (
             unicode(self.id),
             self.date.strftime("%d.%m.%Y"),
-            unicode(self.person),
+            unicode(self.client),
             )
     
     class Meta:
@@ -1002,7 +1052,7 @@ class Invoice(models.Model):
     def save(self, **kwargs):
         if not self.summa:
             if self.order.is_divdoc:
-                self.summa = str(self.order.summa_for_person)
+                self.summa = str(self.order.summa_for_client)
             else:
                 self.summa = str(self.order.summa)
         
@@ -1120,8 +1170,8 @@ class Act(models.Model):
             Invoice,
             null=True, blank=True,
             verbose_name=u"счёт")
-    person = models.ForeignKey(
-            Person,
+    client = models.ForeignKey(
+            Client,
             null=True, blank=True,
             verbose_name=u"клиент")
     date = models.DateField(

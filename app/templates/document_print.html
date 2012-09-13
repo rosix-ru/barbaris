@@ -57,7 +57,13 @@
 </li>
 
 <li class="dropdown">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Печатные формы <b class="caret"></b></a>
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+        {% for doctemplate in template_list %}
+            {% if doctemplate.id == template.id %}
+            Форма: {{ doctemplate.title }}
+            {% endif %}
+        {% endfor %}
+        <b class="caret"></b></a>
     <ul class="dropdown-menu">
     {% for doctemplate in template_list %}
         <li{% if doctemplate.id == template.id %} class="active"{% endif %}>
@@ -68,6 +74,7 @@
     {% endfor %}
     </ul>
 </li>
+
 {% endblock %}
 
 {% block content %}

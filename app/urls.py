@@ -77,10 +77,12 @@ ORDER_LIST = { 'model': Order, 'template_name': "order_list.html",
         'use_distinct': True,
         }
 
-ORDER_LIST_PERSON = ORDER_LIST.copy()
-ORDER_LIST_PERSON.update({ 'foreign_field': "persons__id", })
-ORDER_LIST_ORG = ORDER_LIST.copy()
-ORDER_LIST_ORG.update({ 'foreign_field': "persons__org__id", })
+ORDER_LIST_CLIENT = ORDER_LIST.copy()
+ORDER_LIST_CLIENT.update({ 'foreign_field': "clients__id", })
+#~ ORDER_LIST_PERSON = ORDER_LIST.copy()
+#~ ORDER_LIST_PERSON.update({ 'foreign_field': "persons__id", })
+#~ ORDER_LIST_ORG = ORDER_LIST.copy()
+#~ ORDER_LIST_ORG.update({ 'foreign_field': "persons__org__id", })
 
 
 INVOICE_LIST = { 'model': Invoice, 'template_name': "invoice_list.html", 
@@ -132,16 +134,21 @@ urlpatterns = patterns('project.app.views',
     url(r'^acts/$',       'object_list',      name='act_list',        kwargs = ACT_LIST),
     url(r'^questions/$',  'object_list',      name='question_list',   kwargs = QUESTION_LIST),
     url(r'^orders/$',     'object_list',      name='order_list',      kwargs = ORDER_LIST),
-    url(r'^orders/person(?P<foreign_key>\d+)/$',     
-                                            'object_list',      name='person_orders',   kwargs = ORDER_LIST_PERSON),
-    url(r'^orders/org(?P<foreign_key>\d+)/$',     
-                                            'object_list',      name='org_orders',      kwargs = ORDER_LIST_ORG),
+    url(r'^orders/client(?P<foreign_key>\d+)/$',     
+                                            'object_list',      name='client_orders',   kwargs = ORDER_LIST_CLIENT),
+    #~ url(r'^orders/person(?P<foreign_key>\d+)/$',     
+                                            #~ 'object_list',      name='person_orders',   kwargs = ORDER_LIST_PERSON),
+    #~ url(r'^orders/org(?P<foreign_key>\d+)/$',     
+                                            #~ 'object_list',      name='org_orders',      kwargs = ORDER_LIST_ORG),
     
     
+    url(r'^client/(?P<pk>\d+)/$',           'client_detail',    name='client_detail'),
     url(r'^person/(?P<pk>\d+)/$',           'person_detail',    name='person_detail'),
     #~ url(r'^person/(?P<person_pk>\d+)/order/new/$', 
                                             #~ 'order_detail',     name='person_new_order',    kwargs = {'action': 'new'}),
-    url(r'^person/search/$',                'person_search',    name='person_search'),
+    #~ url(r'^person/search/$',                'person_search',    name='person_search'),
+    url(r'^client/search/$',                'client_search',    name='client_search'),
+    url(r'^client/new/$',                   'client_create',    name='client_create'),
     
     url(r'^org/(?P<pk>\d+)/$',              'org_detail',       name='org_detail'),
     

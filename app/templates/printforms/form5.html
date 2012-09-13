@@ -53,66 +53,66 @@
     <div class="span2 align-right">форма №5</div>
 </div>
 <h1 class="align-center">{{ supplier.title|upper }}</h1>
-<h5 class="align-center">{{ supplier.detail.address }}</h5>
+<h5 class="align-center">{{ supplier.address }}</h5>
 <div class="align-right">комната ____</div>
 
-<div class="signature">1. Фамилия <strong>{{ document.person.last_name }}</strong></div>
+<div class="signature">1. Фамилия <strong>{{ document.client.detail.last_name }}</strong></div>
 <br>
-<div class="signature">2. Имя <strong>{{ document.person.first_name }}</strong></div>
+<div class="signature">2. Имя <strong>{{ document.client.detail.first_name }}</strong></div>
 <br>
-<div class="signature">3. Отчество <strong>{{ document.person.middle_name }}</strong></div>
+<div class="signature">3. Отчество <strong>{{ document.client.detail.middle_name }}</strong></div>
 <br>
 <div class="row-fluid signature">
-    <div class="span6">4. Дата роджения <strong>{{ document.person.detail.birth_day|default:'' }}</strong></div>
-    <div class="span6">5. Пол <strong>{{ document.person.get_sex_display  }}</strong></div>
+    <div class="span6">4. Дата роджения <strong>{{ document.client.detail.birth_day|default:'' }}</strong></div>
+    <div class="span6">5. Пол <strong>{{ document.client.detail.get_sex_display|default:''  }}</strong></div>
 </div>
 <br>
 <br>
-<div class="signature">6. Место рождения: страна <strong>{{ document.person.detail.birth_country }}</strong></div>
+<div class="signature">6. Место рождения: страна <strong>{{ document.client.detail.birth_country }}</strong></div>
 <br>
-<div class="signature">регион <strong>{{ document.person.detail.birth_region }}</strong></div>
+<div class="signature">регион <strong>{{ document.client.detail.birth_region }}</strong></div>
 <br>
-<div class="signature">район <strong>{{ document.person.detail.birth_area }}</strong></div>
+<div class="signature">район <strong>{{ document.client.detail.birth_area }}</strong></div>
 <br>
-<div class="signature">город <strong>{{ document.person.detail.birth_sity }}</strong></div>
+<div class="signature">город <strong>{{ document.client.detail.birth_sity }}</strong></div>
 <br>
-<div class="signature">населённый пункт <strong>{{ document.person.detail.birth_settlement }}</strong></div>
+<div class="signature">населённый пункт <strong>{{ document.client.detail.birth_settlement }}</strong></div>
 <br>
-<br>
-
-<div class="signature">7. Гражданство <strong>{{ document.person.residence_sitizenship }}</strong></div>
 <br>
 
-<div class="signature">8. Документ, удостоверяющий личность: вид <strong>{{ document.person.detail.document_type }}</strong></div>
+<div class="signature">7. Гражданство <strong>{{ document.client.detail.residence_sitizenship }}</strong></div>
+<br>
+
+<div class="signature">8. Документ, удостоверяющий личность: вид <strong>{{ document.client.detail.get_document_type_display }}</strong></div>
 <br>
 <div class="row-fluid signature">
-    <div class="span3">серия <strong>{{ document.person.detail.document_series }}</strong></div>
-    <div class="span3">номер <strong>{{ document.person.detail.document_number }}</strong></div>
-    <div class="span6">выдан <strong>{{ document.person.detail.document_date }}</strong></div>
+    <div class="span3">серия <strong>{{ document.client.detail.document_series }}</strong></div>
+    <div class="span3">номер <strong>{{ document.client.detail.document_number }}</strong></div>
+    <div class="span6">выдан <strong>{{ document.client.detail.document_date }}</strong></div>
 </div>
 <br>
 <div class="row-fluid signature">
-    <div class="span10">орган, выдавший документ <strong>{{ document.person.detail.document_organ }}</strong></div>
-    <div class="span2">код <strong>{{ document.person.detail.document_code }}</strong></div>
+    <div class="span10">орган, выдавший документ <strong>{{ document.client.detail.document_organ }}</strong></div>
+    <div class="span2">код <strong>{{ document.client.detail.document_code }}</strong></div>
 </div>
 <br>
 <br>
 
-<div class="signature">9. Место жительства: страна <strong>{{ document.person.detail.residence_country }}</strong></div>
+<div class="signature">9. Место жительства: страна <strong>{{ document.client.detail.residence_country }}</strong></div>
 <br>
-<div class="signature">регион <strong>{{ document.person.detail.residence_region }}</strong></div>
+<div class="signature">регион <strong>{{ document.client.detail.residence_region }}</strong></div>
 <br>
-<div class="signature">район <strong>{{ document.person.detail.residence_area }}</strong></div>
+<div class="signature">район <strong>{{ document.client.detail.residence_area }}</strong></div>
 <br>
-<div class="signature">город <strong>{{ document.person.detail.residence_sity }}</strong></div>
+<div class="signature">город <strong>{{ document.client.detail.residence_sity }}</strong></div>
 <br>
-<div class="signature">населённый пункт <strong>{{ document.person.detail.residence_settlement }}</strong></div>
+<div class="signature">населённый пункт <strong>{{ document.client.detail.residence_settlement }}</strong></div>
 <br>
 <div class="row-fluid signature">
-    <div class="span6">ул. <strong>{{ document.person.detail.residence_street }}</strong></div>
-    <div class="span2">дом <strong>{{ document.person.detail.residence_house }}</strong></div>
-    <div class="span1">корп. <strong>{{ document.person.detail.residence_case }}</strong></div>
-    <div class="span3">квартира <strong>{{ document.person.detail.residence_apartment }}</strong></div>
+    <div class="span6">ул. <strong>{{ document.client.detail.residence_street }}</strong></div>
+    <div class="span2">дом <strong>{{ document.client.detail.residence_house }}</strong></div>
+    <div class="span1">корп. <strong>{{ document.client.detail.residence_case }}</strong></div>
+    <div class="span3">квартира <strong>{{ document.client.detail.residence_apartment }}</strong></div>
 </div>
 <br>
 <br>

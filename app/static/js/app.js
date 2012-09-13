@@ -120,12 +120,12 @@ function testLog(text) {
     console.log(text);
 }
 
-function goSearchPerson(input_text) {
-    //~ alert("goSearchPerson()"); //debug
+function goSearchClient(input_text) {
+    //~ alert("goSearchClient()"); //debug
     var div = input_text.next().children("fieldset");
     var query = input_text.val();
     if (query == '') { return false }
-    div.load("/person/search/?query="+ query +"&destination="+ input_text.attr("name"));
+    div.load("/client/search/?query="+ query +"&destination="+ input_text.attr("name"));
     return false;
 }
 
@@ -181,8 +181,8 @@ $(document).ready(function($) {
     
     setInterval("updateMonitor()", 15000);
     
-    $("#persons input.search").keyup(function() {
-        goSearchPerson($(this));
+    $("#clients input.search").keyup(function() {
+        goSearchClient($(this));
     });
     
     $("a[data-toggle^=_modal_]").click(loadModal);

@@ -54,12 +54,12 @@
   <div class="span12">
     <div class="row-fluid">
       <div class="span2 align-right">Исполнитель:</div>
-      <div class="span10"><strong>{% block print_supplier_header %}{{ supplier.detail.get_string_requsites }}{% endblock %}</strong></div>
+      <div class="span10"><strong>{% block print_supplier_header %}{{ supplier.get_string_requsites }}{% endblock %}</strong></div>
     </div>
     <div class="row-fluid"><div class="span12"></div></div>
     <div class="row-fluid">
       <div class="span2 align-right">Заказчик:</div>
-      <div class="span10"><strong>{% block print_client_header %}{{ document.person }}{% endblock %}</strong></div>
+      <div class="span10"><strong>{% block print_client_header %}{{ document.client }}{% endblock %}</strong></div>
     </div>
     <div class="row-fluid"><div class="span12"></div></div>
   </div>
@@ -85,7 +85,7 @@
       <div class="span1 align-left">Исполнитель:</div>
       <div class="span5 align-right signature">{% block print_supplier_footer %}{{ supplier.owner }}{% endblock %}</div>
       <div class="span1 align-left">Заказчик:</div>
-      <div class="span5 align-right signature">{% block print_client_footer %}{{ document.person }}{% endblock %}</div>
+      <div class="span5 align-right signature">{% block print_client_footer %}{{ document.client }}{% endblock %}</div>
     </div>
   </div>
 </div>

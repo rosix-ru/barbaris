@@ -44,7 +44,7 @@
 
 {% block subnav_content %}
 <li>
-    <a href="{% url org_detail 0 %}" title="Добавить организацию"><i class="icon-plus"></i></a>
+    <a href="#" data-toggle="_modal_client_create_0_" title="Добавить клиента"><i class="icon-plus"></i></a>
 </li>
 {% subnav_filter request 'org_list' %}
 {% endblock %}
@@ -66,8 +66,8 @@
         {% for org in paginator.object_list %}
             <tr>
                 <td>{{ org }}</td>
-                <td>{{ org.detail.fulltitle }}</td>
-                <td>{{ org.detail.inn }}</td>
+                <td>{{ org.fulltitle }}</td>
+                <td>{{ org.inn }}</td>
                 <td><span class="pull-right">
                     <a href="{% url org_print org.id %}">
                         <i class="icon-print" title="Печать"></i>
@@ -75,7 +75,7 @@
                     <a href="{% url org_detail org.id %}">
                         <i class="icon-edit" title="Редактировать карточку организации"></i>
                     </a>
-                    <a href="{% url org_orders org.id %}">
+                    <a href="{% url client_orders org.client.id %}">
                         <i class="icon-list" title="Список заказов организации"></i>
                     </a>
                     </span>

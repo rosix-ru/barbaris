@@ -44,7 +44,7 @@
 
 {% block subnav_content %}
 <li>
-    <a href="{% url person_detail 0 %}" title="Добавить персону"><i class="icon-plus"></i></a>
+    <a href="#" data-toggle="_modal_client_create_0_" title="Добавить клиента"><i class="icon-plus"></i></a>
 </li>
 {% subnav_filter request 'person_list' %}
 {% endblock %}
@@ -74,7 +74,7 @@
                     <a href="{% url person_detail person.id %}">
                         <i class="icon-edit" title="Редактировать карточку клиента"></i>
                     </a>
-                    <a href="{% url person_orders person.id %}">
+                    <a href="{% url client_orders person.client.id %}">
                         <i class="icon-list" title="Список заказов клиента"></i>
                     </a>
                     </span>

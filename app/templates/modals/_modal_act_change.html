@@ -47,11 +47,11 @@
     <fieldset>
         <div class="modal-body">
             <div class="control-group">
-                <label class="control-label" for="id_person">Клиент</label>
+                <label class="control-label" for="id_client">Клиент</label>
                 <div class="controls">
-                    <select name="person" id="id_person">
-                    {% for person in object.order.persons.all %} 
-                        <option value="{{ person.id }}"{% if person.id == form.instance.person.id  %} selected="selected"{% endif %}>{{ person }}</option>
+                    <select name="client" id="id_client">
+                    {% for client in object.order.clients.all %} 
+                        <option value="{{ client.id }}"{% if client.id == form.instance.client.id  %} selected="selected"{% endif %}>{{ client }}</option>
                     {% endfor %}
                     </select>
                 </div>

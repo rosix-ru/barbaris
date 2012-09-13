@@ -49,20 +49,6 @@ class ActivePriceManager(models.Manager):
             start_date__lte=datetime.date.today()
         )
 
-class ActiveOrgDetailManager(models.Manager):
-    use_for_related_fields = True
-    def get_query_set(self):
-        return super(ActiveOrgDetailManager, self).get_query_set().filter(
-            is_active=True
-        )
-
-class ActivePersonDetailManager(models.Manager):
-    use_for_related_fields = True
-    def get_query_set(self):
-        return super(ActivePersonDetailManager, self).get_query_set().filter(
-            is_active=True
-        )
-
 class CreateOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
@@ -133,19 +119,6 @@ class CashInvoiceManager(models.Manager):
             state__in=settings.SELECT_CASH_INVOICES
         )
 
-class SellerOrgManager(models.Manager):
-    use_for_related_fields = True
-    def get_query_set(self):
-        return super(SellerOrgManager, self).get_query_set().filter(
-            is_seller=True
-        )
-
-class BuyerOrgManager(models.Manager):
-    use_for_related_fields = True
-    def get_query_set(self):
-        return super(BuyerOrgManager, self).get_query_set().filter(
-            is_seller=False
-        )
 
 class PrivatePersonManager(models.Manager):
     use_for_related_fields = True

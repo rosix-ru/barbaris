@@ -54,7 +54,7 @@
     <a href="#categories">Прайс-лист</a>
 </li>
 <li>
-    <a href="#persons">Клиенты</a>
+    <a href="#clients">Клиенты</a>
 </li>
 {% if not order.state_close %}
 <li>
@@ -167,30 +167,35 @@
 </div>
 
 <legend>Клиенты</legend>
-<div id="persons" class="row-fluid">
+<div id="clients" class="row-fluid">
     <div class="well span6">
-        <legend>Поиск персон</legend>
-        <input name="persons" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
+        <legend>Поиск клиентов
+            <a class="btn pull-right" data-toggle="_modal_client_create_0_" title="Создать нового клиента">
+                <i class="icon-plus"></i>
+            </a>
+        </legend>
+        
+        <input name="clients" class="search span12" type="text" placeholder="Поиск: Фамилия Имя Отчество или Организация">
         <form action="" method="post" class="form">{% csrf_token %}
             <fieldset></fieldset>
         </form>
     </div>
 {% if order.id %}
-    {% if order.persons.all %}
+    {% if order.clients.all %}
     <div class="well span6">
-        <legend>Список персон в заказе</legend>
+        <legend>Список клиентов в заказе</legend>
         <form action="" method="post" class="form">{% csrf_token %}
             <fieldset>
                 <div class="controls ">
-                {% for person in order.persons.all %}
+                {% for client in order.clients.all %}
                     <label class="checkbox">
-                        <input type="checkbox" name="deletePerson" value="{{ person.id }}">
+                        <input type="checkbox" name="deleteClient" value="{{ client.id }}">
                         <h6>
-                            {{ person }}
-                            <a href="{% url person_detail person.id %}" title="Редактировать карточку клиента">
+                            {{ client }}
+                            <a href="{% url client_detail client.id %}" title="Редактировать карточку клиента">
                                 <i class="icon-edit"></i>
                             </a>
-                            <small>{{ person.detail.birth_day|default:"" }}</small>
+                            <small>{{ client.detail.birth_day|default:"" }}</small>
                         </h6>
                     </label>
                 {% endfor %}

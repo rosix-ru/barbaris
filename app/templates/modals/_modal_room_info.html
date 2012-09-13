@@ -49,7 +49,7 @@
             <thead>
                 <tr>
                     <th class=""><span>Заказ</span></th>
-                    <th class=""><span>Персона</span></th>
+                    <th class=""><span>Клиент</span></th>
                     <th class="input-small"><span class="pull-right">Заезд</span></th>
                     <th class="input-small"><span class="pull-right">Выезд</span></th>
                     <th class=""><span class="pull-right"></span></th>
@@ -59,10 +59,10 @@
             {% if object.current_order %}
                 <tr id="order_{{ object.current_order.id }}">
                     <td><span>{{ object.current_order.id }}</span></td>
-                    {% if object.current_order.persons.count %}
+                    {% if object.current_order.clients.count %}
                         <td>
-                            {% for person in object.current_order.persons.all %}
-                            <p>{{ person }}</p>
+                            {% for client in object.current_order.clients.all %}
+                            <p>{{ client }}</p>
                             {% endfor %}
                         </td>
                     {% else %}
@@ -80,10 +80,10 @@
             {% for order in object.next_orders %}
                 <tr id="order_{{ order.id }}">
                     <td><span>{{ order.id }}</span></td>
-                    {% if order.persons.count %}
+                    {% if order.clients.count %}
                         <td>
-                            {% for person in order.persons.all %}
-                            <p>{{ person }}</p>
+                            {% for client in order.clients.all %}
+                            <p>{{ client }}</p>
                             {% endfor %}
                         </td>
                     {% else %}

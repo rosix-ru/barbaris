@@ -67,7 +67,7 @@
     <thead>
         <tr>
             <th class=""><span>№</span></th>
-            <th class=""><span>Персона</span></th>
+            <th class=""><span>Клиент</span></th>
             <th class=""><span>Организация</span></th>
             <th class=""><span>Дата</span></th>
             <th class=""><span>Комментарий</span></th>
@@ -82,8 +82,8 @@
     {% for invoice in paginator.object_list %}
         <tr id="invoice_{{ invoice.id }}">
             <td><span>{{ invoice.id }}</span></td>
-            <td><span>{{ invoice.person }}</span></td>
-            <td><span>{{ invoice.person.org|default:'' }}</span></td>
+            <td><span>{{ invoice.client }}</span></td>
+            <td><span>{{ invoice.client.org|default:'' }}</span></td>
             <td><span>{{ invoice.date|date:'Y-m-d' }}</span></td>
             <td><span>{{ invoice.comment }}</span></td>
             <td><span class="pull-right">{{ invoice.summa }}</span></td>

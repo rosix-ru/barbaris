@@ -52,7 +52,7 @@
                     {% room_occupied room room.current_order %}
                     <a href="{% url order_detail room.current_order.pk %}"><i class="icon-edit"></i></a>
                     <br>
-                    Клиентов: {{ room.current_order.persons.count|default:"0" }}
+                    Клиентов: {{ room.current_order.clients.count|default:"0" }}
                     <br>
                     {{ room.current_order.comment|default:"Комментарий отсутствует." }}
                     <br>

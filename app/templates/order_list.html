@@ -42,12 +42,8 @@
 
 {% block page_name %}Заказы
 
-    {% if person %}
-        <small>по клиенту: {{ person }}</small>
-    {% endif %}
-
-    {% if org %}
-        <small>по организации: {{ org }}</small>
+    {% if client %}
+        <small>по клиенту: {{ client }}</small>
     {% endif %}
 
 {% endblock %}
@@ -85,7 +81,7 @@
     <thead>
         <tr>
             <th class=""><span>№</span></th>
-            <th class=""><span>Персона</span> <span class="pull-right">Организация</span></th>
+            <th class=""><span>Клиент</span> <span class="pull-right">Организация</span></th>
             <th class=""><span>Дата</span></th>
             <th class=""><span>Комментарий</span></th>
             <th class="input-mini"><span class="pull-right">Сумма</span></th>
@@ -100,14 +96,14 @@
         <tr id="order_{{ order.id }}">
             <td><span>{{ order.id }}</span></td>
             
-        {% if order.persons.count %}
+        {% if order.clients.count %}
             <td>
-                {% for person in order.persons.all %}
-                <p><a href="{% url person_orders person.id %}">
+                {% for client in order.clients.all %}
+                <p><a href="{% url client_orders client.id %}">
                     <i class="icon-list" title="Отфильтровать заказы этого клиента"></i>
                 </a>
-                {{ person }}
-                <small class="pull-right">{{ person.org|default:'' }}</small></p>{% endfor %}
+                {{ client }}
+                <small class="pull-right">{{ client.detail.org|default:'' }}</small></p>{% endfor %}
             </td>
         {% else %}
             <td><span class="badge badge-important">Установиете клиента!!!</span></td>

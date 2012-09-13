@@ -40,14 +40,18 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 import models
 
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = models.Client
+
 class OrgForm(forms.ModelForm):
     class Meta:
         model = models.Org
-        exclude = ('is_seller',)
+        fields = ('title',)
 
 class OrgDetailForm(forms.ModelForm):
     class Meta:
-        model = models.OrgDetail
+        model = models.Org
         fields = ('fulltitle', 'inn', 'kpp', 'ogrn', 'address', 'phones')
         widgets = {
             'fulltitle': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
@@ -55,7 +59,7 @@ class OrgDetailForm(forms.ModelForm):
 
 class OrgBankForm(forms.ModelForm):
     class Meta:
-        model = models.OrgDetail
+        model = models.Org
         fields = ('bank_bik', 'bank_title', 'bank_set_account', 
             'bank_cor_account')
         widgets = {
@@ -64,7 +68,7 @@ class OrgBankForm(forms.ModelForm):
 
 class OrgDocumentForm(forms.ModelForm):
     class Meta:
-        model = models.OrgDetail
+        model = models.Org
         fields = ('document_type', 'document_series', 
             'document_number', 'document_date', 'document_organ', 
             'document_code')
@@ -75,10 +79,12 @@ class OrgDocumentForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     class Meta:
         model = models.Person
+        fields = ('last_name', 'first_name', 'middle_name', 
+            'phones', 'sex', 'org')
 
 class PersonResidenceForm(forms.ModelForm):
     class Meta:
-        model = models.PersonDetail
+        model = models.Person
         fields = ('residence_sitizenship', 'residence_country', 
             'residence_region', 'residence_area', 'residence_sity',
             'residence_settlement', 'residence_street',
@@ -86,7 +92,7 @@ class PersonResidenceForm(forms.ModelForm):
 
 class PersonBirthForm(forms.ModelForm):
     class Meta:
-        model = models.PersonDetail
+        model = models.Person
         fields = ('birth_day', 'birth_country', 'birth_area', 
             'birth_sity', 'birth_settlement',)
         widgets = {
@@ -95,7 +101,7 @@ class PersonBirthForm(forms.ModelForm):
 
 class PersonDocumentForm(forms.ModelForm):
     class Meta:
-        model = models.PersonDetail
+        model = models.Person
         fields = ('document_type', 'document_series', 
             'document_number', 'document_date', 'document_organ', 
             'document_code')

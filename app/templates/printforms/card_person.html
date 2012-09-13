@@ -59,60 +59,60 @@
 <div class="signature">3. Отчество <strong>{{ document.middle_name }}</strong></div>
 <br>
 <div class="row-fluid signature">
-    <div class="span6">4. Дата роджения <strong>{{ document.detail.birth_day|default:'' }}</strong></div>
-    <div class="span6">5. Пол <strong>{{ document.get_sex_display  }}</strong></div>
+    <div class="span6">4. Дата роджения <strong>{{ document.birth_day|default:'' }}</strong></div>
+    <div class="span6">5. Пол <strong>{{ document.get_sex_display|default:''  }}</strong></div>
 </div>
 <br>
 <br>
-<div class="signature">6. Место рождения: страна <strong>{{ document.detail.birth_country }}</strong></div>
+<div class="signature">6. Место рождения: страна <strong>{{ document.birth_country }}</strong></div>
 <br>
-<div class="signature">регион <strong>{{ document.detail.birth_region }}</strong></div>
+<div class="signature">регион <strong>{{ document.birth_region }}</strong></div>
 <br>
-<div class="signature">район <strong>{{ document.detail.birth_area }}</strong></div>
+<div class="signature">район <strong>{{ document.birth_area }}</strong></div>
 <br>
-<div class="signature">город <strong>{{ document.detail.birth_sity }}</strong></div>
+<div class="signature">город <strong>{{ document.birth_sity }}</strong></div>
 <br>
-<div class="signature">населённый пункт <strong>{{ document.detail.birth_settlement }}</strong></div>
+<div class="signature">населённый пункт <strong>{{ document.birth_settlement }}</strong></div>
 <br>
 <br>
 
 <div class="signature">7. Гражданство <strong>{{ document.residence_sitizenship }}</strong></div>
 <br>
 
-<div class="signature">8. Документ, удостоверяющий личность: вид <strong>{{ document.detail.document_type }}</strong></div>
+<div class="signature">8. Документ, удостоверяющий личность: вид <strong>{{ document.get_document_type_display }}</strong></div>
 <br>
 <div class="row-fluid signature">
-    <div class="span3">серия <strong>{{ document.detail.document_series }}</strong></div>
-    <div class="span3">номер <strong>{{ document.detail.document_number }}</strong></div>
-    <div class="span6">выдан <strong>{{ document.detail.document_date }}</strong></div>
+    <div class="span3">серия <strong>{{ document.document_series }}</strong></div>
+    <div class="span3">номер <strong>{{ document.document_number }}</strong></div>
+    <div class="span6">выдан <strong>{{ document.document_date }}</strong></div>
 </div>
 <br>
 <div class="row-fluid signature">
-    <div class="span10">орган, выдавший документ <strong>{{ document.detail.document_organ }}</strong></div>
-    <div class="span2">код <strong>{{ document.detail.document_code }}</strong></div>
-</div>
-<br>
-<br>
-
-<div class="signature">9. Место жительства: страна <strong>{{ document.detail.residence_country }}</strong></div>
-<br>
-<div class="signature">регион <strong>{{ document.detail.residence_region }}</strong></div>
-<br>
-<div class="signature">район <strong>{{ document.detail.residence_area }}</strong></div>
-<br>
-<div class="signature">город <strong>{{ document.detail.residence_sity }}</strong></div>
-<br>
-<div class="signature">населённый пункт <strong>{{ document.detail.residence_settlement }}</strong></div>
-<br>
-<div class="row-fluid signature">
-    <div class="span6">ул. <strong>{{ document.detail.residence_street }}</strong></div>
-    <div class="span2">дом <strong>{{ document.detail.residence_house }}</strong></div>
-    <div class="span1">корп. <strong>{{ document.detail.residence_case }}</strong></div>
-    <div class="span3">квартира <strong>{{ document.detail.residence_apartment }}</strong></div>
+    <div class="span10">орган, выдавший документ <strong>{{ document.document_organ }}</strong></div>
+    <div class="span2">код <strong>{{ document.document_code }}</strong></div>
 </div>
 <br>
 <br>
 
-<div class="signature">10. Телефоны <strong>{{ document.detail.phones }}</strong></div>
+<div class="signature">9. Место жительства: страна <strong>{{ document.residence_country }}</strong></div>
 <br>
-<div class="signature">11. Организация <strong>{{ document.org|default:"" }}</strong></div>
+<div class="signature">регион <strong>{{ document.residence_region }}</strong></div>
+<br>
+<div class="signature">район <strong>{{ document.residence_area }}</strong></div>
+<br>
+<div class="signature">город <strong>{{ document.residence_sity }}</strong></div>
+<br>
+<div class="signature">населённый пункт <strong>{{ document.residence_settlement }}</strong></div>
+<br>
+<div class="row-fluid signature">
+    <div class="span6">ул. <strong>{{ document.residence_street }}</strong></div>
+    <div class="span2">дом <strong>{{ document.residence_house }}</strong></div>
+    <div class="span1">корп. <strong>{{ document.residence_case }}</strong></div>
+    <div class="span3">квартира <strong>{{ document.residence_apartment }}</strong></div>
+</div>
+<br>
+<br>
+
+<div class="signature">10. Телефоны <strong>{{ document.phones }}</strong></div>
+<br>
+<div class="signature">11. Организация <strong>{{ document.org.fulltitle|default:document.org|default:"" }}</strong></div>

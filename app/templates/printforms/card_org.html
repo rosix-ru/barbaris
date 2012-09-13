@@ -51,38 +51,38 @@
 </div>
 <h1 class="align-center">{{ document }}</h1>
 <br>
-<div class="signature">1. Название <strong>{{ document.detail.fulltitle }}</strong></div>
+<div class="signature">1. Название <strong>{{ document.fulltitle }}</strong></div>
 <br>
-<div class="signature">2. ИНН <strong>{{ document.detail.inn }}</strong></div>
+<div class="signature">2. ИНН <strong>{{ document.inn }}</strong></div>
 <br>
-<div class="signature">3. КПП <strong>{{ document.detail.kpp }}</strong></div>
+<div class="signature">3. КПП <strong>{{ document.kpp }}</strong></div>
 <br>
-<div class="signature">4. ОГРН <strong>{{ document.detail.ogrn }}</strong></div>
+<div class="signature">4. ОГРН <strong>{{ document.ogrn }}</strong></div>
 <br>
-<div class="signature">5. Адрес <strong>{{ document.detail.address }}</strong></div>
+<div class="signature">5. Адрес <strong>{{ document.address }}</strong></div>
 <br>
-<div class="signature">6. Телефоны <strong>{{ document.detail.phones }}</strong></div>
+<div class="signature">6. Телефоны <strong>{{ document.phones }}</strong></div>
 <br>
 
-<div class="signature">7. Документ-основание: вид <strong>{{ document.detail.document_type }}</strong></div>
+<div class="signature">7. Документ-основание: вид <strong>{{ document.get_document_type_display }}</strong></div>
 <br>
 <div class="row-fluid signature">
-    <div class="span3">серия <strong>{{ document.detail.document_series }}</strong></div>
-    <div class="span3">номер <strong>{{ document.detail.document_number }}</strong></div>
-    <div class="span6">выдан <strong>{{ document.detail.document_date }}</strong></div>
+    <div class="span3">серия <strong>{{ document.document_series }}</strong></div>
+    <div class="span3">номер <strong>{{ document.document_number }}</strong></div>
+    <div class="span6">выдан <strong>{{ document.document_date }}</strong></div>
 </div>
 <br>
 <div class="row-fluid signature">
-    <div class="span10">орган, выдавший документ <strong>{{ document.detail.document_organ }}</strong></div>
-    <div class="span2">код <strong>{{ document.detail.document_code }}</strong></div>
+    <div class="span10">орган, выдавший документ <strong>{{ document.document_organ }}</strong></div>
+    <div class="span2">код <strong>{{ document.document_code }}</strong></div>
 </div>
 <br>
 <br>
 
-<div class="signature">8. Банковские реквизиты: БИК <strong>{{ document.detail.bank_bik }}</strong></div>
+<div class="signature">8. Банковские реквизиты: БИК <strong>{{ document.bank_bik }}</strong></div>
 <br>
-<div class="signature">банк <strong>{{ document.detail.bank_title }}</strong></div>
+<div class="signature">банк <strong>{{ document.bank_title }}</strong></div>
 <br>
-<div class="signature">расчётный счёт <strong>{{ document.detail.bank_set_account }}</strong></div>
+<div class="signature">расчётный счёт <strong>{{ document.bank_set_account }}</strong></div>
 <br>
-<div class="signature">кор./счёт <strong>{{ document.detail.bank_cor_account }}</strong></div>
+<div class="signature">кор./счёт <strong>{{ document.bank_cor_account }}</strong></div>
