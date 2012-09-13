@@ -698,6 +698,18 @@ class Order(models.Model):
         payments = Payment.objects.filter(invoice__order=self)
         return sum([ x.summa for x in payments.filter(is_paid=True) ])
     @property
+    def payment_cash(self):
+        payments = Payment.objects.filter(invoice__order=self, payment=settings.PAYMENT_INVOICE_CASH)
+        return sum([ x.summa for x in payments.filter(is_paid=True) ])
+    @property
+    def payment_cashless(self):
+        payments = Payment.objects.filter(invoice__order=self, payment=settings.PAYMENT_INVOICE_CASHLESS)
+        return sum([ x.summa for x in payments.filter(is_paid=True) ])
+    @property
+    def payment_card(self):
+        payments = Payment.objects.filter(invoice__order=self, payment=settings.PAYMENT_INVOICE_CARD)
+        return sum([ x.summa for x in payments.filter(is_paid=True) ])
+    @property
     def debet(self):
         return float(self.summa) - float(self.payment)
     
@@ -1088,6 +1100,15 @@ class Invoice(models.Model):
     @property
     def payment(self):
         return sum([ x.summa for x in self.payment_set.filter(is_paid=True) ])
+    @property
+    def payment_cash(self):
+        return sum([ x.summa for x in self.payment_set.filter(is_paid=True, payment=settings.PAYMENT_INVOICE_CASH) ])
+    @property
+    def payment_cashless(self):
+        return sum([ x.summa for x in self.payment_set.filter(is_paid=True, payment=settings.PAYMENT_INVOICE_CASHLESS) ])
+    @property
+    def payment_card(self):
+        return sum([ x.summa for x in self.payment_set.filter(is_paid=True, payment=settings.PAYMENT_INVOICE_CARD) ])
     @property
     def debet(self):
         return float(self.summa) - float(self.payment)
