@@ -85,8 +85,8 @@
     <input type="hidden" name="id" value="{{ order.id }}" />
     <div class="input-append">
         <h3 class="span2">Комментарий</h3>
-        <input type="text" value="{{ order.comment }}" class="input-xxlarge" name="order_comment" id="id_order_comment">
-        <input type="submit" class="btn" value="Сохранить" />
+        <input type="text" value="{{ order.comment }}" class="input-xxlarge"{% if order.state_close %} disabled{% endif %} name="order_comment" id="id_order_comment">
+        {% if not order.state_close %}<input type="submit" class="btn" value="Сохранить" />{% endif %}
     </div>
 </form>
 
