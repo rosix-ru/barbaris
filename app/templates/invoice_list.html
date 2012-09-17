@@ -83,7 +83,7 @@
         <tr id="invoice_{{ invoice.id }}">
             <td><span>{{ invoice.id }}</span></td>
             <td><span>{{ invoice.client }}</span></td>
-            <td><span>{{ invoice.client.org|default:'' }}</span></td>
+            <td><span>{{ invoice.client.detail.org|default:'' }}</span></td>
             <td><span>{{ invoice.date|date:'Y-m-d' }}</span></td>
             <td><span>{{ invoice.comment }}</span></td>
             <td><span class="pull-right">{{ invoice.summa }}</span></td>

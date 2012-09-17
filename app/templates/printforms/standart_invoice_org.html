@@ -41,6 +41,34 @@
 
 {% block print_client_header %}{{ document.client.detail.org.get_string_requsites }}{% endblock %}
 
+{% block print_header_requisites %}
+<table class="table table-condensed table-bordered">
+    <tr>
+        <td><i class="pull-right">Банк получателя</i></td>
+        <td colspan="5">{{ supplier.bank_title }}</td>
+    </tr>
+    <tr>
+        <td><i class="pull-right">БИК</i></td>
+        <td>{{ supplier.bank_bik }}</td>
+        <td><i class="pull-right">кор/счёт</i></td>
+        <td colspan="3">{{ supplier.bank_cor_account }}</td>
+    </tr>
+    <tr>
+        <td><i class="pull-right">Получатель</i></td>
+        <td colspan="5">{{ supplier.fulltitle }}</td>
+    </tr>
+    <tr>
+        <td><i class="pull-right">ИНН</i></td>
+        <td>{{ supplier.inn }}</td>
+        <td><i class="pull-right">КПП</i></td>
+        <td>{{ supplier.kpp }}</td>
+        <td><i class="pull-right">счёт</i></td>
+        <td>{{ supplier.bank_set_account }}</td>
+    </tr>
+</table>
+{{ block.super }}
+{% endblock %}
+
 {% block print_table_thead %}
 <tr>
     <th class="span1 align-center">№</th>

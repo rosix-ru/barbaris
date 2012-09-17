@@ -65,7 +65,7 @@
         <tr id="act_{{ act.id }}">
             <td><span>{{ act.id }}</span></td>
             <td><span>{{ act.client }}</span></td>
-            <td><span>{{ act.client.org|default:'' }}</span></td>
+            <td><span>{{ act.client.detail.org|default:'' }}</span></td>
             <td><span>{{ act.date|date:'Y-m-d' }}</span></td>
             <td><span>{{ act.comment }}</span></td>
             <td><span>{% short_username act.user %}</span></td>
