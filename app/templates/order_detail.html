@@ -130,6 +130,7 @@
     </div>
 {% endif %}
 
+{% if not order.state_close %}
 <legend>Прайс-лист</legend>
 <div id="categories" class="accordion">
 {% for category in categories %}
@@ -209,5 +210,6 @@
     {% endif %}
 {% endif %}
 </div>
+{% endif %}
 
 {% endblock %}

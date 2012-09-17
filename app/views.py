@@ -105,6 +105,8 @@ def order_detail(request, pk=None, action=None):
         return order
     
     if request.method == 'POST':
+        if order.state_close:
+            return redirect("order_detail", order.pk)
         if 'selectClient' in request.POST:
             check_order()
             [ order.clients.add(int(x)) for x in request.POST.getlist("selectClient", [])]
