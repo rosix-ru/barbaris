@@ -41,6 +41,20 @@ from django.conf import settings
 
 import datetime
 
+class OrgManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(OrgManager, self).get_query_set().filter(
+            client__isnull=False,
+        )
+
+class PersonManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(PersonManager, self).get_query_set().filter(
+            client__isnull=False,
+        )
+
 class ActivePriceManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
@@ -124,5 +138,5 @@ class PrivatePersonManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
         return super(PrivatePersonManager, self).get_query_set().filter(
-            org=None
+            org=None, client__isnull=False,
         )

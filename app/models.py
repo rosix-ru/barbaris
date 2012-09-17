@@ -235,6 +235,8 @@ class Org(AbstractOrg):
         verbose_name=u"клиент",
         blank=True, null=True,
         )
+    allobjects = models.Manager()
+    objects = managers.OrgManager()
     
     @property
     def org(self):
@@ -388,7 +390,8 @@ class Person(models.Model):
         blank=True, null=True,
         )
     
-    objects = models.Manager()
+    allobjects = models.Manager()
+    objects = managers.PersonManager()
     privates = managers.PrivatePersonManager()
     
     def __unicode__(self):
