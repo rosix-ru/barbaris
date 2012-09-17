@@ -41,7 +41,7 @@
 
 {% block print_client_header %}{{ document.client.detail.org.get_string_requsites }}{% endblock %}
 
-{% block print_header_requisites %}
+{% block print_bank_requisites %}
 <table class="table table-condensed table-bordered">
     <tr>
         <td><i class="pull-right">Банк получателя</i></td>
@@ -66,7 +66,6 @@
         <td>{{ supplier.bank_set_account }}</td>
     </tr>
 </table>
-{{ block.super }}
 {% endblock %}
 
 {% block print_table_thead %}
