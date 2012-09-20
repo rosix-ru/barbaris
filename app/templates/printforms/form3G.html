@@ -37,7 +37,7 @@
 
 -->{% endcomment %}
 
-{% load pytils_numeral %}
+{% load pytils_numeral l10n print_extras %}
 
 {% block print_logo %}
 <div class="row-fluid">
@@ -71,9 +71,10 @@
     <div class="row-fluid"><div class="span12"></div></div>
 -->
     <div class="row-fluid">
-      <div class="span2"><h3><small>№ комнаты: </small>{{ document.order.numbers }}</h3></div>
-      <div class="span4"><h3><small>Заезд: </small>{{ document.order.start }}</h3></div>
-      <div class="span4"><h3><small>Количество человек: _____</div>
+      <div class="span3"><h3><small>№ комнаты: </small>{{ document.order.numbers }}</h3></div>
+      <div class="span6"><h3><small>Заезд: </small>
+      {{ document.order.start|date:"DATETIME_FORMAT" }}</h3></div>
+      <div class="span3"><h3 class="pull-right"><small>Количество человек:  </small>{{ document.order.clients.count }}</h3></div>
     </div>
     <div class="row-fluid"><div class="span12"></div></div>
   </div>
@@ -109,9 +110,9 @@
     </tr>
     <tr>
         <td class="span6 align-left">по {{ document.order.end }}</td>
-        <td class="span1 align-center"></td>
-        <td class="span1 align-center"></td>
-        <td class="span1 align-right">{{ document.order.summa_for_client }}</td>
+        <td class="span1 align-center">{% get_divider_for_invoice document %}</td>
+        <td class="span1 align-center">{% get_interval_for_invoice document %}</td>
+        <td class="span1 align-right">{% get_item_summa_for_invoice document %}</td>
         <td class="span2 align-right">{{ document.order.summa_for_client }}</td>
     </tr>
     <tr>

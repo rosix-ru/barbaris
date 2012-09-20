@@ -668,7 +668,8 @@ class Order(models.Model):
             null=True, blank=True,
             verbose_name = u"окончание")
     
-    objects  = models.Manager()
+    allobjects  = models.Manager()
+    objects  = managers.ListOrderManager()
     creates  = managers.CreateOrderManager()
     accepts  = managers.AcceptOrderManager()
     closes   = managers.CloseOrderManager()
@@ -718,7 +719,7 @@ class Order(models.Model):
     
     @property
     def invoices(self):
-        return self.invoice_set.all()
+        return self.invoice_set.filter(state__in=settings.SELECT_WORK_INVOICES)
     
     @property
     def acts(self):
@@ -761,11 +762,30 @@ class Order(models.Model):
         
         super(Order, self).save(**kwargs)
     
+    def delete(self, **kwargs):
+        self.state = settings.STATE_ORDER_TRASH
+        self.save()
+        self.invoice_set.all().delete()
+    
     @property
     def numbers(self):
         sps = self.specification_set.filter(room__isnull=False)
         L = [str(x.room.num) for x in sps]
         return u', '.join(set(L))
+    
+    @property
+    def fullhours(self):
+        interval = self.end - self.start
+        return interval.days * 24 + interval.seconds / 3600
+    
+    @property
+    def fulldays(self):
+        interval = self.end - self.start
+        if interval.days and interval.seconds:
+            return interval.days +1
+        return interval.days
+    
+    
     
 class Specification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -978,6 +998,8 @@ class Specification(models.Model):
     def delete(self, **kwargs):
         # Заказ помечается как принятый, при любых изменениях 
         # после первичного принятия
+        #~ if self.order.payment:
+            #~ return False
         self.order.state = settings.STATE_ORDER_ACCEPT
         self.order.save()
         super(Specification, self).delete(**kwargs)
@@ -1047,7 +1069,8 @@ class Invoice(models.Model):
             blank=True,
             verbose_name = u"комментарий")
     
-    objects = models.Manager()
+    allobjects  = models.Manager()
+    objects  = managers.WorkInvoiceManager()
     payments = managers.PaymentInvoiceManager()
     avances = managers.AvanceInvoiceManager()
     cashes = managers.CashInvoiceManager()
@@ -1074,6 +1097,11 @@ class Invoice(models.Model):
         super(Invoice, self).save(**kwargs)
         
         self.order.save()
+    
+    def delete(self, **kwargs):
+        self.state = settings.STATE_INVOICE_TRASH
+        self.save()
+        #~ super(Invoice, self).delete(**kwargs)
     
     @property
     def summa_float(self):
@@ -1210,6 +1238,9 @@ class Act(models.Model):
             unicode(self.id),
             self.date.strftime("%d.%m.%Y"),
             )
+    
+    def delete(self, **kwargs):
+        pass
     
     class Meta:
         ordering = ['user', '-created']

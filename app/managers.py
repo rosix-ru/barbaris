@@ -91,6 +91,13 @@ class CancelOrderManager(models.Manager):
             state=settings.STATE_ORDER_CANCEL
         )
 
+class ListOrderManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(ListOrderManager, self).get_query_set().filter(
+            state__in=settings.SELECT_LIST_ORDERS
+        )
+
 class WorkOrderManager(models.Manager):
     use_for_related_fields = True
     def get_query_set(self):
@@ -133,6 +140,12 @@ class CashInvoiceManager(models.Manager):
             state__in=settings.SELECT_CASH_INVOICES
         )
 
+class WorkInvoiceManager(models.Manager):
+    use_for_related_fields = True
+    def get_query_set(self):
+        return super(WorkInvoiceManager, self).get_query_set().filter(
+            state__in=settings.SELECT_WORK_INVOICES
+        )
 
 class PrivatePersonManager(models.Manager):
     use_for_related_fields = True
