@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 ###############################################################################
 # Copyright 2012 Grigoriy Kramarenko.
 ###############################################################################
@@ -34,7 +35,7 @@
 #   вместе с этой программой. Если это не так, см.
 #   <http://www.gnu.org/licenses/>.
 ###############################################################################
-
+"""
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from models import *
@@ -151,7 +152,7 @@ class PriceAdmin(admin.ModelAdmin):
 admin.site.register(Price, PriceAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created', 'updated', 'state')
+    list_display = ('__unicode__', 'user', 'created', 'updated', 'state')
     list_filter = ('state', 'user',)
     filter_horizontal = (
         #~ 'payment_clients', 
@@ -177,6 +178,7 @@ class SpecificationAdmin(admin.ModelAdmin):
     list_display = ('price', 'order', 'summa', 'id',)
     list_filter = ('price__service__category', 'reservation')
     raw_id_fields = ['order','price']
+    search_fields = ('id',)
 admin.site.register(Specification,SpecificationAdmin)
 
 class DocTemplateAdmin(admin.ModelAdmin):
@@ -185,27 +187,35 @@ class DocTemplateAdmin(admin.ModelAdmin):
 admin.site.register(DocTemplate, DocTemplateAdmin)
 
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ('order', 'client', 'date','id',)
+    list_display = ('__unicode__', 'order', 'client', 'date','id',)
     list_filter = ('state', 'user')
+    raw_id_fields = ['order','client']
+    search_fields = ('id',)
 admin.site.register(Invoice, InvoiceAdmin)
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('invoice', 'created', 'updated','id',)
-    list_filter = ('user',)
+    list_display = ('__unicode__', 'invoice', 'created', 'updated')
+    list_filter = ('user', 'payment')
+    raw_id_fields = ['invoice']
+    search_fields = ('id',)
 admin.site.register(Payment, PaymentAdmin)
 
 class ActAdmin(admin.ModelAdmin):
-    list_display = ('order', 'client', 'date','id',)
+    list_display = ('__unicode__', 'order', 'client', 'date',)
     list_filter = ('user',)
+    raw_id_fields = ['order','client','invoice']
+    search_fields = ('id',)
 admin.site.register(Act, ActAdmin)
 
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('text', 'user','id',)
     list_filter = ('user',)
+    search_fields = ('text', )
 admin.site.register(Question, QuestionAdmin)
 
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('text', 'user', 'question', 'id',)
     list_filter = ('user',)
+    search_fields = ('text', 'question')
     raw_id_fields = ['question']
 admin.site.register(Answer, AnswerAdmin)
