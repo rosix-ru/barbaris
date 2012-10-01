@@ -79,11 +79,11 @@ class OrgAdmin(admin.ModelAdmin):
 admin.site.register(Org,OrgAdmin)
 
 class SelfOrgAdmin(admin.ModelAdmin):
-    list_display = ('title', 'fulltitle', 'id')
+    list_display = ('title', 'fulltitle', 'is_active', 'id')
     search_fields = ('title', 'fulltitle')
     fieldsets = [(None, {
             'fields': (
-                'title','fulltitle',
+                'is_active', 'title','fulltitle',
                 )
         })] + org_append_fieldsets
 admin.site.register(SelfOrg, SelfOrgAdmin)

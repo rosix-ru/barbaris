@@ -224,9 +224,10 @@ class SelfOrg(AbstractOrg):
     def save(self, **kwargs):
         super(SelfOrg, self).save(**kwargs)
         
-        qs = SelfOrg.objects.filter(is_active=True)
-        qs = qs.exclude(id=self.id)
-        qs.update(is_active=False)
+        if self.is_active:
+            qs = SelfOrg.objects.filter(is_active=True)
+            qs = qs.exclude(id=self.id)
+            qs.update(is_active=False)
 
 class Org(AbstractOrg):
     """ Организация-покупатель услуг """
