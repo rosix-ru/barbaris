@@ -8,3 +8,7 @@
 \.rar$
 \.sqlite$
 \.db$
+^static/.*$
+^media/.*\.sql$
+^media/.*\.log$
+^media/.*\.txt$

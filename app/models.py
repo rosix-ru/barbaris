@@ -573,7 +573,9 @@ class Price(models.Model):
     """ Цены на услуги """
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True,editable=False)
+    is_active = models.BooleanField(
+            default=True,
+            verbose_name = u"активно")
     
     service = models.ForeignKey(
             Service,
