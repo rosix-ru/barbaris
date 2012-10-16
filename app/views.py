@@ -547,8 +547,9 @@ def analyze(request):
     start = request.GET.get('date_start', '')
     end = request.GET.get('date_end', '')
     
+    d = settings.DEFAULT_ANALYSE_DAYS or 7
     if not start and not end:
-        start = str(datetime.date.today() - datetime.timedelta(days=30))
+        start = str(datetime.date.today() - datetime.timedelta(days=d))
     
     if start:
         start = get_datetime(start)
