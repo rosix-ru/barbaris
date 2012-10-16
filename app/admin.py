@@ -153,7 +153,7 @@ admin.site.register(Price, PriceAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'user', 'created', 'updated', 'state')
-    list_filter = ('state', 'user',)
+    list_filter = ('state', 'user', 'updated')
     filter_horizontal = (
         #~ 'payment_clients', 
         'clients',
@@ -172,13 +172,14 @@ class OrderAdmin(admin.ModelAdmin):
             )
         }),
     )
+    search_fields = ('id',)
 admin.site.register(Order, OrderAdmin)
 
 class SpecificationAdmin(admin.ModelAdmin):
     list_display = ('price', 'order', 'summa', 'id',)
-    list_filter = ('price__service__category', 'reservation')
+    list_filter = ('price__service__category', 'reservation', 'updated')
     raw_id_fields = ['order','price']
-    search_fields = ('id',)
+    search_fields = ('id', 'order__id')
 admin.site.register(Specification,SpecificationAdmin)
 
 class DocTemplateAdmin(admin.ModelAdmin):
@@ -188,23 +189,23 @@ admin.site.register(DocTemplate, DocTemplateAdmin)
 
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'order', 'client', 'date','id',)
-    list_filter = ('state', 'user')
+    list_filter = ('state', 'user', 'updated', 'date')
     raw_id_fields = ['order','client']
-    search_fields = ('id',)
+    search_fields = ('id', 'order__id')
 admin.site.register(Invoice, InvoiceAdmin)
 
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'invoice', 'created', 'updated')
-    list_filter = ('user', 'payment')
+    list_filter = ('user', 'payment', 'created', 'updated')
     raw_id_fields = ['invoice']
-    search_fields = ('id',)
+    search_fields = ('id', 'invoice__id')
 admin.site.register(Payment, PaymentAdmin)
 
 class ActAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'order', 'client', 'date',)
-    list_filter = ('user',)
+    list_filter = ('user', 'created', 'date')
     raw_id_fields = ['order','client','invoice']
-    search_fields = ('id',)
+    search_fields = ('id', 'order__id')
 admin.site.register(Act, ActAdmin)
 
 class QuestionAdmin(admin.ModelAdmin):
