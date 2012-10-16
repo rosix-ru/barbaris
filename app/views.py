@@ -545,13 +545,17 @@ def analyze(request):
         orders = orders.filter(user__pk=user)
     
     start = request.GET.get('date_start', '')
+    end = request.GET.get('date_end', '')
+    
+    if not start and not end:
+        start = str(datetime.date.today() - datetime.timedelta(days=30))
+    
     if start:
         start = get_datetime(start)
         acts = acts.filter(date__gte=start).filter(date__isnull=False)
         invoices = invoices.filter(date__gte=start).filter(date__isnull=False)
         orders = orders.filter(created__gte=start)
         
-    end = request.GET.get('date_end', '')
     if end:
         end = get_datetime(end)
         acts = acts.filter(date__lte=end).filter(date__isnull=False)
