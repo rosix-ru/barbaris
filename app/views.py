@@ -645,8 +645,12 @@ def object_list(request, model, template_name, search_fields=[],
     if date_field:
         
         ctx['years']  = [ x.year  for x in qs.dates(date_field, 'year') ]
-        ctx['months'] = [ x.month for x in qs.dates(date_field, 'month') ]
-        ctx['days']   = [ x.day   for x in qs.dates(date_field, 'day') ]
+        #~ _months = [ x.month for x in qs.dates(date_field, 'month') ]
+        #~ ctx['months'] = [ v for i,v in enumerate(_months) if _months.index(v)==i ]
+        ctx['months'] = _sortunique([ x.month for x in qs.dates(date_field, 'month') ])
+        #~ _days = [ x.day   for x in qs.dates(date_field, 'day') ]
+        #~ ctx['days'] = [ v for i,v in enumerate(_days) if _days.index(v)==i ]
+        ctx['days'] = _sortunique([ x.day   for x in qs.dates(date_field, 'day') ])
         
         for key in ('year','month', 'day'):
             val = request.GET.get(key, "")
@@ -830,3 +834,8 @@ def get_datetime(string):
             pass
     return None
     
+def _sortunique(container):
+    L = list(set(container))
+    L.sort()
+    return L
+

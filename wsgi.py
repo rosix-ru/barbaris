@@ -1,5 +1,5 @@
 """
-WSGI config for project project.
+WSGI config for project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
@@ -19,8 +19,9 @@ import os, sys
 ENV = 'env-django1.4'
 
 def getenv():
+    """ Find full path for name directory of environ """
     if ENV:
-        thispath = os.path.dirname(__file__)
+        thispath = os.path.abspath(os.path.dirname(__file__))
         while thispath:
             if thispath == '/' and not os.path.exists(os.path.join(thispath, ENV)):
                 return None
@@ -45,7 +46,3 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 # setting points here.
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
-
-# Apply WSGI middleware here.
-# from helloworld.wsgi import HelloWorldApplication
-# application = HelloWorldApplication(application)

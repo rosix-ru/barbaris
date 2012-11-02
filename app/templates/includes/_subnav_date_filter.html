@@ -44,11 +44,13 @@
             <a href="{% addGET request 'year' 0 %}">Любой</a>
         </li>
         <li class="divider"></li>
-    {% for year in years %}
-        <li class="{% subnavactive request 'year' year %}">
-            <a href="{% addGET request 'year' year %}">{{ year }}</a>
-        </li>
-    {% endfor %}
+        <div style="max-height: 320px; overflow-y: auto;">
+        {% for year in years %}
+            <li class="{% subnavactive request 'year' year %}">
+                <a href="{% addGET request 'year' year %}">{{ year }}</a>
+            </li>
+        {% endfor %}
+        </div>
     </ul>
 </li>
 <li class="dropdown {% subnavactive request 'month' %}">
@@ -58,11 +60,13 @@
             <a href="{% addGET request 'month' 0 %}">Любой</a>
         </li>
         <li class="divider"></li>
-    {% for month in months %}
-        <li class="{% subnavactive request 'month' month %}">
-            <a href="{% addGET request 'month' month %}">{{ month }}</a>
-        </li>
-    {% endfor %}
+        <div style="max-height: 320px; overflow-y: auto;">
+        {% for month in months %}
+            <li class="{% subnavactive request 'month' month %}">
+                <a href="{% addGET request 'month' month %}">{{ month }}</a>
+            </li>
+        {% endfor %}
+        </div>
     </ul>
 </li>
 <li class="dropdown {% subnavactive request 'day' %}">
@@ -72,10 +76,12 @@
             <a href="{% addGET request 'day' 0 %}">Любой</a>
         </li>
         <li class="divider"></li>
-    {% for day in days %}
-        <li class="{% subnavactive request 'day' day %}">
-            <a href="{% addGET request 'day' day %}">{{ day }}</a>
-        </li>
-    {% endfor %}
+        <div style="max-height: 320px; overflow-y: auto;">
+        {% for day in days %}
+            <li class="{% subnavactive request 'day' day %}">
+                <a href="{% addGET request 'day' day %}">{{ day }}</a>
+            </li>
+        {% endfor %}
+        </div>
     </ul>
 </li>
