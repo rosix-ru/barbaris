@@ -258,7 +258,7 @@ class Org(AbstractOrg):
             #~ client.save()
             #~ self.client = client
         super(Org, self).save(**kwargs)
-    
+
 class Person(models.Model):
     """ Физическое лицо, либо представитель фирмы """
     SEX_CHOICES = (
@@ -426,7 +426,7 @@ class Person(models.Model):
             #~ client.save()
             #~ self.client = client
         super(Person, self).save(**kwargs)
-    
+
 class Category(models.Model):
     """ Категория услуги """
     title = models.CharField(
@@ -568,7 +568,7 @@ class Room(models.Model):
                 return settings.STATE_ROOM_NONFREE
         else:
             assert current_order, "Ошибка в расчёте app.models.Room.state()"
-    
+
 class Price(models.Model):
     """ Цены на услуги """
     created = models.DateTimeField(auto_now_add=True)
@@ -783,13 +783,11 @@ class Order(models.Model):
     
     @property
     def fulldays(self):
-        interval = self.end - self.start
-        if interval.days and interval.seconds:
-            return interval.days +1
-        return interval.days
-    
-    
-    
+        #~ interval = self.end - self.start
+        #~ if interval.days and interval.seconds:
+            #~ return interval.days +1
+        return (self.end - self.start).days or 1
+
 class Specification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -1006,7 +1004,7 @@ class Specification(models.Model):
         self.order.state = settings.STATE_ORDER_ACCEPT
         self.order.save()
         super(Specification, self).delete(**kwargs)
-    
+
 class DocTemplate(models.Model):
     """ Шаблоны актов и счетов """
     title = models.CharField(
@@ -1026,15 +1024,15 @@ class DocTemplate(models.Model):
     text = models.TextField(
             blank=True,
             verbose_name = u"шаблон документа")
-    
+
     def __unicode__(self):
         return unicode(self.title)
-    
+
     class Meta:
         ordering = ['title', 'document' ]
         verbose_name = u"шаблон документа"
         verbose_name_plural = u"шаблоны документов"
-    
+
     def save(self, **kwargs):
         if self.is_default:
             docs = DocTemplate.objects.filter(document=self.document, is_default=True)
@@ -1146,7 +1144,7 @@ class Invoice(models.Model):
     @property
     def debet(self):
         return float(self.summa) - float(self.payment)
-    
+
 class Payment(models.Model):
     """ Приходный ордер """
     created = models.DateTimeField(auto_now_add=True)
