@@ -396,7 +396,7 @@ def client_search(request):
     ctx = { 'DEBUG': settings.DEBUG }
     clients = Client.objects.all()
     
-    query = request.GET.get('query', '')
+    query = request.POST.get('query', request.GET.get('query', ''))
     
     if query:
         fields = ('person__last_name', 'person__first_name', 'person__middle_name', 'org__title')

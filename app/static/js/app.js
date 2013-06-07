@@ -125,7 +125,7 @@ function goSearchClient(input_text) {
     var div = input_text.next().children("fieldset");
     var query = input_text.val();
     if (query == '') { return false }
-    div.load("/client/search/?query="+ query +"&destination="+ input_text.attr("name"));
+    div.load("/client/search/", { query: query, destination: input_text.attr("name")});
     return false;
 }
 
