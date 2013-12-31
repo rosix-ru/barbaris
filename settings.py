@@ -59,7 +59,7 @@ try:
     f.close()
 except:
     AUTHORS = ('Webmaster Name', 'Manager Name')
-COPYRIGHT = 'Гостиница «Барбарис»'
+COPYRIGHT = u'Гостиница «Барбарис»'
 COPYRIGHT_YEAR = 2010 # start year of copyright
 PROJECT_NAME = u'АИС «Барбарис»'
 
@@ -98,19 +98,15 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-if DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
-    USE_TZ = False
-else:
-    USE_TZ = True
+USE_TZ = True
 
 LOCALE_PATHS = (
     # abspath('locale'),
-    abspath('app','locale'),
 )
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = abspath('media')
+MEDIA_ROOT = abspath('..', 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -121,7 +117,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = abspath('static')
+STATIC_ROOT = abspath('..', 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -133,7 +129,6 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     #abspath('static'),
-    abspath('app', 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -199,21 +194,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'project.auth_fix',
+    #~ 'project.auth_fix',
     'project.app',
     'pytils',
-    #~ 'webodt',
-    #~ 'cachebot',
-    #~ 'memcache_status',
 )
 
 # Settings for applications:
-
-#~ WEBODT_TMP_DIR = abspath('..', 'tmp-webodt')
-#~ if not os.path.exists(WEBODT_TMP_DIR):
-    #~ os.makedirs(WEBODT_TMP_DIR)
-#~ 
-#~ WEBODT_TEMPLATE_PATH = abspath('templates', 'webodt')
 
 START_YEAR = 2011
 DEFAULT_ANALYSE_DAYS = 7
