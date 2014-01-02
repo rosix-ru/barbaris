@@ -59,9 +59,15 @@ import datetime
 from models import *
 import forms
 
+DEBUG = settings.DEBUG
+DEMO  = getattr(settings, 'DEMO', False)
+
+def default_ctx():
+    return {'DEBUG': DEBUG, 'DEMO': DEMO}
+
 @login_required
 def monitor(request):
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     ctx['object_list'] = Room.objects.all()
     ctx['settings'] = settings
     return render_to_response('monitor.html', ctx,
@@ -69,7 +75,7 @@ def monitor(request):
 
 @login_required
 def monitor_update(request):
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     ctx['object_list'] = Room.objects.all()
     ctx['settings'] = settings
     return render_to_response('includes/_monitor.html', ctx,
@@ -80,7 +86,7 @@ def monitor_update(request):
 def order_detail(request, pk=None, action=None):
     #~ print "EXEC views.order_detail()" # DEBUG
     #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     session = request.session
     user = request.user
     session['user_id'] = user.pk
@@ -316,7 +322,7 @@ def order_delete(request):
 def price_list(request):
     #~ print "EXEC views.price_list()" # DEBUG
     #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     session = request.session
     user = request.user
     session['user_id'] = user.pk
@@ -329,11 +335,11 @@ def price_list(request):
 def person_detail(request, pk):
     #~ print "EXEC views.person_detail()" # DEBUG
     #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     
     person = get_object_or_404(Person.objects, pk=pk)
     
-    if request.method == 'POST':
+    if request.method == 'POST' and (not DEMO or request.user.is_superuser):
         if 'last_name' in request.POST:
             form_person = forms.PersonForm(request.POST, instance=person)
             if form_person.is_valid():
@@ -378,7 +384,7 @@ def person_detail(request, pk):
 def client_create(request):
     #~ print "EXEC views.person_detail()" # DEBUG
     
-    if request.method == 'POST':
+    if request.method == 'POST' and (not DEMO or request.user.is_superuser):
         form = forms.ClientForm(request.POST)
         if form.is_valid():
             client = form.save()
@@ -440,11 +446,11 @@ def client_detail(request, pk):
 def org_detail(request, pk):
     #~ print "EXEC views.org_detail()" # DEBUG
     #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     
     org = get_object_or_404(Org.objects, pk=pk)
     
-    if request.method == 'POST':
+    if request.method == 'POST' and (not DEMO or request.user.is_superuser):
         if 'title' in request.POST:
             form_org = forms.OrgForm(request.POST, instance=org)
             if form_org.is_valid():
@@ -492,7 +498,7 @@ def org_detail(request, pk):
 def question_detail(request, pk=None, action=None):
     #~ print "EXEC views.question_detail()" # DEBUG
     #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     user = request.user
     if not pk or pk in ('0', 0) or action == 'new':
         question = Question(theme=u"Новая тема вопроса")
@@ -533,7 +539,7 @@ def question_detail(request, pk=None, action=None):
 
 @login_required
 def analyze(request):
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     acts = Act.objects.all()
     invoices = Invoice.objects.all()
     orders = Order.objects.all()
@@ -635,7 +641,7 @@ def object_list(request, model, template_name, search_fields=[],
     date_field="", use_stats=False, foreign_field="", foreign_key="",
     use_distinct=False,
     ):
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     page = 1
     qs = model.objects.all()
     
@@ -694,14 +700,14 @@ def object_list(request, model, template_name, search_fields=[],
 
 @login_required
 def object_detail(request, model, template_name, pk):
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     ctx['object'] = get_object_or_404(model.objects, pk=pk)
     return render_to_response(template_name, ctx,
                             context_instance=RequestContext(request,))
 
 @login_required
 def document_print(request, pk, model, document):
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     doc = get_object_or_404(model, pk=pk)
     
     if 'form' in request.GET:
@@ -724,7 +730,7 @@ def document_print(request, pk, model, document):
 
 @login_required
 def sp_info(request):
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     if not request.is_ajax():
         return http.HttpResponseRedirect("/")
     
@@ -759,7 +765,7 @@ def sp_info(request):
 def get_modal(request, obj, key, pk):
     #~ print "EXEC views.get_modal()" # DEBUG
     #~ print request # DEBUG
-    ctx = {'DEBUG': settings.DEBUG}
+    ctx = default_ctx()
     if not request.is_ajax():
         return http.HttpResponseRedirect("/")
     session = request.session
