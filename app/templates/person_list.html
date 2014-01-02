@@ -43,9 +43,11 @@
 {% block page_name %}Персоналии{% endblock %}
 
 {% block subnav_content %}
+{% if not DEMO or user.is_superuser %}
 <li>
     <a href="#" data-toggle="_modal_client_create_0_" title="Добавить клиента"><i class="icon-plus"></i></a>
 </li>
+{% endif %}
 {% subnav_filter request 'person_list' %}
 {% endblock %}
 

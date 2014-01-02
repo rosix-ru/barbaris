@@ -53,7 +53,7 @@
         {{ field }}
         {{ field.errors }}
     {% endfor %}
-        <input type="submit" class="btn btn-success" value="Сохранить" />
+        <input type="submit" class="btn btn-success" value="Сохранить"{% if DEMO and not user.is_superuser %} disabled{% endif %}/>
     </fieldset>
 </form>
 <div class="row-fluid">
@@ -71,7 +71,7 @@
                 </div>
             {% endfor %}
                 <div class="form-actions">
-                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                    <input type="submit" class="btn btn-success" value="Сохранить"{% if DEMO and not user.is_superuser %} disabled{% endif %}/>
                 </div>
             </fieldset>
         </form>
@@ -90,7 +90,7 @@
                 </div>
             {% endfor %}
                 <div class="form-actions">
-                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                    <input type="submit" class="btn btn-success" value="Сохранить"{% if DEMO and not user.is_superuser %} disabled{% endif %}/>
                 </div>
             </fieldset>
         </form>
@@ -112,7 +112,7 @@
                 </div>
             {% endfor %}
                 <div class="form-actions">
-                    <input type="submit" class="btn btn-success" value="Сохранить" />
+                    <input type="submit" class="btn btn-success" value="Сохранить"{% if DEMO and not user.is_superuser %} disabled{% endif %}/>
                 </div>
             </fieldset>
         </form>
