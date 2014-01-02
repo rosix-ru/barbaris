@@ -38,6 +38,7 @@
 -->{% endcomment %}
 {% load i18n l10n base_extras %}
 
+{% if user.is_authenticated %}
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="{% block container_type %}container{% endblock %}">
@@ -116,3 +117,4 @@
         </div>
     </div>
 </div>
+{% endif %}

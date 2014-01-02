@@ -92,6 +92,7 @@
     <div class="{% block container_type %}container{% endblock %}">
 <!-- START: header -->
         {% block header %}
+    {% if user.is_authenticated %}
         <header id="header">
             <div class="row">
                 <div class="span7">
@@ -135,6 +136,7 @@
             <div style="clear:both;"></div>
         <hr class="soften">
         </header>
+    {% endif %}
         {% endblock %}
 <!-- END: header -->
     
