@@ -149,7 +149,7 @@
 <!-- START: block footer -->
         {% block footer %}
         <footer>
-            <p>{% if DEMO %}<strong class="label label-important pull-left">DEMO</strong> {% endif %}© {% filter force_escape %}{% COPYRIGHT %} {% COPYRIGHT_YEARS %}{% endfilter %}</p>
+            <p>{% if DEMO %}<strong class="label label-important pull-left">DEMO</strong> {% endif %}{% filter force_escape %}{% COPYRIGHT %} © {% COPYRIGHT_YEARS %}{% endfilter %}</p>
         </footer>
         {% endblock %}
 <!-- END: block footer -->
