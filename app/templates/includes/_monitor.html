@@ -54,8 +54,10 @@
                     <br>
                     Клиентов: {{ room.current_order.clients.count|default:"0" }}
                     <br>
-                    {{ room.current_order.comment|default:"Комментарий отсутствует." }}
-                    <br>
+                    {% if room.current_order.comment %}
+                        {{ room.current_order.comment }}
+                        <br>
+                    {% endif %}
                     Сумма заказа: {{ room.current_order.summa }}
                     <br>
                     К оплате: {{ room.current_order.debet }}
