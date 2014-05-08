@@ -59,7 +59,7 @@ try:
     f.close()
 except:
     AUTHORS = ('Webmaster Name', 'Manager Name')
-COPYRIGHT = u'Гостиница «Барбарис»'
+COPYRIGHT = u'Григорий Крамаренко / www.rosix.ru'
 COPYRIGHT_YEAR = 2010 # start year of copyright
 PROJECT_NAME = u'АИС «Барбарис»'
 
