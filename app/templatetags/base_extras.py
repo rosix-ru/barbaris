@@ -189,6 +189,10 @@ def pagination(request, paginator):
 def short_username(user):
     if not user.last_name and not user.first_name:
         return user.username
+    elif not user.last_name and user.first_name:
+        return user.first_name
+    elif user.last_name and not user.first_name:
+        return user.last_name
     return u'%s %s.' % (user.last_name, unicode(user.first_name)[0])
 
 @register.simple_tag
